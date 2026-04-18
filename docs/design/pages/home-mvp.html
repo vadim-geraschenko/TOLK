@@ -390,8 +390,7 @@
       .button:hover,
       .episode-card:hover,
       .participant:hover,
-      .social-button:hover,
-      .merch-card:hover {
+      .social-button:hover {
         transform: translateY(-2px);
         border-color: rgba(224, 188, 114, 0.4);
         background: rgba(224, 188, 114, 0.06);
@@ -505,8 +504,16 @@
         border-radius: 26px;
         border: 1px solid rgba(199, 164, 91, 0.18);
         background:
-          radial-gradient(circle at 82% 14%, rgba(224, 188, 114, 0.08), transparent 24%),
-          linear-gradient(180deg, rgba(28, 31, 35, 0.88), rgba(22, 24, 28, 0.92));
+          radial-gradient(
+            circle at 82% 14%,
+            rgba(224, 188, 114, 0.08),
+            transparent 24%
+          ),
+          linear-gradient(
+            180deg,
+            rgba(28, 31, 35, 0.88),
+            rgba(22, 24, 28, 0.92)
+          );
         box-shadow: var(--shadow), var(--inner-glow);
       }
 
@@ -515,7 +522,11 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 34%);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.045),
+          transparent 34%
+        );
       }
 
       .reading-card-body {
@@ -608,6 +619,7 @@
       .panel-content {
         position: relative;
         padding: 32px;
+        padding-bottom: 0;
       }
 
       .events-panel h2,
@@ -753,13 +765,55 @@
 
       .merch-grid {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: 1fr;
         gap: 18px;
       }
 
+      .merch-panel .panel-content {
+        padding: 22px 24px;
+      }
+
+      .contact-panel .panel-content {
+        padding: 22px 24px;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .merch-panel,
+      .contact-panel {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+      }
+
+      .merch-panel::before,
+      .contact-panel::before {
+        display: none;
+      }
+
+      .merch-panel h2 {
+        font-size: clamp(28px, 3vw, 42px);
+        margin-bottom: 12px;
+      }
+
+      .merch-panel > .panel-content > p {
+        max-width: 54ch;
+        font-size: 15px;
+        margin-bottom: 18px;
+      }
+
+      .merch-layout {
+        display: grid;
+        grid-template-columns: 275px minmax(0, 1fr);
+        gap: 18px;
+        align-items: center;
+      }
+
       .merch-card {
-        min-height: 230px;
-        padding: 22px;
+        min-height: 100%;
+        padding: 0;
         border-radius: 22px;
         border: 1px solid rgba(243, 241, 234, 0.08);
         background:
@@ -774,9 +828,46 @@
             rgba(255, 255, 255, 0.02)
           );
         transition:
-          transform 180ms ease,
           border-color 180ms ease,
           background 180ms ease;
+      }
+
+      .merch-card-media {
+        height: 400px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(199, 164, 91, 0.18);
+        background:
+          radial-gradient(
+            circle at 50% 18%,
+            rgba(224, 188, 114, 0.1),
+            transparent 34%
+          ),
+          linear-gradient(180deg, #23262a, #17191c);
+      }
+
+      .merch-card-media img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .merch-copy {
+        display: grid;
+        gap: 14px;
+        padding: 6px 0;
+      }
+
+      .merch-copy strong {
+        display: block;
+        font-family: var(--serif);
+        font-size: clamp(28px, 3vw, 40px);
+        font-weight: 400;
+        letter-spacing: -0.03em;
+        line-height: 0.98;
+        color: var(--text);
       }
 
       .merch-card span,
@@ -820,13 +911,29 @@
         letter-spacing: -0.03em;
       }
 
-      .contact-panel .panel-content {
-        padding: 22px 24px;
+      .lower-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+        gap: 16px;
+        align-items: stretch;
+      }
+
+      .lower-row .section {
+        padding: 0;
+      }
+
+      .lower-row .contact-panel,
+      .lower-row .merch-panel {
+        height: 100%;
       }
 
       .contact-panel h2 {
         font-size: clamp(28px, 3vw, 42px);
         margin-bottom: 12px;
+      }
+
+      .contact-panel .eyebrow {
+        margin-top: 4px;
       }
 
       .contact-panel > .panel-content > p {
@@ -835,7 +942,11 @@
       }
 
       .social-buttons {
-        display: grid;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
         gap: 10px;
         margin-top: 18px;
       }
@@ -955,6 +1066,8 @@
         }
         .hero-row,
         .hero-grid,
+        .lower-row,
+        .merch-layout,
         .merch-grid,
         .participants-list {
           grid-template-columns: 1fr;
@@ -994,7 +1107,7 @@
           width: 100%;
         }
         .panel-content {
-          padding: 24px 20px;
+          padding: 24px 20px 0px;
         }
         .participants-head {
           flex-direction: column;
@@ -1054,12 +1167,16 @@
                     <div class="eyebrow">TOLK</div>
                     <h1>Читать. Спорить. Осмыслять текст.</h1>
                     <div class="hero-manifest">
-                      <p>Библия с разных точек зрения, без догматического нажима.</p>
+                      <p>
+                        Библия с разных точек зрения, без догматического нажима.
+                      </p>
                       <p>Публичный разговор, а не монолог.</p>
                       <p>Атмосферная точка входа в уже живой медиапроект.</p>
                     </div>
                     <div class="hero-actions">
-                      <a class="button button-primary" href="#episodes">Смотреть выпуски</a>
+                      <a class="button button-primary" href="#episodes"
+                        >Смотреть выпуски</a
+                      >
                       <a class="button" href="#">О проекте</a>
                     </div>
                   </div>
@@ -1071,7 +1188,8 @@
                         <span class="hero-episode-meta">Последний выпуск</span>
                         <h3>Вавилонская башня</h3>
                         <p>
-                          Короткое превью последнего материала с переходом на страницу-карточку выпуска.
+                          Короткое превью последнего материала с переходом на
+                          страницу-карточку выпуска.
                         </p>
                         <a class="mini-button" href="#">Открыть выпуск</a>
                       </div>
@@ -1099,7 +1217,8 @@
                   <div class="reading-status">Ближайшее событие</div>
                   <h3>Вавилонская башня</h3>
                   <p>
-                    Короткий анонс живого чтения как отдельная карточка рядом с hero, без лишней высоты.
+                    Короткий анонс живого чтения как отдельная карточка рядом с
+                    hero, без лишней высоты.
                   </p>
                   <div class="reading-meta">
                     <div class="reading-meta-item">
@@ -1206,96 +1325,88 @@
           </div>
         </section>
 
-        <section class="section merch">
-          <div class="container">
-            <div class="section-header">
-              <div>
-                <div class="eyebrow">Мерч</div>
-                <h2>Блок, который может вырасти позже.</h2>
-              </div>
-            </div>
-
-            <div class="merch-grid">
-              <article class="merch-card is-placeholder">
-                <div>
-                  <span>Placeholder</span>
-                  <strong>Скоро появится</strong>
-                  <p>
-                    Если мерча пока нет или его совсем немного, секция остаётся
-                    спокойным плейсхолдером без ощущения пустоты.
-                  </p>
-                </div>
-              </article>
-              <article class="merch-card">
-                <span>Card Slot</span>
-                <h3>Карточка для будущей позиции</h3>
-                <p>
-                  Этот слот показывает, как на главной смогут выглядеть реальные
-                  предметы, если мерч появится позже.
-                </p>
-              </article>
-              <article class="merch-card">
-                <span>Card Slot</span>
-                <h3>Ещё одна тихая витрина</h3>
-                <p>
-                  Секция должна уметь вмещать несколько позиций, но не быть
-                  слишком громкой, пока направление только формируется.
-                </p>
-              </article>
-            </div>
-          </div>
-        </section>
-
         <section class="section">
           <div class="container">
-            <article class="panel contact-panel">
-              <div class="panel-content">
-                <div class="eyebrow">Контакты И Поддержка</div>
-                <h2>Следить, писать, поддерживать проект.</h2>
-                <p>
-                  Короткий нижний блок для быстрых переходов и ненавязчивой поддержки проекта.
-                </p>
-
-                <div class="social-buttons">
-                  <a class="social-button" href="#">
-                    <div class="social-icon">TG</div>
-                    <div class="social-copy">
-                      <strong>Telegram</strong>
-                      <p>Анонсы, короткие посты и текущая жизнь проекта.</p>
+            <div class="lower-row">
+              <section class="section merch">
+                <article class="panel merch-panel">
+                  <div class="panel-content">
+                    <div>
+                      <div class="eyebrow">Мерч</div>
                     </div>
-                    <div class="social-arrow">›</div>
-                  </a>
 
-                  <a class="social-button" href="#">
-                    <div class="social-icon">YT</div>
-                    <div class="social-copy">
-                      <strong>YouTube</strong>
-                      <p>Длинные выпуски, shorts и видеозаписи разговоров.</p>
+                    <div class="merch-grid">
+                      <article class="merch-card">
+                        <div class="merch-layout">
+                          <div class="merch-card-media">
+                            <img
+                              src="../merch.png"
+                              alt="Футболки TOLK от одного из ведущих проекта"
+                            />
+                          </div>
+                          <div class="merch-copy">
+                            <span>Merch</span>
+                            <strong>Мерч от TOLK</strong>
+                            <p>
+                              У Тараса вышел мерч для важных переговоров.
+                              Приобретайте и побеждайте в дискуссиях.
+                            </p>
+                            <div>
+                              <a class="button button-primary" href="#"
+                                >Приобрести</a
+                              >
+                            </div>
+                          </div>
+                        </div>
+                      </article>
                     </div>
-                    <div class="social-arrow">›</div>
-                  </a>
+                  </div>
+                </article>
+              </section>
 
-                  <a class="social-button" href="#">
-                    <div class="social-icon">BS</div>
-                    <div class="social-copy">
-                      <strong>Boosty</strong>
-                      <p>
-                        Поддержка проекта и доступ к дополнительным материалам.
-                      </p>
+              <section class="section">
+                <article class="panel contact-panel">
+                  <div class="panel-content">
+                    <div class="eyebrow">Контакты И Поддержка</div>
+                    <h2>Поддержите проект.</h2>
+
+                    <div class="social-buttons">
+                      <a class="social-button" href="#">
+                        <div class="social-icon">TG</div>
+                        <div class="social-copy">
+                          <strong>Telegram</strong>
+                          <p>Анонсы, короткие посты и текущая жизнь проекта.</p>
+                        </div>
+                        <div class="social-arrow">›</div>
+                      </a>
+
+                      <a class="social-button" href="#">
+                        <div class="social-icon">YT</div>
+                        <div class="social-copy">
+                          <strong>YouTube</strong>
+                          <p>
+                            Длинные выпуски, shorts и видеозаписи разговоров.
+                          </p>
+                        </div>
+                        <div class="social-arrow">›</div>
+                      </a>
+
+                      <a class="social-button" href="#">
+                        <div class="social-icon">BS</div>
+                        <div class="social-copy">
+                          <strong>Boosty</strong>
+                          <p>
+                            Поддержка проекта и доступ к дополнительным
+                            материалам.
+                          </p>
+                        </div>
+                        <div class="social-arrow">›</div>
+                      </a>
                     </div>
-                    <div class="social-arrow">›</div>
-                  </a>
-                </div>
-
-                <div class="support-note">
-                  <span>Support</span>
-                  <p>
-                    Поддержка должна быть видна, но не навязчива: это
-                    продолжение участия в проекте, а не жёсткая продажа.
-                  </p>
-                </div>
-              </div>
-            </article>
+                  </div>
+                </article>
+              </section>
+            </div>
           </div>
         </section>
       </main>
