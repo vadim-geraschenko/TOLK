@@ -6,28 +6,34 @@
     <title>TOLK — Home MVP</title>
     <style>
       :root {
-        --bg: #0f1114;
-        --panel: rgba(24, 27, 31, 0.88);
-        --panel-quiet: rgba(21, 24, 28, 0.74);
-        --panel-border: rgba(226, 231, 238, 0.1);
-        --line: rgba(226, 231, 238, 0.08);
-        --text: #f2f4f7;
-        --text-soft: #c6cbd2;
+        --surface-panel: rgba(24, 27, 31, 0.88);
+        --border-panel: rgba(226, 231, 238, 0.1);
+        --text-primary: #f2f4f7;
+        --text-secondary: #c6cbd2;
         --text-muted: #8d959f;
-        --gold: #cfd6df;
-        --gold-hot: #eef2f6;
-        --shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
-        --inner-glow:
+        --accent-silver: #cfd6df;
+        --accent-silver-strong: #eef2f6;
+        --elevation-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+        --elevation-inner:
           inset 0 0 0 1px rgba(255, 255, 255, 0.03),
           inset 0 0 32px rgba(255, 255, 255, 0.015);
-        --radius-lg: 28px;
-        --radius-md: 20px;
-        --content: 1280px;
-        --serif:
+        --layout-content-max: 1280px;
+        --page-gutter-desktop: 32px;
+        --page-gutter-tablet: 28px;
+        --page-gutter-mobile: 24px;
+        --font-display:
           "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
           "URW Palladio L", serif;
-        --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
-        --mono: "SF Mono", "Cascadia Code", "Consolas", monospace;
+        --font-body: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+        /*
+          Breakpoint tokens are mirrored in media queries below.
+          Plain CSS custom properties are not available inside media conditions.
+        */
+        --bp-layout-compact-max: 68.75rem; /* 1100px */
+        --bp-hero-reading-stack-max: 61.1875rem; /* 979px */
+        --bp-mobile-max: 47.5rem; /* 760px */
+        --bp-reading-two-column-min: 35.0625rem; /* 561px */
+        --bp-mobile-tight-max: 32.5rem; /* 520px */
       }
 
       * {
@@ -40,7 +46,7 @@
       body {
         margin: 0;
         min-height: 100vh;
-        color: var(--text);
+        color: var(--text-primary);
         background:
           radial-gradient(
             circle at 50% -10%,
@@ -48,7 +54,7 @@
             transparent 34%
           ),
           linear-gradient(180deg, #0b0d10 0%, #0f1114 34%, #12151a 100%);
-        font-family: var(--sans);
+        font-family: var(--font-body);
         letter-spacing: 0.01em;
         overflow-x: hidden;
       }
@@ -119,7 +125,7 @@
       }
 
       .container {
-        width: min(calc(100% - 32px), var(--content));
+        width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
         margin: 0 auto;
       }
 
@@ -129,7 +135,7 @@
 
       .section-divider {
         position: relative;
-        width: min(calc(100% - 32px), var(--content));
+        width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
         height: 28px;
         margin: 0 auto;
       }
@@ -166,19 +172,7 @@
         color: rgba(230, 235, 241, 0.26);
         font-size: 18px;
         letter-spacing: 0.3em;
-        /* background: linear-gradient(
-          180deg,
-          rgba(15, 17, 20, 0.96),
-          rgba(15, 17, 20, 0.82)
-        ); */
       }
-
-      /*
-        Divider center mark alternatives:
-        1. content: "●";  // neutral, current default
-        2. content: "✦";  // more editorial
-        3. content: "◦◦◦"; // softer ornamental rhythm
-      */
 
       .section-header {
         display: flex;
@@ -193,7 +187,7 @@
         align-items: center;
         gap: 10px;
         margin-bottom: 14px;
-        color: var(--gold);
+        color: var(--accent-silver);
         font-size: 12px;
         font-weight: 600;
         letter-spacing: 0.22em;
@@ -215,7 +209,7 @@
       h2,
       h3 {
         margin: 0;
-        font-family: var(--serif);
+        font-family: var(--font-display);
         font-weight: 400;
         line-height: 0.96;
         letter-spacing: -0.03em;
@@ -223,7 +217,7 @@
 
       p {
         margin: 0;
-        color: var(--text-soft);
+        color: var(--text-secondary);
         line-height: 1.74;
       }
 
@@ -261,9 +255,9 @@
         border-radius: 50%;
         display: grid;
         place-items: center;
-        box-shadow: var(--inner-glow);
-        color: var(--gold-hot);
-        font-family: var(--serif);
+        box-shadow: var(--elevation-inner);
+        color: var(--accent-silver-strong);
+        font-family: var(--font-display);
         font-size: 18px;
       }
 
@@ -273,7 +267,7 @@
         letter-spacing: 0.28em;
         text-transform: uppercase;
         font-weight: 700;
-        color: var(--text);
+        color: var(--text-primary);
       }
 
       .brand-copy span {
@@ -292,18 +286,18 @@
       }
 
       .nav a {
-        color: var(--text-soft);
+        color: var(--text-secondary);
         font-size: 14px;
         transition: color 180ms ease;
       }
 
       .nav a:hover,
       .nav a.is-active {
-        color: var(--text);
+        color: var(--text-primary);
       }
 
       .nav .social {
-        color: var(--gold);
+        color: var(--accent-silver);
       }
 
       .hero {
@@ -322,8 +316,8 @@
         position: relative;
         overflow: hidden;
         border-radius: 32px;
-        border: 1px solid var(--panel-border);
-        box-shadow: var(--shadow), var(--inner-glow);
+        border: 1px solid var(--border-panel);
+        box-shadow: var(--elevation-shadow), var(--elevation-inner);
         backdrop-filter: blur(12px);
       }
 
@@ -407,7 +401,7 @@
       }
 
       .hero-manifest p {
-        color: var(--text);
+        color: var(--text-primary);
         font-size: 14px;
       }
 
@@ -420,7 +414,7 @@
         border-radius: 999px;
         border: 1px solid rgba(243, 241, 234, 0.12);
         background: rgba(255, 255, 255, 0.02);
-        color: var(--text);
+        color: var(--text-primary);
         font-weight: 600;
         letter-spacing: 0.02em;
         transition:
@@ -472,7 +466,8 @@
 
       .hero-episode-cover {
         position: relative;
-
+        width: 100%;
+        aspect-ratio: 16 / 9;
         overflow: hidden;
         display: grid;
         place-items: center;
@@ -507,7 +502,7 @@
       .hero-episode-meta {
         display: inline-block;
         margin-top: 14px;
-        color: var(--gold);
+        color: var(--accent-silver);
         font-size: 10px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -534,42 +529,9 @@
         border-radius: 999px;
         border: 1px solid rgba(255, 255, 255, 0.12);
         background: rgba(255, 255, 255, 0.05);
-        color: var(--text);
+        color: var(--text-primary);
         font-size: 13px;
         font-weight: 600;
-      }
-
-      .hero-hosts {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 4px 2px 0;
-      }
-
-      .hero-host {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .hero-host .avatar {
-        width: 42px;
-        height: 42px;
-        overflow: hidden;
-      }
-
-      .hero-host .avatar img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-      }
-
-      .hero-host span {
-        display: block;
-        color: var(--text-muted);
-        font-size: 12px;
       }
 
       .reading-card {
@@ -589,7 +551,7 @@
             rgba(28, 31, 35, 0.88),
             rgba(22, 24, 28, 0.92)
           );
-        box-shadow: var(--shadow), var(--inner-glow);
+        box-shadow: var(--elevation-shadow), var(--elevation-inner);
       }
 
       .reading-card::before {
@@ -626,7 +588,7 @@
           rgba(255, 255, 255, 0.08),
           rgba(255, 255, 255, 0.03)
         );
-        color: var(--gold-hot);
+        color: var(--accent-silver-strong);
         font-size: 10px;
         font-weight: 700;
         letter-spacing: 0.18em;
@@ -700,24 +662,21 @@
 
       .reading-meta-row strong {
         display: block;
-        color: var(--text);
+        color: var(--text-primary);
         font-size: 14px;
         line-height: 1.45;
       }
 
       .panel {
-        background: var(--panel);
+        background: var(--surface-panel);
       }
-      .panel.quiet {
-        background: var(--panel-quiet);
-      }
+
       .panel-content {
         position: relative;
         padding: 32px;
         padding-bottom: 0;
       }
 
-      .events-panel h2,
       .episodes h2,
       .merch h2,
       .contact-panel h2 {
@@ -739,7 +698,7 @@
 
       .participants-head h3 {
         font-size: 26px;
-        color: var(--text-soft);
+        color: var(--text-secondary);
       }
 
       .participants-list {
@@ -790,7 +749,7 @@
       .participant strong {
         display: block;
         font-size: 15px;
-        color: var(--text);
+        color: var(--text-primary);
         margin-bottom: 4px;
       }
 
@@ -949,7 +908,7 @@
         border-radius: 999px;
         border: 1px solid rgba(255, 255, 255, 0.12);
         background: rgba(255, 255, 255, 0.04);
-        color: var(--gold-hot);
+        color: var(--accent-silver-strong);
         font-size: 11px;
         letter-spacing: 0.08em;
         text-transform: uppercase;
@@ -957,7 +916,7 @@
       }
 
       .episode-card .meta {
-        color: var(--gold);
+        color: var(--accent-silver);
         font-size: 11px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
@@ -1014,12 +973,6 @@
       .merch-panel h2 {
         font-size: clamp(28px, 3vw, 42px);
         margin-bottom: 12px;
-      }
-
-      .merch-panel > .panel-content > p {
-        max-width: 54ch;
-        font-size: 15px;
-        margin-bottom: 18px;
       }
 
       .merch-layout {
@@ -1080,53 +1033,12 @@
 
       .merch-copy strong {
         display: block;
-        font-family: var(--serif);
+        font-family: var(--font-display);
         font-size: clamp(28px, 3vw, 40px);
         font-weight: 400;
         letter-spacing: -0.03em;
         line-height: 0.98;
-        color: var(--text);
-      }
-
-      .merch-card span,
-      .support-note span {
-        display: inline-block;
-        margin-bottom: 14px;
-        color: var(--gold);
-        font-size: 11px;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-      }
-
-      .merch-card h3 {
-        font-size: 28px;
-        margin-bottom: 12px;
-      }
-
-      .merch-card.is-placeholder {
-        display: grid;
-        place-items: center;
-        text-align: center;
-        background:
-          radial-gradient(
-            circle at center,
-            rgba(224, 188, 114, 0.08),
-            transparent 38%
-          ),
-          linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.035),
-            rgba(255, 255, 255, 0.015)
-          );
-      }
-
-      .merch-card.is-placeholder strong {
-        display: block;
-        margin-bottom: 10px;
-        font-family: var(--serif);
-        font-size: 34px;
-        font-weight: 400;
-        letter-spacing: -0.03em;
+        color: var(--text-primary);
       }
 
       .lower-row {
@@ -1152,11 +1064,6 @@
 
       .contact-panel .eyebrow {
         margin-top: 4px;
-      }
-
-      .contact-panel > .panel-content > p {
-        max-width: 54ch;
-        font-size: 15px;
       }
 
       .social-buttons {
@@ -1191,9 +1098,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: grid;
         place-items: center;
-        color: var(--gold-hot);
-        font-family: var(--mono);
-        font-size: 16px;
+        color: var(--accent-silver-strong);
         background:
           radial-gradient(
             circle at 30% 30%,
@@ -1201,7 +1106,7 @@
             transparent 35%
           ),
           linear-gradient(180deg, #23272b, #171a1d);
-        box-shadow: var(--inner-glow);
+        box-shadow: var(--elevation-inner);
       }
 
       .social-icon svg,
@@ -1210,7 +1115,7 @@
         height: 40px;
         display: block;
         object-fit: contain;
-        stroke: var(--gold-hot);
+        stroke: var(--accent-silver-strong);
         fill: none;
         stroke-width: 1.55;
         stroke-linecap: round;
@@ -1236,38 +1141,22 @@
         height: 42px;
       }
 
-      .social-icon svg.is-fill {
-        fill: var(--gold-hot);
-        stroke: none;
-      }
-
       .social-copy strong {
         display: block;
         margin-bottom: 4px;
         font-size: 17px;
-        color: var(--text);
+        color: var(--text-primary);
       }
 
       .social-copy p {
         font-size: 13px;
-        color: var(--text-soft);
+        color: var(--text-secondary);
       }
 
       .social-arrow {
         color: var(--text-muted);
         font-size: 22px;
         transform: translateY(-1px);
-      }
-
-      .support-note {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid rgba(243, 241, 234, 0.08);
-      }
-
-      .support-note p {
-        max-width: 58ch;
-        font-size: 14px;
       }
 
       .footer {
@@ -1295,30 +1184,9 @@
         }
       }
 
-      @keyframes breathe {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 0.65;
-        }
-        50% {
-          transform: scale(1.035);
-          opacity: 1;
-        }
-      }
-
-      @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-      }
-
-      @media (max-width: 1100px) {
+      @media (max-width: 68.75rem) {
         .container {
-          width: min(calc(100% - 28px), var(--content));
+          width: min(calc(100% - var(--page-gutter-tablet)), var(--layout-content-max));
         }
 
         .section {
@@ -1449,7 +1317,7 @@
         }
       }
 
-      @media (max-width: 979px) and (min-width: 761px) {
+      @media (max-width: 61.1875rem) and (min-width: 47.5625rem) {
         .hero-row {
           grid-template-columns: 1fr;
         }
@@ -1526,9 +1394,9 @@
         }
       }
 
-      @media (max-width: 760px) {
+      @media (max-width: 47.5rem) {
         .container {
-          width: min(calc(100% - 24px), var(--content));
+          width: min(calc(100% - var(--page-gutter-mobile)), var(--layout-content-max));
         }
 
         .hero-row {
@@ -1757,7 +1625,7 @@
         }
       }
 
-      @media (max-width: 760px) and (min-width: 561px) {
+      @media (max-width: 47.5rem) and (min-width: 35.0625rem) {
         .reading-card-body {
           display: grid;
           grid-template-columns: minmax(0, 1fr) 240px;
@@ -1824,7 +1692,7 @@
         }
       }
 
-      @media (max-width: 520px) {
+      @media (max-width: 32.5rem) {
         .brand-copy span {
           display: none;
         }
@@ -1938,6 +1806,8 @@
                         <img
                           src="./assets/episode-ecclesiastes.jpg"
                           alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
+                          width="1280"
+                          height="720"
                         />
                         <span class="episode-duration">2:14:22</span>
                       </div>
@@ -2034,10 +1904,8 @@
                   <img src="./assets/host-taras.jpg" alt="Тарас" />
                 </div>
                 <div>
-                  <div>
-                    <strong>Тарас</strong>
-                    <p>Скептический и атеистический взгляд.</p>
-                  </div>
+                  <strong>Тарас</strong>
+                  <p>Скептический и атеистический взгляд.</p>
                 </div>
               </div>
               <div class="participant">
@@ -2080,6 +1948,8 @@
                   <img
                     src="./assets/episode-ecclesiastes.jpg"
                     alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
+                    width="1280"
+                    height="720"
                   />
                   <span class="episode-duration">2:14:22</span>
                 </div>
@@ -2118,6 +1988,8 @@
                   <img
                     src="./assets/episode-samson.jpg"
                     alt="Превью выпуска Читаем историю Самсона с Артемом Широковым"
+                    width="1280"
+                    height="720"
                   />
                   <span class="episode-duration">1:55:30</span>
                 </div>
@@ -2161,6 +2033,8 @@
                   <img
                     src="./assets/episode-thomas.jpg"
                     alt="Превью выпуска Читаем апокрифы. Евангелие от Фомы"
+                    width="1280"
+                    height="720"
                   />
                   <span class="episode-duration">2:11:36</span>
                 </div>
@@ -2205,6 +2079,8 @@
                   <img
                     src="./assets/episode-isaac.jpg"
                     alt="Превью выпуска Читаем Библию. Женитьба Исаака"
+                    width="1280"
+                    height="720"
                   />
                   <span class="episode-duration">1:17:32</span>
                 </div>
@@ -2256,9 +2132,7 @@
               <section class="section merch">
                 <article class="panel merch-panel">
                   <div class="panel-content">
-                    <div>
-                      <div class="eyebrow">Мерч</div>
-                    </div>
+                    <div class="eyebrow">Мерч</div>
 
                     <div class="merch-grid">
                       <article class="merch-card">
@@ -2267,6 +2141,8 @@
                             <img
                               src="../../assets/merch.png"
                               alt="Футболки TOLK от одного из ведущих проекта"
+                              width="1200"
+                              height="1600"
                             />
                           </div>
                           <div class="merch-copy">

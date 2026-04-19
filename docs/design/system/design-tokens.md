@@ -93,7 +93,24 @@ Usage guidance:
 - `layout.text-max` — `44rem`
 - `layout.media-max` — `88rem`
 - `layout.gutter.desktop` — `2rem`
-- `layout.gutter.mobile` — `1rem`
+- `layout.gutter.tablet` — `1.75rem`
+- `layout.gutter.mobile` — `1.5rem`
+
+Current implementation tokens in `home-mvp.html`:
+- `--layout-content-max`
+- `--page-gutter-desktop`
+- `--page-gutter-tablet`
+- `--page-gutter-mobile`
+
+Breakpoint tokens mirrored in the current MVP stylesheet:
+- `--bp-layout-compact-max` — `68.75rem`
+- `--bp-hero-reading-stack-max` — `61.1875rem`
+- `--bp-mobile-max` — `47.5rem`
+- `--bp-reading-two-column-min` — `35.0625rem`
+- `--bp-mobile-tight-max` — `32.5rem`
+
+Note:
+- In plain CSS these breakpoint tokens still need to be duplicated numerically inside `@media`, because custom properties are not available in media conditions.
 
 ## Typography Scale
 Font families are directional placeholders; final implementation can select exact licensed fonts later.
@@ -243,3 +260,17 @@ The home page composition should:
 - prioritize a strong hero, curated entry points, and featured content lanes;
 - reserve the more immersive cinematic behavior for selected narrative moments rather than the whole page;
 - allow a hierarchy where cards, events, and support blocks all feel part of one clean symbolic visual language.
+
+## Current MVP Naming
+The current `home-mvp.html` should use implementation-level names that stay semantically clear:
+- `--surface-panel`
+- `--border-panel`
+- `--text-primary`
+- `--text-secondary`
+- `--text-muted`
+- `--accent-silver`
+- `--accent-silver-strong`
+- `--elevation-shadow`
+- `--elevation-inner`
+- `--font-display`
+- `--font-body`
