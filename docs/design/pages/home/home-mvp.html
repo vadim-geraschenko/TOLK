@@ -1151,10 +1151,10 @@
 
       .social-button {
         display: grid;
-        grid-template-columns: 52px minmax(0, 1fr) auto;
-        gap: 14px;
+        grid-template-columns: 64px minmax(0, 1fr) auto;
+        gap: 16px;
         align-items: center;
-        padding: 12px 14px;
+        padding: 14px 16px;
         border-radius: 22px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         background: rgba(255, 255, 255, 0.02);
@@ -1165,9 +1165,9 @@
       }
 
       .social-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 18px;
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: grid;
         place-items: center;
@@ -1189,11 +1189,31 @@
         width: 40px;
         height: 40px;
         display: block;
+        object-fit: contain;
         stroke: var(--gold-hot);
         fill: none;
         stroke-width: 1.55;
         stroke-linecap: round;
         stroke-linejoin: round;
+      }
+
+      .social-icon img {
+        opacity: 0.96;
+      }
+
+      .social-icon img.icon-telegram {
+        width: 36px;
+        height: 36px;
+      }
+
+      .social-icon img.icon-youtube {
+        width: 38px;
+        height: 38px;
+      }
+
+      .social-icon img.icon-boosty {
+        width: 42px;
+        height: 42px;
       }
 
       .social-icon svg.is-fill {
@@ -1216,6 +1236,7 @@
       .social-arrow {
         color: var(--text-muted);
         font-size: 22px;
+        transform: translateY(-1px);
       }
 
       .support-note {
@@ -1757,7 +1778,11 @@
                     <div class="social-buttons">
                       <a class="social-button" href="#">
                         <div class="social-icon" aria-hidden="true">
-                          <img src="../../assets/socials-telegram.svg" alt="" />
+                          <img
+                            src="../../assets/socials-telegram.svg"
+                            alt=""
+                            class="icon-telegram"
+                          />
                         </div>
                         <div class="social-copy">
                           <strong>Telegram</strong>
@@ -1768,7 +1793,11 @@
 
                       <a class="social-button" href="#">
                         <div class="social-icon" aria-hidden="true">
-                          <img src="../../assets/socials-youtube.svg" alt="" />
+                          <img
+                            src="../../assets/socials-youtube.svg"
+                            alt=""
+                            class="icon-youtube"
+                          />
                         </div>
                         <div class="social-copy">
                           <strong>YouTube</strong>
@@ -1781,7 +1810,11 @@
 
                       <a class="social-button" href="#">
                         <div class="social-icon" aria-hidden="true">
-                          <img src="../../assets/socials-boosty.svg" alt="" />
+                          <img
+                            src="../../assets/socials-boosty.svg"
+                            alt=""
+                            class="icon-boosty"
+                          />
                         </div>
                         <div class="social-copy">
                           <strong>Boosty</strong>
