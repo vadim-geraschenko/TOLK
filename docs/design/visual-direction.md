@@ -9,10 +9,10 @@ Approved by user on April 18, 2026 with adjustments:
 ## Direction Source
 Selected direction: `Option 1 — Nocturnal Editorial`
 
-TOLK should feel like a dark editorial-cultural object with cinematic warmth, not like a startup landing page, occult product, church portal, or AI-generated spectacle. The site should read as intelligent, composed, and slightly dramatic, with atmosphere built through light, typography, framing, and measured motion.
+TOLK should feel like a dark editorial-cultural object with clean tonal contrast, not like a startup landing page, occult product, church portal, or AI-generated spectacle. The site should read as intelligent, composed, and slightly dramatic, with atmosphere built through typography, framing, negative space, and measured motion.
 
 ## Direction Summary
-The visual identity is grounded in textured charcoal and graphite surfaces, warm gold accents, silver support tones, and clean white typography. The overall mood is nocturnal, reflective, and editorial. Religious imagery may appear, but only in distilled form: halos, circular motifs, ornamental lines, and sacred light should be reduced to precise graphic gestures rather than literal decorative symbolism.
+The visual identity is grounded in charcoal and graphite surfaces, restrained silver-white accents, and clean pale typography. The overall mood is nocturnal, reflective, and editorial. Religious imagery may appear, but only in distilled form: halos, circular motifs, ornamental lines, and sacred light should be reduced to precise graphic gestures rather than literal decorative symbolism.
 
 This direction should support three simultaneous readings:
 - a serious media archive;
@@ -25,11 +25,12 @@ This direction should support three simultaneous readings:
 - Premium rather than luxurious-for-show.
 - Symbolic rather than decorative.
 - Human-curated rather than trend-driven.
+- Cleaner and drier rather than smoky, molten, or “mystical premium”.
 
 ## Core Atmosphere
 - Textured charcoal / graphite background with visible depth.
-- Warm, candle-like gold light used as a controlled accent.
-- Silver and white used for clarity, contrast, and tonal relief.
+- Silver-white used as the main accent and contour language.
+- Very restrained warm notes may appear rarely, but never dominate the interface.
 - Strong editorial typography with generous spacing and vertical rhythm.
 - Framed content blocks that feel intentional and composed.
 - Motion that feels ambient, not performative.
@@ -54,7 +55,7 @@ Allowed:
 - restrained ornamental borders;
 - soft aureole-like light fields;
 - radial or arched framing derived from icon / manuscript geometry;
-- faint thunder, flame, or sacred-light cues in hero or special sections.
+- faint sacred-light cues in hero or special sections.
 
 Avoid:
 - ornate church styling;
@@ -102,7 +103,8 @@ Every symbolic or animated gesture must feel earned.
 ## Do
 - use light, type, and framing as primary expressive tools;
 - build dark backgrounds from layered graphite values rather than pure black;
-- use gold as accent metal, not as broad fill color;
+- use silver-white contour and pale light as the primary accent system;
+- keep warm accents rare, secondary, and carefully controlled;
 - allow more frames, contours, and fine lines than in a typical modern editorial site;
 - keep cards, covers, and sections visually composed and slightly ceremonial;
 - reserve motion-rich treatments for hero moments, `About`, and select featured modules;
@@ -111,10 +113,11 @@ Every symbolic or animated gesture must feel earned.
 ## Don’t
 - do not build a church-themed decorative interface;
 - do not turn the site into a mystical / occult / pseudo-spiritual artifact;
-- do not use excessive blur, bloom, or soft-focus fantasy imagery;
+- do not use excessive blur, bloom, metallic glow, or soft-focus fantasy imagery;
 - do not overuse glitch, thunder, flame, or floating elements;
 - do not make the optional character behave like a mascot or novelty widget;
 - do not flatten the interface into generic monochrome minimalism.
+- do not treat “premium” as gold-heavy styling or pseudo-luxury gloss.
 
 ## Assumptions
 - Primary platform is responsive web.
@@ -125,10 +128,10 @@ Every symbolic or animated gesture must feel earned.
 
 ## Handoff Notes For Design Tokens
 The token stage should define:
-- a charcoal-first palette with warm gold, silver, and precise white;
+- a charcoal-first palette with silver-white accents and precise pale neutrals;
 - frame, contour, and line treatments as first-class UI primitives;
-- hover and glow rules based on inner illumination, not generic shadows;
+- hover and glow rules based on subtle inner illumination, not generic shadows;
 - typography with editorial authority and long-form readability;
-- dedicated motion tokens for ambient float, breathing, glow pulse, ember / storm accents;
+- dedicated motion tokens for ambient float, breathing, and restrained glow pulse;
 - a special token group for cinematic media sections and scroll-synced video backgrounds;
 - a reserved token slot for optional symbolic character layers.
