@@ -1184,6 +1184,23 @@
         box-shadow: var(--inner-glow);
       }
 
+      .social-icon svg,
+      .social-icon img {
+        width: 40px;
+        height: 40px;
+        display: block;
+        stroke: var(--gold-hot);
+        fill: none;
+        stroke-width: 1.55;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .social-icon svg.is-fill {
+        fill: var(--gold-hot);
+        stroke: none;
+      }
+
       .social-copy strong {
         display: block;
         margin-bottom: 4px;
@@ -1739,7 +1756,9 @@
 
                     <div class="social-buttons">
                       <a class="social-button" href="#">
-                        <div class="social-icon">TG</div>
+                        <div class="social-icon" aria-hidden="true">
+                          <img src="../../assets/socials-telegram.svg" alt="" />
+                        </div>
                         <div class="social-copy">
                           <strong>Telegram</strong>
                           <p>Анонсы, короткие посты и текущая жизнь проекта.</p>
@@ -1748,7 +1767,9 @@
                       </a>
 
                       <a class="social-button" href="#">
-                        <div class="social-icon">YT</div>
+                        <div class="social-icon" aria-hidden="true">
+                          <img src="../../assets/socials-youtube.svg" alt="" />
+                        </div>
                         <div class="social-copy">
                           <strong>YouTube</strong>
                           <p>
@@ -1759,7 +1780,9 @@
                       </a>
 
                       <a class="social-button" href="#">
-                        <div class="social-icon">BS</div>
+                        <div class="social-icon" aria-hidden="true">
+                          <img src="../../assets/socials-boosty.svg" alt="" />
+                        </div>
                         <div class="social-copy">
                           <strong>Boosty</strong>
                           <p>
