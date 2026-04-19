@@ -312,7 +312,7 @@
 
       .hero-row {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 280px;
+        grid-template-columns: minmax(0, 1fr) 300px;
         gap: 18px;
         align-items: stretch;
       }
@@ -650,39 +650,59 @@
 
       .reading-card p {
         font-size: 13px;
+        line-height: 1.68;
       }
 
       .reading-meta {
         display: grid;
-        gap: 8px;
-        margin-top: 14px;
+      }
+
+      .reading-actions {
+        display: grid;
+        margin-top: auto;
+        padding-top: 20px;
       }
 
       .reading-card .mini-button {
-        margin-top: auto;
+        align-self: flex-start;
+        min-height: 40px;
+        padding-inline: 16px;
       }
 
       .reading-meta-item {
-        padding: 10px 12px;
-        border-radius: 14px;
+        padding: 4px 0 0;
+        border-radius: 16px;
         border: 1px solid rgba(243, 241, 234, 0.08);
         background: rgba(255, 255, 255, 0.02);
+        overflow: hidden;
       }
 
-      .reading-meta-item span {
+      .reading-meta-row {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        padding: 10px 13px;
+      }
+
+      .reading-meta-row + .reading-meta-row {
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .reading-meta-row span {
         display: block;
-        margin-bottom: 4px;
         color: var(--text-muted);
-        font-size: 10px;
+        font-size: 12px;
         letter-spacing: 0.16em;
         text-transform: uppercase;
+        padding-top: 3px;
       }
 
-      .reading-meta-item strong {
+      .reading-meta-row strong {
         display: block;
         color: var(--text);
         font-size: 14px;
-        line-height: 1.35;
+        line-height: 1.45;
       }
 
       .panel {
@@ -1475,7 +1495,7 @@
                 <div class="reading-card-body">
                   <div class="eyebrow">Очные Чтения</div>
                   <div class="reading-status">Событие прошло</div>
-                  <h3></h3>
+                  <h3>Читаем Библию. Бог решает убить человечество</h3>
                   <p>
                     Запись следующих чтений планируется 13-го апреля, в 18:00 в
                     Москве. Мероприятие, как и в прошлый раз, будет очень
@@ -1484,17 +1504,23 @@
                     записи мы ответим на ваши вопросы и вместе обсудим
                     прочитанное.
                   </p>
-                  <div class="reading-meta">
-                    <div class="reading-meta-item">
-                      <span>Дата</span>
-                      <strong>13 апреля 2025 · 18:00</strong>
+                  <div class="reading-actions">
+                    <div class="reading-meta">
+                      <div class="reading-meta-item">
+                        <div class="reading-meta-row">
+                          <span>Дата</span>
+                          <strong>13 апреля 2025 · 18:00</strong>
+                        </div>
+                        <div class="reading-meta-row">
+                          <span>Адрес</span>
+                          <strong
+                            >Москва, Спартаковская площадь, 14 стр. 3</strong
+                          >
+                        </div>
+                      </div>
                     </div>
-                    <div class="reading-meta-item">
-                      <span>Адрес</span>
-                      <strong>Москва, Спартаковская площадь, 14 стр. 3</strong>
-                    </div>
+                    <a class="mini-button" href="#">Приобрести билет</a>
                   </div>
-                  <a class="mini-button" href="#">Приобрести билет</a>
                 </div>
               </article>
             </div>
