@@ -451,17 +451,27 @@
       }
 
       .hero-episode {
+        min-height: 320px;
+        padding: 0 0 18px;
         border-radius: 22px;
         border: 1px solid rgba(243, 241, 234, 0.08);
-        background: rgba(255, 255, 255, 0.02);
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 28%),
+          linear-gradient(
+            180deg,
+            rgba(26, 29, 34, 0.96),
+            rgba(18, 20, 23, 0.98)
+          );
         overflow: hidden;
       }
 
       .hero-episode-cover {
-        height: 150px;
+        position: relative;
+        height: 156px;
         overflow: hidden;
         display: grid;
         place-items: center;
+        border-radius: 22px 22px 18px 18px;
         background:
           linear-gradient(
             145deg,
@@ -486,12 +496,12 @@
       }
 
       .hero-episode-body {
-        padding: 16px 16px 18px;
+        padding: 0 16px;
       }
 
       .hero-episode-meta {
         display: inline-block;
-        margin-bottom: 10px;
+        margin-top: 14px;
         color: var(--gold);
         font-size: 10px;
         letter-spacing: 0.16em;
@@ -499,11 +509,13 @@
       }
 
       .hero-episode-body h3 {
+        margin-top: 14px;
         font-size: 26px;
-        margin-bottom: 10px;
+        line-height: 1;
       }
 
       .hero-episode-body p {
+        margin-top: 14px;
         font-size: 13px;
       }
 
@@ -760,6 +772,7 @@
         grid-auto-columns: minmax(250px, 1fr);
         gap: 18px;
         overflow-x: auto;
+        padding-top: 12px;
         padding-bottom: 8px;
         scrollbar-width: thin;
         scrollbar-color: rgba(199, 164, 91, 0.5) transparent;
@@ -767,7 +780,7 @@
 
       .episode-card {
         min-height: 320px;
-        padding: 0 0 20px;
+        padding: 0;
         border-radius: 24px;
         border: 1px solid rgba(243, 241, 234, 0.08);
         background:
@@ -834,6 +847,79 @@
         padding: 0 20px;
       }
 
+      .episode-participants {
+        margin-top: 14px;
+        display: grid;
+        gap: 8px;
+      }
+
+      .episode-participants-label {
+        display: inline-block;
+        color: var(--text-muted);
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .episode-participants-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: nowrap;
+      }
+
+      .episode-host-stack {
+        display: flex;
+        align-items: center;
+      }
+
+      .episode-host-avatar {
+        width: 32px;
+        height: 32px;
+        margin-left: -8px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid rgba(207, 214, 223, 0.28);
+        background: linear-gradient(180deg, #23272b, #171a1d);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.02);
+        flex: 0 0 auto;
+      }
+
+      .episode-host-avatar:first-child {
+        margin-left: 0;
+      }
+
+      .episode-host-avatar img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .episode-host-avatar.guest {
+        border-color: rgba(238, 242, 246, 0.42);
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.03),
+          0 0 0 3px rgba(207, 214, 223, 0.06);
+      }
+
+      .episode-guest-badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 0 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--gold-hot);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
       .episode-card .meta {
         color: var(--gold);
         font-size: 11px;
@@ -851,6 +937,12 @@
         margin-top: 14px;
         font-size: 14px;
         line-height: 1.65;
+        height: 205px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 9;
+        text-overflow: ellipsis;
       }
 
       .merch-grid {
@@ -1105,7 +1197,7 @@
       }
 
       .footer {
-        padding: 32px 0 60px;
+        padding: 32px 0 20px;
         color: var(--text-muted);
         font-size: 13px;
       }
@@ -1234,12 +1326,11 @@
             </div>
           </div>
           <nav class="nav">
-            <a href="#" class="is-active">Home</a>
-            <a href="#">About</a>
-            <a href="#">Episodes</a>
-            <a href="#">Readings</a>
-            <a href="#">Merch</a>
-            <a href="#">Contacts</a>
+            <a href="#" class="is-active">Главная</a>
+            <a href="#">О нас</a>
+            <a href="#">Выпуски</a>
+            <a href="#">Очные чтения</a>
+            <a href="#">Мерч</a>
             <a href="#" class="social">Telegram</a>
             <a href="#" class="social">YouTube</a>
             <a href="#" class="social">Boosty</a>
@@ -1255,13 +1346,16 @@
                 <div class="hero-grid">
                   <div class="hero-copy">
                     <div class="eyebrow">TOLK</div>
-                    <h1>Читать. Спорить. Осмыслять текст.</h1>
+                    <h1>Читать. Мыслить. Искать истину.</h1>
                     <div class="hero-manifest">
                       <p>
-                        Библия с разных точек зрения, без догматического нажима.
+                        Мы читаем и обсуждаем Библию с разных точек зрения:
+                        Тарас — атеист, Мурат — придерживается ортодоксальных
+                        взглядов, Валентин — внеконфессиональный верующий. Но мы
+                        не планируем ограничиваться только чтением Библии, этот
+                        канал — площадка для глубоких вопросов, смелых идей и
+                        открытого диалога без догм.
                       </p>
-                      <p>Публичный разговор, а не монолог.</p>
-                      <p>Атмосферная точка входа в уже живой медиапроект.</p>
                     </div>
                     <div class="hero-actions">
                       <a class="button button-primary" href="#episodes"
@@ -1278,15 +1372,14 @@
                           src="./assets/episode-ecclesiastes.jpg"
                           alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
                         />
+                        <span class="episode-duration">2:14:22</span>
                       </div>
                       <div class="hero-episode-body">
-                        <span class="hero-episode-meta"
-                          >Последний выпуск · 9 дней назад</span
-                        >
-                        <h3>Екклесиаст с Кириллом Кириченко</h3>
+                        <span class="hero-episode-meta">9 дней назад</span>
+                        <h3>Читаем Екклесиаста с Кириллом Кириченко</h3>
                         <p>
-                          Последний разговор TOLK о книге Екклесиаста и ее
-                          скептическом нерве.
+                          Спецвыпуск наших чтений о книге Екклесиаста вместе с
+                          Кириллом Кириченко.
                         </p>
                         <a class="mini-button" href="#">Открыть выпуск</a>
                       </div>
@@ -1317,23 +1410,27 @@
               <article class="reading-card">
                 <div class="reading-card-body">
                   <div class="eyebrow">Очные Чтения</div>
-                  <div class="reading-status">Ближайшее событие</div>
-                  <h3>Вавилонская башня</h3>
+                  <div class="reading-status">Событие прошло</div>
+                  <h3></h3>
                   <p>
-                    Короткий анонс живого чтения как отдельная карточка рядом с
-                    hero, без лишней высоты.
+                    Запись следующих чтений планируется 13-го апреля, в 18:00 в
+                    Москве. Мероприятие, как и в прошлый раз, будет очень
+                    камерным, фактически мы приглашаем вас в нашу студию записи,
+                    поэтому количество мест сильно ограничено. После основной
+                    записи мы ответим на ваши вопросы и вместе обсудим
+                    прочитанное.
                   </p>
                   <div class="reading-meta">
                     <div class="reading-meta-item">
                       <span>Дата</span>
-                      <strong>24 апреля · 19:30</strong>
+                      <strong>13 апреля 2025 · 18:00</strong>
                     </div>
                     <div class="reading-meta-item">
                       <span>Адрес</span>
-                      <strong>Москва, пространство уточняется</strong>
+                      <strong>Москва, Спартаковская площадь, 14 стр. 3</strong>
                     </div>
                   </div>
-                  <a class="mini-button" href="#">Подробнее</a>
+                  <a class="mini-button" href="#">Приобрести билет</a>
                 </div>
               </article>
             </div>
@@ -1398,11 +1495,31 @@
                   <span class="episode-duration">2:14:22</span>
                 </div>
                 <div class="episode-body">
-                  <span class="meta">9.9K просмотров · 9 дней назад</span>
+                  <span class="meta">9 дней назад</span>
                   <h3>Читаем Екклесиаста с Кириллом Кириченко</h3>
+                  <div class="episode-participants">
+                    <span class="episode-participants-label">Участники</span>
+                    <div class="episode-participants-line">
+                      <div class="episode-host-stack">
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-taras.jpg" alt="Тарас" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-murat.jpg" alt="Мурат" />
+                        </div>
+                        <div class="episode-host-avatar guest">
+                          <img src="./assets/host-kirill.png" alt="Кирилл" />
+                        </div>
+                      </div>
+                      <span class="episode-guest-badge">Гость: Кирилл</span>
+                    </div>
+                  </div>
                   <p>
-                    Разговор TOLK с Кириллом Кириченко о книге Екклесиаста и ее
-                    напряженном, скептическом тоне.
+                    Спецвыпуск наших чтений. Вместе с Кириллом Кириченко читаем
+                    и обсуждаем Екклесиаста — одну из самых мрачных, странных и
+                    философски насыщенных книг Библии. Пытаемся понять,
+                    действительно ли она такая мрачная и что именно говорит
+                    Екклесиаст о смысле жизни, суете, труде, времени и мудрости.
                   </p>
                 </div>
               </article>
@@ -1416,11 +1533,36 @@
                   <span class="episode-duration">1:55:30</span>
                 </div>
                 <div class="episode-body">
-                  <span class="meta">10K просмотров · 3 недели назад</span>
+                  <span class="meta">3 недели назад</span>
                   <h3>Читаем историю Самсона с Артемом Широковым</h3>
+                  <div class="episode-participants">
+                    <span class="episode-participants-label">Участники</span>
+                    <div class="episode-participants-line">
+                      <div class="episode-host-stack">
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-taras.jpg" alt="Тарас" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-murat.jpg" alt="Мурат" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img
+                            src="./assets/host-valentin.jpg"
+                            alt="Валентин"
+                          />
+                        </div>
+                        <div class="episode-host-avatar guest">
+                          <img src="./assets/host-artem.jpg" alt="Артем" />
+                        </div>
+                      </div>
+                      <span class="episode-guest-badge">Гость: Артем</span>
+                    </div>
+                  </div>
                   <p>
-                    Выпуск с Артемом Широковым о Самсоне, силе, насилии и
-                    противоречивой героике внутри библейского сюжета.
+                    Спецвыпуск наших чтений. Вместе с Артемом Широковым читаем
+                    Книгу Судей, а именно историю Самсона. Пытаемся понять
+                    какого происхождения сила Самсона и в чем праведность этого
+                    персонажа Библии.
                   </p>
                 </div>
               </article>
@@ -1434,11 +1576,37 @@
                   <span class="episode-duration">2:11:36</span>
                 </div>
                 <div class="episode-body">
-                  <span class="meta">15K просмотров · 1 месяц назад</span>
+                  <span class="meta">1 месяц назад</span>
                   <h3>Читаем апокрифы. Евангелие от Фомы</h3>
+                  <div class="episode-participants">
+                    <span class="episode-participants-label">Участники</span>
+                    <div class="episode-participants-line">
+                      <div class="episode-host-stack">
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-taras.jpg" alt="Тарас" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-murat.jpg" alt="Мурат" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img
+                            src="./assets/host-valentin.jpg"
+                            alt="Валентин"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <p>
-                    Большой разговор об апокрифах и о том, как Евангелие от Фомы
-                    расширяет привычную каноническую рамку.
+                    Спецвыпуск наших чтений: «Евангелие от Фомы». Что это за
+                    текст и почему вокруг него столько споров? В этом выпуске мы
+                    читаем и обсуждаем один из самых известных раннехристианских
+                    апокрифов: сборник изречений Иисуса без привычного сюжета.
+                    Чем он отличается от канонических Евангелий, что здесь
+                    значит «познание» и «Царство», и можно ли считать этот текст
+                    гностическим? Как всегда, смотрим с трёх позиций: атеист,
+                    ортодокс и внеконфессиональный верующий. Делитесь мыслями в
+                    комментариях.
                   </p>
                 </div>
               </article>
@@ -1452,11 +1620,38 @@
                   <span class="episode-duration">1:17:32</span>
                 </div>
                 <div class="episode-body">
-                  <span class="meta">9.4K просмотров · 2 месяца назад</span>
+                  <span class="meta">2 месяца назад</span>
                   <h3>Читаем Библию. Женитьба Исаака</h3>
+                  <div class="episode-participants">
+                    <span class="episode-participants-label">Участники</span>
+                    <div class="episode-participants-line">
+                      <div class="episode-host-stack">
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-taras.jpg" alt="Тарас" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img src="./assets/host-murat.jpg" alt="Мурат" />
+                        </div>
+                        <div class="episode-host-avatar">
+                          <img
+                            src="./assets/host-valentin.jpg"
+                            alt="Валентин"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <p>
-                    Выпуск о библейском сюжете женитьбы Исаака, выборе жены и
-                    логике семейного повествования в Ветхом Завете.
+                    В этом выпуске мы читаем и обсуждаем Бытие 23–25: смерть
+                    Сарры и погребение в пещере Махпела; переговоры Авраама с
+                    хеттеями и покупку поля с пещерой у Ефрона. Затем — история
+                    поиска жены для Исаака: Авраам поручает слуге поездку в
+                    Месопотамию, встреча у колодца, знакомство с Ревеккой,
+                    разговор в доме её семьи и согласие на брак; возвращение в
+                    Ханаан и встреча Исаака с Ревеккой. В 25-й главе — Кетура и
+                    сыновья Авраама, распределение наследства и смерть Авраама;
+                    родословие Измаила. Финал — рождение Исавa и Иакова, голод
+                    Исавa и продажа первородства за похлёбку.
                   </p>
                 </div>
               </article>
@@ -1481,7 +1676,7 @@
                         <div class="merch-layout">
                           <div class="merch-card-media">
                             <img
-                              src="../merch.png"
+                              src="../../assets/merch.png"
                               alt="Футболки TOLK от одного из ведущих проекта"
                             />
                           </div>
@@ -1554,8 +1749,7 @@
 
       <footer class="footer">
         <div class="container">
-          <div>TOLK MVP home preview</div>
-          <div>Home · About · Episodes · Readings · Merch · Contacts</div>
+          <div>TOLK 2026</div>
         </div>
       </footer>
     </div>
