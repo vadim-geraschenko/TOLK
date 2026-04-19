@@ -1317,73 +1317,566 @@
       }
 
       @media (max-width: 1100px) {
+        .container {
+          width: min(calc(100% - 28px), var(--content));
+        }
+
+        .section {
+          padding: 30px 0;
+        }
+
         .hero-frame {
           padding: 26px 26px 22px;
         }
-        .hero-row,
-        .hero-grid,
+
+        .hero-row {
+          grid-template-columns: minmax(640px, 1fr) 292px;
+          gap: 16px;
+          align-items: stretch;
+        }
+
         .lower-row,
-        .merch-layout,
-        .merch-grid,
-        .participants-list {
+        .merch-grid {
           grid-template-columns: 1fr;
+        }
+
+        .hero-grid {
+          grid-template-columns: minmax(332px, 1fr) 292px;
+          gap: 16px;
+        }
+
+        .hero-copy {
+          max-width: none;
+        }
+
+        .hero-copy h1 {
+          max-width: 20ch;
+          font-size: clamp(32px, 4.8vw, 44px);
+        }
+
+        .hero-copy p {
+          font-size: 15px;
+        }
+
+        .hero-episode {
+          min-height: auto;
+        }
+
+        .hero-episode-body h3 {
+          font-size: 22px;
+        }
+
+        .reading-card-body {
+          padding: 20px 20px 18px;
+        }
+
+        .reading-card {
+          max-width: 292px;
+          justify-self: end;
+        }
+
+        .reading-card h3 {
+          font-size: 22px;
+        }
+
+        .reading-actions {
+          gap: 12px;
+          padding-top: 18px;
+        }
+
+        .reading-meta-row {
+          grid-template-columns: 70px minmax(0, 1fr);
+        }
+
+        .participants-list {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 12px;
+        }
+
+        .participant {
+          grid-template-columns: 48px 1fr;
+          gap: 12px;
+          padding: 12px 14px;
+        }
+
+        .avatar {
+          width: 48px;
+          height: 48px;
+        }
+
+        .participant strong {
+          font-size: 14px;
+        }
+
+        .participant p {
+          font-size: 12px;
+          line-height: 1.45;
+        }
+
+        .section-header {
+          align-items: start;
+        }
+
+        .episodes-track {
+          grid-auto-columns: minmax(270px, 320px);
+          scroll-snap-type: x proximity;
+        }
+
+        .episode-card {
+          scroll-snap-align: start;
+        }
+
+        .episode-card h3 {
+          font-size: 26px;
+        }
+
+        .episode-card p {
+          height: 176px;
+          -webkit-line-clamp: 8;
+        }
+
+        .merch-layout {
+          grid-template-columns: 245px minmax(0, 1fr);
+          gap: 16px;
+        }
+
+        .merch-card-media {
+          height: 340px;
+        }
+
+        .social-buttons {
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 979px) and (min-width: 761px) {
+        .hero-row {
+          grid-template-columns: 1fr;
+        }
+
+        .reading-card {
+          max-width: none;
+          width: 100%;
+          justify-self: stretch;
+        }
+
+        .reading-card-body {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 288px;
+          grid-template-rows: auto auto auto 1fr;
+          column-gap: 18px;
+          row-gap: 0;
+          align-items: start;
+          padding: 20px 22px;
+        }
+
+        .reading-card .eyebrow {
+          grid-column: 1;
+          grid-row: 1;
+          margin-bottom: 12px;
+        }
+
+        .reading-status {
+          grid-column: 1;
+          grid-row: 2;
+          justify-self: start;
+          margin-bottom: 14px;
+        }
+
+        .reading-card h3 {
+          grid-column: 1;
+          grid-row: 3;
+          max-width: 16ch;
+        }
+
+        .reading-card p {
+          grid-column: 1;
+          grid-row: 4;
+          max-width: 54ch;
+        }
+
+        .reading-actions {
+          grid-column: 2;
+          grid-row: 1 / span 4;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-self: stretch;
+          gap: 16px;
+          margin-top: 0;
+          padding-top: 0;
+        }
+
+        .reading-meta {
+          margin-top: 0;
+        }
+
+        .reading-meta-item {
+          height: 100%;
+        }
+
+        .reading-meta-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 13px 14px;
+        }
+
+        .reading-card .mini-button {
+          width: 100%;
         }
       }
 
       @media (max-width: 760px) {
         .container {
-          width: min(calc(100% - 20px), var(--content));
+          width: min(calc(100% - 24px), var(--content));
         }
+
+        .hero-row {
+          grid-template-columns: 1fr;
+        }
+
+        .site-header {
+          padding: 14px 0 12px;
+        }
+
         .site-header .container {
-          align-items: start;
+          gap: 12px;
+          align-items: stretch;
           flex-direction: column;
         }
 
+        .brand {
+          gap: 12px;
+        }
+
+        .brand-copy span {
+          font-size: 11px;
+        }
+
         .nav {
+          width: 100%;
+          flex-wrap: nowrap;
+          overflow-x: auto;
           justify-content: start;
-          gap: 14px 16px;
+          gap: 14px;
+          padding-bottom: 4px;
+          scrollbar-width: none;
+        }
+
+        .nav::-webkit-scrollbar {
+          display: none;
+        }
+
+        .nav a {
+          white-space: nowrap;
+          font-size: 13px;
         }
 
         .hero {
-          padding-top: 28px;
+          padding-top: 24px;
         }
         .hero-frame {
-          padding: 32px 22px 24px;
-          border-radius: 28px;
+          padding: 22px 18px 18px;
+          border-radius: 24px;
+        }
+
+        .reading-card {
+          width: 100%;
+          max-width: none;
+          justify-self: stretch;
+        }
+
+        .hero-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
         }
 
         .hero-copy h1 {
-          font-size: clamp(50px, 18vw, 84px);
+          font-size: clamp(32px, 9.6vw, 42px);
+          max-width: none;
         }
 
         .hero-copy p {
-          font-size: 16px;
+          font-size: 15px;
+          line-height: 1.68;
         }
+
+        .hero-actions {
+          gap: 10px;
+          padding-top: 18px;
+        }
+
         .button {
           width: 100%;
         }
+
         .panel-content {
-          padding: 24px 20px 0px;
+          padding: 22px 18px 0;
         }
+
+        .reading-card {
+          border-radius: 24px;
+        }
+
+        .reading-card-body {
+          padding: 18px;
+        }
+
+        .reading-card h3 {
+          font-size: 21px;
+        }
+
+        .reading-actions {
+          gap: 12px;
+          padding-top: 16px;
+        }
+
+        .reading-meta-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 12px;
+        }
+
+        .reading-meta-row span {
+          padding-top: 0;
+        }
+
         .participants-head {
           flex-direction: column;
           align-items: start;
         }
 
-        .episodes-track {
-          grid-auto-columns: 84%;
-        }
-        .social-button {
-          grid-template-columns: 52px minmax(0, 1fr);
+        .participants-head h3 {
+          font-size: 24px;
         }
 
-        .hero-hosts {
+        .participants-list {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        .participant {
+          max-width: 400px;
+          grid-template-columns: 48px 1fr;
+          gap: 12px;
+          padding: 12px 14px;
+        }
+
+        .avatar {
+          width: 48px;
+          height: 48px;
+        }
+
+        .section-header {
           flex-direction: column;
           align-items: start;
+          margin-bottom: 18px;
+        }
+
+        .episodes-track {
+          grid-auto-columns: minmax(280px, 88vw);
+          gap: 14px;
+          padding-top: 16px;
+          padding-bottom: 4px;
+        }
+
+        .episode-cover {
+          height: 174px;
+        }
+
+        .episode-body {
+          padding: 0 16px 16px;
+        }
+
+        .episode-card h3 {
+          font-size: 22px;
+        }
+
+        .episode-card p {
+          height: 160px;
+          font-size: 13px;
+          -webkit-line-clamp: 7;
+        }
+
+        .episode-participants-line {
+          justify-content: flex-start;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .episode-guest-badge {
+          font-size: 10px;
+        }
+
+        .merch-panel .panel-content,
+        .contact-panel .panel-content {
+          padding: 20px 0 0;
+        }
+
+        .merch-layout {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+
+        .merch-card-media {
+          height: 300px;
+        }
+
+        .merch-copy {
+          padding: 0;
+        }
+
+        .social-buttons {
+          gap: 12px;
+          margin-top: 16px;
+        }
+
+        .social-button {
+          grid-template-columns: 56px minmax(0, 1fr);
+          gap: 14px;
+          padding: 14px;
+        }
+
+        .social-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 18px;
         }
 
         .social-arrow {
           display: none;
+        }
+
+        .section-divider {
+          height: 22px;
+        }
+
+        .section-divider::after {
+          width: 30px;
+          font-size: 14px;
+        }
+      }
+
+      @media (max-width: 760px) and (min-width: 561px) {
+        .reading-card-body {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 240px;
+          grid-template-rows: auto auto auto 1fr;
+          column-gap: 16px;
+          row-gap: 0;
+          align-items: start;
+          padding: 18px 18px 20px;
+        }
+
+        .reading-card .eyebrow {
+          grid-column: 1;
+          grid-row: 1;
+          margin-bottom: 12px;
+        }
+
+        .reading-status {
+          grid-column: 1;
+          grid-row: 2;
+          justify-self: start;
+          margin-bottom: 14px;
+        }
+
+        .reading-card h3 {
+          grid-column: 1;
+          grid-row: 3;
+          max-width: 34ch;
+        }
+
+        .reading-card p {
+          grid-column: 1;
+          grid-row: 4;
+          max-width: 42ch;
+        }
+
+        .reading-actions {
+          grid-column: 2;
+          grid-row: 1 / span 4;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-self: stretch;
+          gap: 14px;
+          margin-top: 0;
+          padding-top: 0;
+        }
+
+        .reading-meta {
+          margin-top: 0;
+        }
+
+        .reading-meta-item {
+          height: 100%;
+        }
+
+        .reading-meta-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+          padding: 12px 13px;
+        }
+
+        .reading-card .mini-button {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .brand-copy span {
+          display: none;
+        }
+
+        .hero-copy h1 {
+          font-size: clamp(30px, 10.2vw, 38px);
+        }
+
+        .hero-manifest p {
+          font-size: 14px;
+        }
+
+        .hero-episode-cover {
+          height: 188px;
+        }
+
+        .hero-episode-body h3 {
+          font-size: 20px;
+        }
+
+        .episode-card p {
+          height: 144px;
+          -webkit-line-clamp: 6;
+        }
+
+        .episode-host-avatar {
+          margin-left: -6px;
+        }
+
+        .merch-card-media {
+          height: 260px;
+        }
+
+        .social-button {
+          grid-template-columns: 52px minmax(0, 1fr);
+          gap: 12px;
+          padding: 13px 12px;
+        }
+
+        .social-icon {
+          width: 52px;
+          height: 52px;
+          border-radius: 16px;
+        }
+
+        .social-copy strong {
+          font-size: 15px;
+        }
+
+        .social-copy p {
+          font-size: 12px;
+          line-height: 1.45;
         }
       }
     </style>
