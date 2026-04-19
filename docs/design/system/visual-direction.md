@@ -4,7 +4,7 @@
 Approved by user on April 18, 2026 with adjustments:
 - minimalist halos and ornaments are allowed;
 - frames and contours may be used more actively;
-- baseline motion language may include subtle floating, breathing, glow, and restrained fire / thunder accents.
+- baseline motion language may include subtle floating, breathing, glow, and restrained pale light accents.
 
 ## Direction Source
 Selected direction: `Option 1 — Nocturnal Editorial`
@@ -42,7 +42,7 @@ Allowed baseline motion:
 - subtle vertical floating for select sacred / atmospheric layers;
 - very slow breathing motion for highlighted objects or framed media;
 - soft inner glow shifts on hover or focus;
-- controlled ember-like or storm-like accent movement in rare key moments;
+- controlled pale accent movement in rare key moments;
 - quiet scroll-linked reveals with no hard snapping or flashy transitions.
 
 Motion should remain sparse and low-amplitude. The interface should never feel game-like, magical, or over-animated.
