@@ -369,7 +369,7 @@
 
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 300px;
+        grid-template-columns: minmax(0, 1fr) 320px;
         gap: 18px;
         align-items: start;
       }
@@ -458,7 +458,10 @@
       }
 
       .hero-episode-cover {
-        height: 120px;
+        height: 150px;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
         background:
           linear-gradient(
             145deg,
@@ -472,6 +475,14 @@
           ),
           linear-gradient(180deg, #252a30, #171a1f);
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .hero-episode-cover img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
       }
 
       .hero-episode-body {
@@ -527,6 +538,15 @@
       .hero-host .avatar {
         width: 42px;
         height: 42px;
+        overflow: hidden;
+      }
+
+      .hero-host .avatar img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
       }
 
       .hero-host span {
@@ -747,7 +767,7 @@
 
       .episode-card {
         min-height: 320px;
-        padding: 20px;
+        padding: 0 0 20px;
         border-radius: 24px;
         border: 1px solid rgba(243, 241, 234, 0.08);
         background:
@@ -764,9 +784,11 @@
       }
 
       .episode-cover {
+        position: relative;
         height: 156px;
-        border-radius: 18px;
+        border-radius: 24px 24px 18px 18px;
         margin-bottom: 18px;
+        overflow: hidden;
         background:
           linear-gradient(
             145deg,
@@ -780,6 +802,36 @@
           ),
           linear-gradient(180deg, #252a30, #171a1f);
         border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .episode-cover img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+      .episode-duration {
+        position: absolute;
+        right: 6px;
+        bottom: 6px;
+        z-index: 1;
+        min-height: 26px;
+        padding: 0 10px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        background: rgba(11, 13, 16, 0.82);
+        color: #f2f4f7;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      }
+
+      .episode-body {
+        padding: 0 20px;
       }
 
       .episode-card .meta {
@@ -1221,29 +1273,42 @@
 
                   <div class="hero-side">
                     <article class="hero-episode">
-                      <div class="hero-episode-cover" aria-hidden="true"></div>
+                      <div class="hero-episode-cover">
+                        <img
+                          src="./assets/episode-ecclesiastes.jpg"
+                          alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
+                        />
+                      </div>
                       <div class="hero-episode-body">
-                        <span class="hero-episode-meta">Последний выпуск</span>
-                        <h3>Вавилонская башня</h3>
+                        <span class="hero-episode-meta"
+                          >Последний выпуск · 9 дней назад</span
+                        >
+                        <h3>Екклесиаст с Кириллом Кириченко</h3>
                         <p>
-                          Короткое превью последнего материала с переходом на
-                          страницу-карточку выпуска.
+                          Последний разговор TOLK о книге Екклесиаста и ее
+                          скептическом нерве.
                         </p>
                         <a class="mini-button" href="#">Открыть выпуск</a>
                       </div>
                     </article>
                     <div class="hero-hosts">
                       <div class="hero-host">
-                        <div class="avatar" aria-hidden="true"></div>
-                        <span>Валентин</span>
+                        <div class="avatar">
+                          <img src="./assets/host-taras.jpg" alt="Тарас" />
+                        </div>
+                        <span>Тарас</span>
                       </div>
                       <div class="hero-host">
-                        <div class="avatar" aria-hidden="true"></div>
+                        <div class="avatar">
+                          <img src="./assets/host-murat.jpg" alt="Мурат" />
+                        </div>
                         <span>Мурат</span>
                       </div>
                       <div class="hero-host">
-                        <div class="avatar" aria-hidden="true"></div>
-                        <span>Тарас</span>
+                        <div class="avatar">
+                          <img src="./assets/host-kirill.png" alt="Кирилл" />
+                        </div>
+                        <span>Кирилл</span>
                       </div>
                     </div>
                   </div>
@@ -1318,50 +1383,82 @@
             <div class="section-header">
               <div>
                 <div class="eyebrow">Выпуски</div>
-                <h2>Несколько входов в архив.</h2>
+                <h2>Подкасты, записи чтений и спецвыпуски.</h2>
               </div>
               <a class="button" href="#">Все выпуски</a>
             </div>
 
             <div class="episodes-track">
               <article class="episode-card">
-                <div class="episode-cover" aria-hidden="true"></div>
-                <span class="meta">Избранное · 62 мин</span>
-                <h3>Сотворение мира</h3>
-                <p>
-                  Первые главы как текст о порядке, языке, власти и человеческом
-                  взгляде на начало.
-                </p>
+                <div class="episode-cover">
+                  <img
+                    src="./assets/episode-ecclesiastes.jpg"
+                    alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
+                  />
+                  <span class="episode-duration">2:14:22</span>
+                </div>
+                <div class="episode-body">
+                  <span class="meta">9.9K просмотров · 9 дней назад</span>
+                  <h3>Читаем Екклесиаста с Кириллом Кириченко</h3>
+                  <p>
+                    Разговор TOLK с Кириллом Кириченко о книге Екклесиаста и ее
+                    напряженном, скептическом тоне.
+                  </p>
+                </div>
               </article>
 
               <article class="episode-card">
-                <div class="episode-cover" aria-hidden="true"></div>
-                <span class="meta">Новый выпуск · 58 мин</span>
-                <h3>Великий потоп</h3>
-                <p>
-                  Моральный нерв сюжета, страх наказания и вопрос о
-                  справедливости в библейском повествовании.
-                </p>
+                <div class="episode-cover">
+                  <img
+                    src="./assets/episode-samson.jpg"
+                    alt="Превью выпуска Читаем историю Самсона с Артемом Широковым"
+                  />
+                  <span class="episode-duration">1:55:30</span>
+                </div>
+                <div class="episode-body">
+                  <span class="meta">10K просмотров · 3 недели назад</span>
+                  <h3>Читаем историю Самсона с Артемом Широковым</h3>
+                  <p>
+                    Выпуск с Артемом Широковым о Самсоне, силе, насилии и
+                    противоречивой героике внутри библейского сюжета.
+                  </p>
+                </div>
               </article>
 
               <article class="episode-card">
-                <div class="episode-cover" aria-hidden="true"></div>
-                <span class="meta">Спецвыпуск · 49 мин</span>
-                <h3>Евангелие от Фомы</h3>
-                <p>
-                  Апокриф как способ увидеть раннее христианство шире привычной
-                  канонической рамки.
-                </p>
+                <div class="episode-cover">
+                  <img
+                    src="./assets/episode-thomas.jpg"
+                    alt="Превью выпуска Читаем апокрифы. Евангелие от Фомы"
+                  />
+                  <span class="episode-duration">2:11:36</span>
+                </div>
+                <div class="episode-body">
+                  <span class="meta">15K просмотров · 1 месяц назад</span>
+                  <h3>Читаем апокрифы. Евангелие от Фомы</h3>
+                  <p>
+                    Большой разговор об апокрифах и о том, как Евангелие от Фомы
+                    расширяет привычную каноническую рамку.
+                  </p>
+                </div>
               </article>
 
               <article class="episode-card">
-                <div class="episode-cover" aria-hidden="true"></div>
-                <span class="meta">Гость · 71 мин</span>
-                <h3>Библия и современность</h3>
-                <p>
-                  Разговор о том, почему древний текст продолжает вмешиваться в
-                  сегодняшние споры и частную жизнь.
-                </p>
+                <div class="episode-cover">
+                  <img
+                    src="./assets/episode-isaac.jpg"
+                    alt="Превью выпуска Читаем Библию. Женитьба Исаака"
+                  />
+                  <span class="episode-duration">1:17:32</span>
+                </div>
+                <div class="episode-body">
+                  <span class="meta">9.4K просмотров · 2 месяца назад</span>
+                  <h3>Читаем Библию. Женитьба Исаака</h3>
+                  <p>
+                    Выпуск о библейском сюжете женитьбы Исаака, выборе жены и
+                    логике семейного повествования в Ветхом Завете.
+                  </p>
+                </div>
               </article>
             </div>
           </div>
