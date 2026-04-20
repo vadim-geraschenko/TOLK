@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TOLK — Home MVP</title>
     <style>
+      @layer tokens, base, components, responsive;
+
+      @layer tokens {
       :root {
         --surface-panel: rgba(24, 27, 31, 0.88);
         --border-panel: rgba(226, 231, 238, 0.1);
@@ -21,6 +24,60 @@
         --page-gutter-desktop: 32px;
         --page-gutter-tablet: 28px;
         --page-gutter-mobile: 24px;
+        --section-padding: 34px;
+        --section-padding-tablet: 30px;
+        --section-divider-height: 28px;
+        --section-divider-height-mobile: 22px;
+        --frame-radius-xl: 32px;
+        --frame-radius-lg: 26px;
+        --frame-radius-md: 24px;
+        --card-radius-lg: 22px;
+        --card-radius-md: 18px;
+        --button-radius-pill: 999px;
+        --space-xxs: 4px;
+        --space-xs: 8px;
+        --space-sm: 10px;
+        --space-md: 12px;
+        --space-lg: 14px;
+        --space-xl: 16px;
+        --space-2xl: 18px;
+        --space-3xl: 20px;
+        --space-4xl: 22px;
+        --space-5xl: 24px;
+        --space-6xl: 28px;
+        --hero-row-side-width-desktop: 300px;
+        --hero-side-width-desktop: 320px;
+        --hero-row-side-width-tablet: 292px;
+        --hero-side-width-tablet: 292px;
+        --hero-copy-max-width-desktop: 560px;
+        --hero-title-max-width-desktop: 8ch;
+        --hero-title-max-width-tablet: 20ch;
+        --reading-meta-label-width-desktop: 48px;
+        --reading-meta-label-width-tablet: 70px;
+        --reading-actions-width-tablet: 288px;
+        --reading-actions-width-mobile-wide: 240px;
+        --participant-card-max-width-mobile: 400px;
+        --participant-avatar-size-desktop: 54px;
+        --participant-avatar-size-compact: 48px;
+        --episode-card-max-width: 320px;
+        --episode-card-min-width: 250px;
+        --episode-description-height-desktop: 205px;
+        --episode-description-height-tablet: 176px;
+        --episode-description-height-mobile: 160px;
+        --episode-description-height-mobile-tight: 144px;
+        --episode-cover-height-desktop: 156px;
+        --episode-cover-height-mobile: 174px;
+        --hero-episode-cover-height-tight-mobile: 188px;
+        --merch-media-height-desktop: 400px;
+        --merch-media-height-tablet: 340px;
+        --merch-media-height-mobile: 300px;
+        --merch-media-height-mobile-tight: 260px;
+        --social-icon-size-desktop: 64px;
+        --social-icon-size-mobile: 56px;
+        --social-icon-size-mobile-tight: 52px;
+        --social-button-icon-column-desktop: 64px;
+        --social-button-icon-column-mobile: 56px;
+        --social-button-icon-column-mobile-tight: 52px;
         --font-display:
           "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
           "URW Palladio L", serif;
@@ -35,7 +92,9 @@
         --bp-reading-two-column-min: 35.0625rem; /* 561px */
         --bp-mobile-tight-max: 32.5rem; /* 520px */
       }
+      }
 
+      @layer base {
       * {
         box-sizing: border-box;
       }
@@ -130,13 +189,13 @@
       }
 
       .section {
-        padding: 34px 0;
+        padding: var(--section-padding) 0;
       }
 
       .section-divider {
         position: relative;
         width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
-        height: 28px;
+        height: var(--section-divider-height);
         margin: 0 auto;
       }
 
@@ -220,7 +279,9 @@
         color: var(--text-secondary);
         line-height: 1.74;
       }
+      }
 
+      @layer components {
       .site-header {
         position: sticky;
         top: 0;
@@ -315,7 +376,7 @@
       .panel {
         position: relative;
         overflow: hidden;
-        border-radius: 32px;
+        border-radius: var(--frame-radius-xl);
         border: 1px solid var(--border-panel);
         box-shadow: var(--elevation-shadow), var(--elevation-inner);
         backdrop-filter: blur(12px);
@@ -323,7 +384,7 @@
 
       .hero-frame {
         height: 100%;
-        padding: 28px 30px;
+        padding: var(--space-6xl) 30px;
         background:
           radial-gradient(
             circle at 82% 0%,
@@ -363,13 +424,13 @@
 
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 320px;
-        gap: 18px;
+        grid-template-columns: minmax(0, 1fr) var(--hero-side-width-desktop);
+        gap: var(--space-2xl);
         align-items: stretch;
       }
 
       .hero-copy {
-        max-width: 560px;
+        max-width: var(--hero-copy-max-width-desktop);
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -377,7 +438,7 @@
 
       .hero-copy h1 {
         font-size: clamp(34px, 4.2vw, 50px);
-        max-width: 8ch;
+        max-width: var(--hero-title-max-width-desktop);
       }
 
       .hero-copy p {
@@ -388,7 +449,7 @@
 
       .hero-actions {
         display: flex;
-        gap: 12px;
+        gap: var(--space-md);
         flex-wrap: wrap;
         margin-top: auto;
         padding-top: 22px;
@@ -444,7 +505,7 @@
 
       .hero-side {
         display: grid;
-        gap: 10px;
+        gap: var(--space-sm);
         align-content: stretch;
         height: 100%;
       }
@@ -452,7 +513,7 @@
       .hero-episode {
         min-height: 320px;
         padding: 0 0 18px;
-        border-radius: 22px;
+        border-radius: var(--card-radius-lg);
         border: 1px solid rgba(243, 241, 234, 0.08);
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 28%),
@@ -471,7 +532,7 @@
         overflow: hidden;
         display: grid;
         place-items: center;
-        border-radius: 22px 22px 18px 18px;
+        border-radius: var(--card-radius-lg) var(--card-radius-lg) var(--card-radius-md) var(--card-radius-md);
         background:
           linear-gradient(
             145deg,
@@ -535,10 +596,26 @@
       }
 
       .reading-card {
+        --reading-layout-columns: 1fr;
+        --reading-layout-areas:
+          "eyebrow"
+          "status"
+          "title"
+          "copy"
+          "actions";
+        --reading-layout-column-gap: 0;
+        --reading-status-margin-bottom: 14px;
+        --reading-actions-gap: 12px;
+        --reading-actions-margin-top: 20px;
+        --reading-actions-justify: flex-start;
+        --reading-actions-width: auto;
+        --reading-title-max-width: none;
+        --reading-copy-max-width: none;
+        --reading-meta-label-width: var(--reading-meta-label-width-desktop);
         position: relative;
         overflow: hidden;
         height: 100%;
-        border-radius: 26px;
+        border-radius: var(--frame-radius-lg);
         border: 1px solid rgba(255, 255, 255, 0.08);
         background:
           radial-gradient(
@@ -569,19 +646,30 @@
       .reading-card-body {
         position: relative;
         min-height: 100%;
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: var(--reading-layout-columns);
+        grid-template-areas: var(--reading-layout-areas);
+        column-gap: var(--reading-layout-column-gap);
+        row-gap: 0;
+        align-items: start;
         padding: 18px 18px 20px;
       }
 
+      .reading-card .eyebrow {
+        grid-area: eyebrow;
+        margin-bottom: 12px;
+      }
+
       .reading-status {
+        grid-area: status;
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        align-self: flex-start;
-        margin-bottom: 14px;
+        justify-self: start;
+        align-self: start;
+        margin-bottom: var(--reading-status-margin-bottom);
         padding: 8px 12px;
-        border-radius: 999px;
+        border-radius: var(--button-radius-pill);
         border: 1px solid rgba(255, 255, 255, 0.12);
         background: linear-gradient(
           180deg,
@@ -606,13 +694,17 @@
       }
 
       .reading-card h3 {
+        grid-area: title;
         font-size: 24px;
         margin-bottom: 12px;
+        max-width: var(--reading-title-max-width);
       }
 
       .reading-card p {
+        grid-area: copy;
         font-size: 13px;
         line-height: 1.68;
+        max-width: var(--reading-copy-max-width);
       }
 
       .reading-meta {
@@ -620,9 +712,14 @@
       }
 
       .reading-actions {
-        display: grid;
-        margin-top: auto;
-        padding-top: 20px;
+        grid-area: actions;
+        display: flex;
+        flex-direction: column;
+        justify-content: var(--reading-actions-justify);
+        gap: var(--reading-actions-gap);
+        width: var(--reading-actions-width);
+        margin-top: var(--reading-actions-margin-top);
+        padding-top: 0;
       }
 
       .reading-card .mini-button {
@@ -641,7 +738,7 @@
 
       .reading-meta-row {
         display: grid;
-        grid-template-columns: 48px minmax(0, 1fr);
+        grid-template-columns: var(--reading-meta-label-width) minmax(0, 1fr);
         gap: 12px;
         align-items: start;
         padding: 10px 13px;
@@ -704,13 +801,13 @@
       .participants-list {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
+        gap: var(--space-lg);
       }
 
       .participant {
         display: grid;
-        grid-template-columns: 54px 1fr;
-        gap: 14px;
+        grid-template-columns: var(--participant-avatar-size-desktop) 1fr;
+        gap: var(--space-lg);
         align-items: center;
         padding: 14px 16px;
         border-radius: 18px;
@@ -723,8 +820,8 @@
       }
 
       .avatar {
-        width: 54px;
-        height: 54px;
+        width: var(--participant-avatar-size-desktop);
+        height: var(--participant-avatar-size-desktop);
         border-radius: 50%;
         border: 1px solid rgba(255, 255, 255, 0.1);
         background:
@@ -762,8 +859,8 @@
       .episodes-track {
         display: grid;
         grid-auto-flow: column;
-        grid-auto-columns: minmax(250px, 320px);
-        gap: 18px;
+        grid-auto-columns: minmax(var(--episode-card-min-width), var(--episode-card-max-width));
+        gap: var(--space-2xl);
         overflow-x: auto;
         padding-top: 12px;
         padding-bottom: 8px;
@@ -773,7 +870,7 @@
 
       .episode-card {
         width: 100%;
-        max-width: 320px;
+        max-width: var(--episode-card-max-width);
         min-height: 320px;
         padding: 0;
         border-radius: 24px;
@@ -793,8 +890,8 @@
 
       .episode-cover {
         position: relative;
-        height: 156px;
-        border-radius: 24px 24px 18px 18px;
+        height: var(--episode-cover-height-desktop);
+        border-radius: var(--frame-radius-md) var(--frame-radius-md) var(--card-radius-md) var(--card-radius-md);
         margin-bottom: 18px;
         overflow: hidden;
         background:
@@ -932,7 +1029,7 @@
         margin-top: 14px;
         font-size: 14px;
         line-height: 1.65;
-        height: 205px;
+        height: var(--episode-description-height-desktop);
         overflow: hidden;
         display: -webkit-box;
         -webkit-box-orient: vertical;
@@ -1004,8 +1101,8 @@
       }
 
       .merch-card-media {
-        height: 400px;
-        border-radius: 18px;
+        height: var(--merch-media-height-desktop);
+        border-radius: var(--card-radius-md);
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.08);
         background:
@@ -1078,7 +1175,7 @@
 
       .social-button {
         display: grid;
-        grid-template-columns: 64px minmax(0, 1fr) auto;
+        grid-template-columns: var(--social-button-icon-column-desktop) minmax(0, 1fr) auto;
         gap: 16px;
         align-items: center;
         padding: 14px 16px;
@@ -1092,8 +1189,8 @@
       }
 
       .social-icon {
-        width: 64px;
-        height: 64px;
+        width: var(--social-icon-size-desktop);
+        height: var(--social-icon-size-desktop);
         border-radius: 20px;
         border: 1px solid rgba(255, 255, 255, 0.1);
         display: grid;
@@ -1183,14 +1280,16 @@
           transform: translate3d(0, 18px, 0);
         }
       }
+      }
 
+      @layer responsive {
       @media (max-width: 68.75rem) {
         .container {
           width: min(calc(100% - var(--page-gutter-tablet)), var(--layout-content-max));
         }
 
         .section {
-          padding: 30px 0;
+          padding: var(--section-padding-tablet) 0;
         }
 
         .hero-frame {
@@ -1198,7 +1297,7 @@
         }
 
         .hero-row {
-          grid-template-columns: minmax(640px, 1fr) 292px;
+          grid-template-columns: minmax(640px, 1fr) var(--hero-row-side-width-tablet);
           gap: 16px;
           align-items: stretch;
         }
@@ -1209,7 +1308,7 @@
         }
 
         .hero-grid {
-          grid-template-columns: minmax(332px, 1fr) 292px;
+          grid-template-columns: minmax(332px, 1fr) var(--hero-side-width-tablet);
           gap: 16px;
         }
 
@@ -1218,7 +1317,7 @@
         }
 
         .hero-copy h1 {
-          max-width: 20ch;
+          max-width: var(--hero-title-max-width-tablet);
           font-size: clamp(32px, 4.8vw, 44px);
         }
 
@@ -1239,7 +1338,7 @@
         }
 
         .reading-card {
-          max-width: 292px;
+          max-width: var(--hero-row-side-width-tablet);
           justify-self: end;
         }
 
@@ -1247,13 +1346,10 @@
           font-size: 22px;
         }
 
-        .reading-actions {
-          gap: 12px;
-          padding-top: 18px;
-        }
-
-        .reading-meta-row {
-          grid-template-columns: 70px minmax(0, 1fr);
+        .reading-card {
+          --reading-actions-gap: 12px;
+          --reading-actions-margin-top: 18px;
+          --reading-meta-label-width: var(--reading-meta-label-width-tablet);
         }
 
         .participants-list {
@@ -1262,14 +1358,14 @@
         }
 
         .participant {
-          grid-template-columns: 48px 1fr;
+          grid-template-columns: var(--participant-avatar-size-compact) 1fr;
           gap: 12px;
           padding: 12px 14px;
         }
 
         .avatar {
-          width: 48px;
-          height: 48px;
+          width: var(--participant-avatar-size-compact);
+          height: var(--participant-avatar-size-compact);
         }
 
         .participant strong {
@@ -1299,7 +1395,7 @@
         }
 
         .episode-card p {
-          height: 176px;
+          height: var(--episode-description-height-tablet);
           -webkit-line-clamp: 8;
         }
 
@@ -1309,7 +1405,7 @@
         }
 
         .merch-card-media {
-          height: 340px;
+          height: var(--merch-media-height-tablet);
         }
 
         .social-buttons {
@@ -1323,60 +1419,26 @@
         }
 
         .reading-card {
+          --reading-layout-columns: minmax(0, 1fr) var(--reading-actions-width-tablet);
+          --reading-layout-areas:
+            "eyebrow actions"
+            "status actions"
+            "title actions"
+            "copy actions";
+          --reading-layout-column-gap: 18px;
+          --reading-actions-gap: 16px;
+          --reading-actions-margin-top: 0;
+          --reading-actions-justify: space-between;
+          --reading-actions-width: 100%;
+          --reading-title-max-width: 16ch;
+          --reading-copy-max-width: 54ch;
           max-width: none;
           width: 100%;
           justify-self: stretch;
         }
 
         .reading-card-body {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) 288px;
-          grid-template-rows: auto auto auto 1fr;
-          column-gap: 18px;
-          row-gap: 0;
-          align-items: start;
           padding: 20px 22px;
-        }
-
-        .reading-card .eyebrow {
-          grid-column: 1;
-          grid-row: 1;
-          margin-bottom: 12px;
-        }
-
-        .reading-status {
-          grid-column: 1;
-          grid-row: 2;
-          justify-self: start;
-          margin-bottom: 14px;
-        }
-
-        .reading-card h3 {
-          grid-column: 1;
-          grid-row: 3;
-          max-width: 16ch;
-        }
-
-        .reading-card p {
-          grid-column: 1;
-          grid-row: 4;
-          max-width: 54ch;
-        }
-
-        .reading-actions {
-          grid-column: 2;
-          grid-row: 1 / span 4;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-self: stretch;
-          gap: 16px;
-          margin-top: 0;
-          padding-top: 0;
-        }
-
-        .reading-meta {
-          margin-top: 0;
         }
 
         .reading-meta-item {
@@ -1449,6 +1511,8 @@
         }
 
         .reading-card {
+          --reading-actions-gap: 12px;
+          --reading-actions-margin-top: 16px;
           width: 100%;
           max-width: none;
           justify-self: stretch;
@@ -1494,11 +1558,6 @@
           font-size: 21px;
         }
 
-        .reading-actions {
-          gap: 12px;
-          padding-top: 16px;
-        }
-
         .reading-meta-row {
           grid-template-columns: 1fr;
           gap: 6px;
@@ -1524,15 +1583,15 @@
         }
 
         .participant {
-          max-width: 400px;
-          grid-template-columns: 48px 1fr;
+          max-width: var(--participant-card-max-width-mobile);
+          grid-template-columns: var(--participant-avatar-size-compact) 1fr;
           gap: 12px;
           padding: 12px 14px;
         }
 
         .avatar {
-          width: 48px;
-          height: 48px;
+          width: var(--participant-avatar-size-compact);
+          height: var(--participant-avatar-size-compact);
         }
 
         .section-header {
@@ -1549,7 +1608,7 @@
         }
 
         .episode-cover {
-          height: 174px;
+          height: var(--episode-cover-height-mobile);
         }
 
         .episode-body {
@@ -1561,7 +1620,7 @@
         }
 
         .episode-card p {
-          height: 160px;
+          height: var(--episode-description-height-mobile);
           font-size: 13px;
           -webkit-line-clamp: 7;
         }
@@ -1587,7 +1646,7 @@
         }
 
         .merch-card-media {
-          height: 300px;
+          height: var(--merch-media-height-mobile);
         }
 
         .merch-copy {
@@ -1600,14 +1659,14 @@
         }
 
         .social-button {
-          grid-template-columns: 56px minmax(0, 1fr);
+          grid-template-columns: var(--social-button-icon-column-mobile) minmax(0, 1fr);
           gap: 14px;
           padding: 14px;
         }
 
         .social-icon {
-          width: 56px;
-          height: 56px;
+          width: var(--social-icon-size-mobile);
+          height: var(--social-icon-size-mobile);
           border-radius: 18px;
         }
 
@@ -1616,7 +1675,7 @@
         }
 
         .section-divider {
-          height: 22px;
+          height: var(--section-divider-height-mobile);
         }
 
         .section-divider::after {
@@ -1626,55 +1685,24 @@
       }
 
       @media (max-width: 47.5rem) and (min-width: 35.0625rem) {
+        .reading-card {
+          --reading-layout-columns: minmax(0, 1fr) var(--reading-actions-width-mobile-wide);
+          --reading-layout-areas:
+            "eyebrow actions"
+            "status actions"
+            "title actions"
+            "copy actions";
+          --reading-layout-column-gap: 16px;
+          --reading-actions-gap: 14px;
+          --reading-actions-margin-top: 0;
+          --reading-actions-justify: space-between;
+          --reading-actions-width: 100%;
+          --reading-title-max-width: 34ch;
+          --reading-copy-max-width: 42ch;
+        }
+
         .reading-card-body {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) 240px;
-          grid-template-rows: auto auto auto 1fr;
-          column-gap: 16px;
-          row-gap: 0;
-          align-items: start;
           padding: 18px 18px 20px;
-        }
-
-        .reading-card .eyebrow {
-          grid-column: 1;
-          grid-row: 1;
-          margin-bottom: 12px;
-        }
-
-        .reading-status {
-          grid-column: 1;
-          grid-row: 2;
-          justify-self: start;
-          margin-bottom: 14px;
-        }
-
-        .reading-card h3 {
-          grid-column: 1;
-          grid-row: 3;
-          max-width: 34ch;
-        }
-
-        .reading-card p {
-          grid-column: 1;
-          grid-row: 4;
-          max-width: 42ch;
-        }
-
-        .reading-actions {
-          grid-column: 2;
-          grid-row: 1 / span 4;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-self: stretch;
-          gap: 14px;
-          margin-top: 0;
-          padding-top: 0;
-        }
-
-        .reading-meta {
-          margin-top: 0;
         }
 
         .reading-meta-item {
@@ -1706,7 +1734,7 @@
         }
 
         .hero-episode-cover {
-          height: 188px;
+          height: var(--hero-episode-cover-height-tight-mobile);
         }
 
         .hero-episode-body h3 {
@@ -1714,7 +1742,7 @@
         }
 
         .episode-card p {
-          height: 144px;
+          height: var(--episode-description-height-mobile-tight);
           -webkit-line-clamp: 6;
         }
 
@@ -1723,18 +1751,18 @@
         }
 
         .merch-card-media {
-          height: 260px;
+          height: var(--merch-media-height-mobile-tight);
         }
 
         .social-button {
-          grid-template-columns: 52px minmax(0, 1fr);
+          grid-template-columns: var(--social-button-icon-column-mobile-tight) minmax(0, 1fr);
           gap: 12px;
           padding: 13px 12px;
         }
 
         .social-icon {
-          width: 52px;
-          height: 52px;
+          width: var(--social-icon-size-mobile-tight);
+          height: var(--social-icon-size-mobile-tight);
           border-radius: 16px;
         }
 
@@ -1746,6 +1774,7 @@
           font-size: 12px;
           line-height: 1.45;
         }
+      }
       }
     </style>
   </head>
@@ -1800,58 +1829,7 @@
                     </div>
                   </div>
 
-                  <div class="hero-side">
-                    <article class="hero-episode">
-                      <div class="hero-episode-cover">
-                        <img
-                          src="./assets/episode-ecclesiastes.jpg"
-                          alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
-                          width="1280"
-                          height="720"
-                        />
-                        <span class="episode-duration">2:14:22</span>
-                      </div>
-                      <div class="hero-episode-body">
-                        <span class="hero-episode-meta">9 дней назад</span>
-                        <h3>Читаем Екклесиаста с Кириллом Кириченко</h3>
-                        <div class="episode-participants">
-                          <span class="episode-participants-label"
-                            >Участники</span
-                          >
-                          <div class="episode-participants-line">
-                            <div class="episode-host-stack">
-                              <div class="episode-host-avatar">
-                                <img
-                                  src="./assets/host-taras.jpg"
-                                  alt="Тарас"
-                                />
-                              </div>
-                              <div class="episode-host-avatar">
-                                <img
-                                  src="./assets/host-murat.jpg"
-                                  alt="Мурат"
-                                />
-                              </div>
-                              <div class="episode-host-avatar guest">
-                                <img
-                                  src="./assets/host-kirill.png"
-                                  alt="Кирилл"
-                                />
-                              </div>
-                            </div>
-                            <span class="episode-guest-badge"
-                              >Гость: Кирилл</span
-                            >
-                          </div>
-                        </div>
-                        <p>
-                          Спецвыпуск наших чтений о книге Екклесиаста вместе с
-                          Кириллом Кириченко.
-                        </p>
-                        <a class="mini-button" href="#">Открыть выпуск</a>
-                      </div>
-                    </article>
-                  </div>
+                  <div class="hero-side" id="hero-episode-slot"></div>
                 </div>
               </div>
               <article class="reading-card">
@@ -1898,35 +1876,7 @@
               <div class="eyebrow">Оптики Проекта</div>
               <h3>Три голоса, один текст.</h3>
             </div>
-            <div class="participants-list">
-              <div class="participant">
-                <div class="avatar">
-                  <img src="./assets/host-taras.jpg" alt="Тарас" />
-                </div>
-                <div>
-                  <strong>Тарас</strong>
-                  <p>Скептический и атеистический взгляд.</p>
-                </div>
-              </div>
-              <div class="participant">
-                <div class="avatar">
-                  <img src="./assets/host-murat.jpg" alt="Мурат" />
-                </div>
-                <div>
-                  <strong>Мурат</strong>
-                  <p>Ортодоксальная перспектива традиции.</p>
-                </div>
-              </div>
-              <div class="participant">
-                <div class="avatar">
-                  <img src="./assets/host-valentin.jpg" alt="Валентин" />
-                </div>
-                <div>
-                  <strong>Валентин</strong>
-                  <p>Личный и внеконфессиональный поиск.</p>
-                </div>
-              </div>
-            </div>
+            <div class="participants-list" id="participants-slot"></div>
           </div>
         </section>
 
@@ -1942,185 +1892,7 @@
               <a class="button" href="#">Все выпуски</a>
             </div>
 
-            <div class="episodes-track">
-              <article class="episode-card">
-                <div class="episode-cover">
-                  <img
-                    src="./assets/episode-ecclesiastes.jpg"
-                    alt="Превью выпуска Читаем Екклесиаста с Кириллом Кириченко"
-                    width="1280"
-                    height="720"
-                  />
-                  <span class="episode-duration">2:14:22</span>
-                </div>
-                <div class="episode-body">
-                  <span class="meta">9 дней назад</span>
-                  <h3>Читаем Екклесиаста с Кириллом Кириченко</h3>
-                  <div class="episode-participants">
-                    <span class="episode-participants-label">Участники</span>
-                    <div class="episode-participants-line">
-                      <div class="episode-host-stack">
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-taras.jpg" alt="Тарас" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-murat.jpg" alt="Мурат" />
-                        </div>
-                        <div class="episode-host-avatar guest">
-                          <img src="./assets/host-kirill.png" alt="Кирилл" />
-                        </div>
-                      </div>
-                      <span class="episode-guest-badge">Гость: Кирилл</span>
-                    </div>
-                  </div>
-                  <p>
-                    Спецвыпуск наших чтений. Вместе с Кириллом Кириченко читаем
-                    и обсуждаем Екклесиаста — одну из самых мрачных, странных и
-                    философски насыщенных книг Библии. Пытаемся понять,
-                    действительно ли она такая мрачная и что именно говорит
-                    Екклесиаст о смысле жизни, суете, труде, времени и мудрости.
-                  </p>
-                </div>
-              </article>
-
-              <article class="episode-card">
-                <div class="episode-cover">
-                  <img
-                    src="./assets/episode-samson.jpg"
-                    alt="Превью выпуска Читаем историю Самсона с Артемом Широковым"
-                    width="1280"
-                    height="720"
-                  />
-                  <span class="episode-duration">1:55:30</span>
-                </div>
-                <div class="episode-body">
-                  <span class="meta">3 недели назад</span>
-                  <h3>Читаем историю Самсона с Артемом Широковым</h3>
-                  <div class="episode-participants">
-                    <span class="episode-participants-label">Участники</span>
-                    <div class="episode-participants-line">
-                      <div class="episode-host-stack">
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-taras.jpg" alt="Тарас" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-murat.jpg" alt="Мурат" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img
-                            src="./assets/host-valentin.jpg"
-                            alt="Валентин"
-                          />
-                        </div>
-                        <div class="episode-host-avatar guest">
-                          <img src="./assets/host-artem.jpg" alt="Артем" />
-                        </div>
-                      </div>
-                      <span class="episode-guest-badge">Гость: Артем</span>
-                    </div>
-                  </div>
-                  <p>
-                    Спецвыпуск наших чтений. Вместе с Артемом Широковым читаем
-                    Книгу Судей, а именно историю Самсона. Пытаемся понять
-                    какого происхождения сила Самсона и в чем праведность этого
-                    персонажа Библии.
-                  </p>
-                </div>
-              </article>
-
-              <article class="episode-card">
-                <div class="episode-cover">
-                  <img
-                    src="./assets/episode-thomas.jpg"
-                    alt="Превью выпуска Читаем апокрифы. Евангелие от Фомы"
-                    width="1280"
-                    height="720"
-                  />
-                  <span class="episode-duration">2:11:36</span>
-                </div>
-                <div class="episode-body">
-                  <span class="meta">1 месяц назад</span>
-                  <h3>Читаем апокрифы. Евангелие от Фомы</h3>
-                  <div class="episode-participants">
-                    <span class="episode-participants-label">Участники</span>
-                    <div class="episode-participants-line">
-                      <div class="episode-host-stack">
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-taras.jpg" alt="Тарас" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-murat.jpg" alt="Мурат" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img
-                            src="./assets/host-valentin.jpg"
-                            alt="Валентин"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p>
-                    Спецвыпуск наших чтений: «Евангелие от Фомы». Что это за
-                    текст и почему вокруг него столько споров? В этом выпуске мы
-                    читаем и обсуждаем один из самых известных раннехристианских
-                    апокрифов: сборник изречений Иисуса без привычного сюжета.
-                    Чем он отличается от канонических Евангелий, что здесь
-                    значит «познание» и «Царство», и можно ли считать этот текст
-                    гностическим? Как всегда, смотрим с трёх позиций: атеист,
-                    ортодокс и внеконфессиональный верующий. Делитесь мыслями в
-                    комментариях.
-                  </p>
-                </div>
-              </article>
-
-              <article class="episode-card">
-                <div class="episode-cover">
-                  <img
-                    src="./assets/episode-isaac.jpg"
-                    alt="Превью выпуска Читаем Библию. Женитьба Исаака"
-                    width="1280"
-                    height="720"
-                  />
-                  <span class="episode-duration">1:17:32</span>
-                </div>
-                <div class="episode-body">
-                  <span class="meta">2 месяца назад</span>
-                  <h3>Читаем Библию. Женитьба Исаака</h3>
-                  <div class="episode-participants">
-                    <span class="episode-participants-label">Участники</span>
-                    <div class="episode-participants-line">
-                      <div class="episode-host-stack">
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-taras.jpg" alt="Тарас" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img src="./assets/host-murat.jpg" alt="Мурат" />
-                        </div>
-                        <div class="episode-host-avatar">
-                          <img
-                            src="./assets/host-valentin.jpg"
-                            alt="Валентин"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <p>
-                    В этом выпуске мы читаем и обсуждаем Бытие 23–25: смерть
-                    Сарры и погребение в пещере Махпела; переговоры Авраама с
-                    хеттеями и покупку поля с пещерой у Ефрона. Затем — история
-                    поиска жены для Исаака: Авраам поручает слуге поездку в
-                    Месопотамию, встреча у колодца, знакомство с Ревеккой,
-                    разговор в доме её семьи и согласие на брак; возвращение в
-                    Ханаан и встреча Исаака с Ревеккой. В 25-й главе — Кетура и
-                    сыновья Авраама, распределение наследства и смерть Авраама;
-                    родословие Измаила. Финал — рождение Исавa и Иакова, голод
-                    Исавa и продажа первородства за похлёбку.
-                  </p>
-                </div>
-              </article>
-            </div>
+            <div class="episodes-track" id="episodes-slot"></div>
           </div>
         </section>
 
@@ -2170,57 +1942,7 @@
                     <div class="eyebrow">Контакты И Поддержка</div>
                     <h2>Поддержите проект.</h2>
 
-                    <div class="social-buttons">
-                      <a class="social-button" href="#">
-                        <div class="social-icon" aria-hidden="true">
-                          <img
-                            src="../../assets/socials-telegram.svg"
-                            alt=""
-                            class="icon-telegram"
-                          />
-                        </div>
-                        <div class="social-copy">
-                          <strong>Telegram</strong>
-                          <p>Анонсы, короткие посты и текущая жизнь проекта.</p>
-                        </div>
-                        <div class="social-arrow">›</div>
-                      </a>
-
-                      <a class="social-button" href="#">
-                        <div class="social-icon" aria-hidden="true">
-                          <img
-                            src="../../assets/socials-youtube.svg"
-                            alt=""
-                            class="icon-youtube"
-                          />
-                        </div>
-                        <div class="social-copy">
-                          <strong>YouTube</strong>
-                          <p>
-                            Длинные выпуски, shorts и видеозаписи разговоров.
-                          </p>
-                        </div>
-                        <div class="social-arrow">›</div>
-                      </a>
-
-                      <a class="social-button" href="#">
-                        <div class="social-icon" aria-hidden="true">
-                          <img
-                            src="../../assets/socials-boosty.svg"
-                            alt=""
-                            class="icon-boosty"
-                          />
-                        </div>
-                        <div class="social-copy">
-                          <strong>Boosty</strong>
-                          <p>
-                            Поддержка проекта и доступ к дополнительным
-                            материалам.
-                          </p>
-                        </div>
-                        <div class="social-arrow">›</div>
-                      </a>
-                    </div>
+                    <div class="social-buttons" id="socials-slot"></div>
                   </div>
                 </article>
               </section>
@@ -2235,5 +1957,230 @@
         </div>
       </footer>
     </div>
+    <script>
+      const siteData = {
+        participants: [
+          {
+            name: "Тарас",
+            avatar: "./assets/host-taras.jpg",
+            perspective: "Скептический и атеистический взгляд.",
+          },
+          {
+            name: "Мурат",
+            avatar: "./assets/host-murat.jpg",
+            perspective: "Ортодоксальная перспектива традиции.",
+          },
+          {
+            name: "Валентин",
+            avatar: "./assets/host-valentin.jpg",
+            perspective: "Личный и внеконфессиональный поиск.",
+          },
+        ],
+        socials: [
+          {
+            name: "Telegram",
+            href: "#",
+            icon: "../../assets/socials-telegram.svg",
+            iconClass: "icon-telegram",
+            description: "Анонсы, короткие посты и текущая жизнь проекта.",
+          },
+          {
+            name: "YouTube",
+            href: "#",
+            icon: "../../assets/socials-youtube.svg",
+            iconClass: "icon-youtube",
+            description: "Длинные выпуски, shorts и видеозаписи разговоров.",
+          },
+          {
+            name: "Boosty",
+            href: "#",
+            icon: "../../assets/socials-boosty.svg",
+            iconClass: "icon-boosty",
+            description:
+              "Поддержка проекта и доступ к дополнительным материалам.",
+          },
+        ],
+        episodes: [
+          {
+            id: "ecclesiastes",
+            title: "Читаем Екклесиаста с Кириллом Кириченко",
+            meta: "9 дней назад",
+            duration: "2:14:22",
+            image: "./assets/episode-ecclesiastes.jpg",
+            imageAlt:
+              "Превью выпуска Читаем Екклесиаста с Кириллом Кириченко",
+            imageWidth: 1280,
+            imageHeight: 720,
+            summary:
+              "Спецвыпуск наших чтений о книге Екклесиаста вместе с Кириллом Кириченко.",
+            description:
+              "Спецвыпуск наших чтений. Вместе с Кириллом Кириченко читаем и обсуждаем Екклесиаста — одну из самых мрачных, странных и философски насыщенных книг Библии. Пытаемся понять, действительно ли она такая мрачная и что именно говорит Екклесиаст о смысле жизни, суете, труде, времени и мудрости.",
+            participants: [
+              { name: "Тарас", avatar: "./assets/host-taras.jpg" },
+              { name: "Мурат", avatar: "./assets/host-murat.jpg" },
+              {
+                name: "Кирилл",
+                avatar: "./assets/host-kirill.png",
+                guest: true,
+              },
+            ],
+            guestLabel: "Гость: Кирилл",
+          },
+          {
+            id: "samson",
+            title: "Читаем историю Самсона с Артемом Широковым",
+            meta: "3 недели назад",
+            duration: "1:55:30",
+            image: "./assets/episode-samson.jpg",
+            imageAlt:
+              "Превью выпуска Читаем историю Самсона с Артемом Широковым",
+            imageWidth: 1280,
+            imageHeight: 720,
+            description:
+              "Спецвыпуск наших чтений. Вместе с Артемом Широковым читаем Книгу Судей, а именно историю Самсона. Пытаемся понять какого происхождения сила Самсона и в чем праведность этого персонажа Библии.",
+            participants: [
+              { name: "Тарас", avatar: "./assets/host-taras.jpg" },
+              { name: "Мурат", avatar: "./assets/host-murat.jpg" },
+              { name: "Валентин", avatar: "./assets/host-valentin.jpg" },
+              { name: "Артем", avatar: "./assets/host-artem.jpg", guest: true },
+            ],
+            guestLabel: "Гость: Артем",
+          },
+          {
+            id: "thomas",
+            title: "Читаем апокрифы. Евангелие от Фомы",
+            meta: "1 месяц назад",
+            duration: "2:11:36",
+            image: "./assets/episode-thomas.jpg",
+            imageAlt: "Превью выпуска Читаем апокрифы. Евангелие от Фомы",
+            imageWidth: 1280,
+            imageHeight: 720,
+            description:
+              "Спецвыпуск наших чтений: «Евангелие от Фомы». Что это за текст и почему вокруг него столько споров? В этом выпуске мы читаем и обсуждаем один из самых известных раннехристианских апокрифов: сборник изречений Иисуса без привычного сюжета. Чем он отличается от канонических Евангелий, что здесь значит «познание» и «Царство», и можно ли считать этот текст гностическим? Как всегда, смотрим с трёх позиций: атеист, ортодокс и внеконфессиональный верующий. Делитесь мыслями в комментариях.",
+            participants: [
+              { name: "Тарас", avatar: "./assets/host-taras.jpg" },
+              { name: "Мурат", avatar: "./assets/host-murat.jpg" },
+              { name: "Валентин", avatar: "./assets/host-valentin.jpg" },
+            ],
+          },
+          {
+            id: "isaac",
+            title: "Читаем Библию. Женитьба Исаака",
+            meta: "2 месяца назад",
+            duration: "1:17:32",
+            image: "./assets/episode-isaac.jpg",
+            imageAlt: "Превью выпуска Читаем Библию. Женитьба Исаака",
+            imageWidth: 1280,
+            imageHeight: 720,
+            description:
+              "В этом выпуске мы читаем и обсуждаем Бытие 23–25: смерть Сарры и погребение в пещере Махпела; переговоры Авраама с хеттеями и покупку поля с пещерой у Ефрона. Затем — история поиска жены для Исаака: Авраам поручает слуге поездку в Месопотамию, встреча у колодца, знакомство с Ревеккой, разговор в доме её семьи и согласие на брак; возвращение в Ханаан и встреча Исаака с Ревеккой. В 25-й главе — Кетура и сыновья Авраама, распределение наследства и смерть Авраама; родословие Измаила. Финал — рождение Исавa и Иакова, голод Исавa и продажа первородства за похлёбку.",
+            participants: [
+              { name: "Тарас", avatar: "./assets/host-taras.jpg" },
+              { name: "Мурат", avatar: "./assets/host-murat.jpg" },
+              { name: "Валентин", avatar: "./assets/host-valentin.jpg" },
+            ],
+          },
+        ],
+      };
+
+      const renderParticipantCard = (participant) => `
+        <div class="participant">
+          <div class="avatar">
+            <img src="${participant.avatar}" alt="${participant.name}" />
+          </div>
+          <div>
+            <strong>${participant.name}</strong>
+            <p>${participant.perspective}</p>
+          </div>
+        </div>
+      `;
+
+      const renderEpisodeParticipants = (episode) => `
+        <div class="episode-participants">
+          <span class="episode-participants-label">Участники</span>
+          <div class="episode-participants-line">
+            <div class="episode-host-stack">
+              ${episode.participants
+                .map(
+                  (participant) => `
+                    <div class="episode-host-avatar${participant.guest ? " guest" : ""}">
+                      <img src="${participant.avatar}" alt="${participant.name}" />
+                    </div>
+                  `
+                )
+                .join("")}
+            </div>
+            ${
+              episode.guestLabel
+                ? `<span class="episode-guest-badge">${episode.guestLabel}</span>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+
+      const renderEpisodeCard = (episode) => `
+        <article class="episode-card">
+          <div class="episode-cover">
+            <img
+              src="${episode.image}"
+              alt="${episode.imageAlt}"
+              width="${episode.imageWidth}"
+              height="${episode.imageHeight}"
+            />
+            <span class="episode-duration">${episode.duration}</span>
+          </div>
+          <div class="episode-body">
+            <span class="meta">${episode.meta}</span>
+            <h3>${episode.title}</h3>
+            ${renderEpisodeParticipants(episode)}
+            <p>${episode.description}</p>
+          </div>
+        </article>
+      `;
+
+      const renderHeroEpisode = (episode) => `
+        <article class="hero-episode">
+          <div class="hero-episode-cover">
+            <img
+              src="${episode.image}"
+              alt="${episode.imageAlt}"
+              width="${episode.imageWidth}"
+              height="${episode.imageHeight}"
+            />
+            <span class="episode-duration">${episode.duration}</span>
+          </div>
+          <div class="hero-episode-body">
+            <span class="hero-episode-meta">${episode.meta}</span>
+            <h3>${episode.title}</h3>
+            ${renderEpisodeParticipants(episode)}
+            <p>${episode.summary ?? episode.description}</p>
+            <a class="mini-button" href="#">Открыть выпуск</a>
+          </div>
+        </article>
+      `;
+
+      const renderSocialButton = (social) => `
+        <a class="social-button" href="${social.href}">
+          <div class="social-icon" aria-hidden="true">
+            <img src="${social.icon}" alt="" class="${social.iconClass}" />
+          </div>
+          <div class="social-copy">
+            <strong>${social.name}</strong>
+            <p>${social.description}</p>
+          </div>
+          <div class="social-arrow">›</div>
+        </a>
+      `;
+
+      document.getElementById("hero-episode-slot").innerHTML =
+        renderHeroEpisode(siteData.episodes[0]);
+      document.getElementById("participants-slot").innerHTML =
+        siteData.participants.map(renderParticipantCard).join("");
+      document.getElementById("episodes-slot").innerHTML =
+        siteData.episodes.map(renderEpisodeCard).join("");
+      document.getElementById("socials-slot").innerHTML =
+        siteData.socials.map(renderSocialButton).join("");
+    </script>
   </body>
 </html>

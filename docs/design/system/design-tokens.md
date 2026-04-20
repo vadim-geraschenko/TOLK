@@ -274,3 +274,11 @@ The current `home-mvp.html` should use implementation-level names that stay sema
 - `--elevation-inner`
 - `--font-display`
 - `--font-body`
+
+The current MVP also keeps component-level implementation tokens for sizes that were previously hardcoded:
+- hero side widths
+- reading-card action column widths
+- episode card width and description heights
+- participant avatar sizes
+- social icon/button column sizes
+- merch media heights
