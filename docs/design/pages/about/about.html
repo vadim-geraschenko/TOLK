@@ -1,0 +1,1512 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TOLK — О проекте</title>
+    <style>
+      @layer tokens, base, components, responsive;
+
+      @layer tokens {
+        :root {
+          --surface-panel: rgba(24, 27, 31, 0.88);
+          --surface-panel-soft: rgba(21, 24, 28, 0.72);
+          --surface-overlay: rgba(10, 12, 15, 0.54);
+          --border-panel: rgba(226, 231, 238, 0.1);
+          --border-soft: rgba(255, 255, 255, 0.08);
+          --border-warm: rgba(230, 203, 170, 0.16);
+          --text-primary: #f2f4f7;
+          --text-secondary: #c6cbd2;
+          --text-muted: #8d959f;
+          --accent-silver: #cfd6df;
+          --accent-silver-strong: #eef2f6;
+          --accent-ember: #d8c1a6;
+          --elevation-shadow: 0 30px 80px rgba(0, 0, 0, 0.38);
+          --elevation-inner:
+            inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+            inset 0 0 32px rgba(255, 255, 255, 0.015);
+          --layout-content-max: 1280px;
+          --page-gutter-desktop: 32px;
+          --page-gutter-tablet: 28px;
+          --page-gutter-mobile: 24px;
+          --section-padding: 40px;
+          --section-padding-tablet: 32px;
+          --frame-radius-xl: 32px;
+          --frame-radius-lg: 26px;
+          --frame-radius-md: 22px;
+          --pill-radius: 999px;
+          --space-xs: 8px;
+          --space-sm: 10px;
+          --space-md: 12px;
+          --space-lg: 14px;
+          --space-xl: 16px;
+          --space-2xl: 18px;
+          --space-3xl: 20px;
+          --space-4xl: 22px;
+          --space-5xl: 24px;
+          --space-6xl: 28px;
+          --space-7xl: 32px;
+          --font-display:
+            "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
+            "URW Palladio L", serif;
+          --font-body: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+          --hero-title-max: 13ch;
+          --story-card-max: 600px;
+          --story-pair-card-max: 400px;
+          --story-pair-gap: 24px;
+          --story-video-progress: 0;
+          --scene-dim: 0.36;
+          --scene-contrast: 0.96;
+          --scene-saturate: 0.9;
+          --scene-grain: 0.1;
+          --bp-tablet-max: 68.75rem; /* 1100px */
+          --bp-mobile-max: 47.5rem; /* 760px */
+          --bp-mobile-tight-max: 32.5rem; /* 520px */
+        }
+      }
+
+      @layer base {
+        * {
+          box-sizing: border-box;
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          margin: 0;
+          min-height: 100vh;
+          color: var(--text-primary);
+          background: linear-gradient(
+            180deg,
+            #08090c 0%,
+            #0c0f13 30%,
+            #101318 100%
+          );
+          font-family: var(--font-body);
+          letter-spacing: 0.01em;
+          overflow-x: hidden;
+        }
+
+        body::before {
+          content: "";
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          opacity: 0.08;
+          background-image:
+            linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(
+              90deg,
+              rgba(255, 255, 255, 0.03) 1px,
+              transparent 1px
+            );
+          background-size:
+            100% 100%,
+            64px 64px;
+          mask-image: radial-gradient(
+            circle at center,
+            black 58%,
+            transparent 100%
+          );
+        }
+
+        a {
+          color: inherit;
+          text-decoration: none;
+        }
+
+        img {
+          display: block;
+          max-width: 100%;
+        }
+
+        h1,
+        h2,
+        h3 {
+          margin: 0;
+          font-family: var(--font-display);
+          font-weight: 400;
+          line-height: 0.96;
+          letter-spacing: -0.03em;
+        }
+
+        p {
+          margin: 0;
+          color: var(--text-secondary);
+          line-height: 1.76;
+        }
+
+        .container {
+          width: min(
+            calc(100% - var(--page-gutter-desktop)),
+            var(--layout-content-max)
+          );
+          margin: 0 auto;
+        }
+
+        .section {
+          padding: var(--section-padding) 0;
+        }
+      }
+
+      @layer components {
+        .background-media {
+          position: fixed;
+          inset: 0;
+          z-index: -3;
+          overflow: hidden;
+          background:
+            radial-gradient(
+              circle at 50% 20%,
+              rgba(255, 255, 255, 0.06),
+              transparent 32%
+            ),
+            linear-gradient(180deg, #0a0c10, #090b0f);
+        }
+
+        .background-frame {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: center;
+          padding: 24px;
+          transform: translateZ(0);
+          filter:
+            brightness(calc(1 - var(--scene-dim)))
+            contrast(var(--scene-contrast))
+            saturate(var(--scene-saturate));
+          opacity: 0;
+        }
+
+        .background-frame.is-ready {
+          opacity: 1;
+        }
+
+        .background-grain {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+        }
+
+        .background-grain::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          opacity: var(--scene-grain);
+          background-image:
+            radial-gradient(rgba(255, 255, 255, 0.22) 0.7px, transparent 0.85px),
+            radial-gradient(rgba(0, 0, 0, 0.2) 0.7px, transparent 0.85px);
+          background-position:
+            0 0,
+            2px 2px;
+          background-size:
+            5px 5px,
+            6px 6px;
+          mix-blend-mode: soft-light;
+          mask-image: radial-gradient(
+            circle at center,
+            black 58%,
+            transparent 100%
+          );
+        }
+
+        .background-media::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(142, 151, 163, 0.16),
+              transparent 42%
+            ),
+            radial-gradient(
+              circle at 50% 22%,
+              rgba(
+                255,
+                255,
+                255,
+                calc(0.04 + var(--story-video-progress) * 0.08)
+              ),
+              transparent 34%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(6, 8, 11, 0.66),
+              rgba(7, 9, 12, 0.72) 24%,
+              rgba(8, 9, 12, 0.54) 48%,
+              rgba(8, 9, 12, 0.7) 72%,
+              rgba(8, 9, 12, 0.86)
+            );
+        }
+
+        .page-shell {
+          position: relative;
+          isolation: isolate;
+        }
+
+        .page-shell::before,
+        .page-shell::after {
+          content: "";
+          position: absolute;
+          pointer-events: none;
+          filter: blur(18px);
+          z-index: -1;
+          border-radius: 50%;
+        }
+
+        .page-shell::before {
+          top: 140px;
+          right: -180px;
+          width: 520px;
+          height: 520px;
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.045),
+            transparent 68%
+          );
+          z-index: -1;
+        }
+
+        .page-shell::after {
+          top: 1020px;
+          left: -140px;
+          width: 360px;
+          height: 360px;
+          background: radial-gradient(
+            circle,
+            rgba(126, 142, 160, 0.08),
+            transparent 70%
+          );
+          z-index: -1;
+        }
+
+        .site-header {
+          position: sticky;
+          top: 0;
+          z-index: 20;
+          padding: 18px 0;
+          backdrop-filter: blur(18px);
+          background: linear-gradient(
+            180deg,
+            rgba(10, 11, 14, 0.84),
+            rgba(10, 11, 14, 0.42)
+          );
+          border-bottom: 1px solid rgba(243, 241, 234, 0.04);
+        }
+
+        .site-header .container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+
+        .brand-mark {
+          width: 42px;
+          height: 42px;
+          border: 1px solid rgba(226, 231, 238, 0.16);
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          box-shadow: var(--elevation-inner);
+          color: var(--accent-silver-strong);
+          font-family: var(--font-display);
+          font-size: 18px;
+        }
+
+        .brand-copy strong {
+          display: block;
+          font-size: 14px;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          font-weight: 700;
+          color: var(--text-primary);
+        }
+
+        .brand-copy span {
+          display: block;
+          margin-top: 2px;
+          color: var(--text-muted);
+          font-size: 12px;
+        }
+
+        .nav {
+          display: flex;
+          align-items: center;
+          gap: 22px;
+          flex-wrap: wrap;
+          justify-content: end;
+        }
+
+        .nav a {
+          color: var(--text-secondary);
+          font-size: 14px;
+          transition: color 180ms ease;
+        }
+
+        .nav a:hover,
+        .nav a.is-active {
+          color: var(--text-primary);
+        }
+
+        .nav .social {
+          color: var(--accent-silver);
+        }
+
+        .eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 14px;
+          color: var(--accent-silver);
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+          content: "";
+          width: 38px;
+          height: 1px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(226, 231, 238, 0.78)
+          );
+        }
+
+        .button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 48px;
+          padding: 0 20px;
+          border-radius: var(--pill-radius);
+          border: 1px solid rgba(243, 241, 234, 0.12);
+          background: rgba(255, 255, 255, 0.02);
+          color: var(--text-primary);
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          transition:
+            transform 180ms ease,
+            border-color 180ms ease,
+            background 180ms ease;
+        }
+
+        .button:hover {
+          transform: translateY(-2px);
+          border-color: rgba(255, 255, 255, 0.16);
+          background: rgba(255, 255, 255, 0.04);
+        }
+
+        .button-primary {
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.04)
+          );
+          border-color: rgba(255, 255, 255, 0.14);
+          box-shadow: 0 0 24px rgba(255, 255, 255, 0.03);
+        }
+
+        .hero {
+          padding: 40px 0 24px;
+        }
+
+        .hero-shell,
+        .text-panel,
+        .cta-panel,
+        .origin-link-card {
+          position: relative;
+          overflow: hidden;
+          border-radius: var(--frame-radius-xl);
+          border: 1px solid var(--border-panel);
+          background:
+            radial-gradient(
+              circle at 85% 0%,
+              rgba(255, 255, 255, 0.04),
+              transparent 26%
+            ),
+            linear-gradient(
+              140deg,
+              rgba(16, 19, 24, 0.96),
+              rgba(23, 26, 31, 0.94)
+            );
+          box-shadow: var(--elevation-shadow), var(--elevation-inner);
+          backdrop-filter: blur(12px);
+        }
+
+        .hero-shell::before,
+        .text-panel::before,
+        .cta-panel::before,
+        .origin-link-card::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.045),
+            transparent 30%
+          );
+        }
+
+        .hero-shell {
+          padding: 34px 36px 30px;
+        }
+
+        .tone-neutral {
+          border-color: rgba(226, 231, 238, 0.11);
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(255, 255, 255, 0.045),
+              transparent 34%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.045),
+              rgba(255, 255, 255, 0.018)
+            ),
+            rgba(10, 12, 15, 0.64);
+        }
+
+        .tone-soft {
+          border-color: rgba(215, 221, 229, 0.12);
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(217, 222, 230, 0.07),
+              transparent 34%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.055),
+              rgba(255, 250, 240, 0.03)
+            ),
+            rgba(13, 14, 17, 0.66);
+        }
+
+        .tone-warm {
+          border-color: rgba(226, 207, 183, 0.14);
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(233, 214, 180, 0.1),
+              transparent 34%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(255, 247, 233, 0.08),
+              rgba(219, 180, 126, 0.035)
+            ),
+            rgba(16, 14, 13, 0.68);
+        }
+
+        .tone-ember {
+          border-color: var(--border-warm);
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(236, 198, 146, 0.12),
+              transparent 32%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(255, 241, 221, 0.1),
+              rgba(215, 157, 92, 0.04)
+            ),
+            rgba(18, 14, 12, 0.72);
+        }
+
+        .hero-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+          gap: 28px;
+          align-items: end;
+        }
+
+        .hero-copy h1 {
+          max-width: var(--hero-title-max);
+          font-size: clamp(38px, 5vw, 64px);
+        }
+
+        .hero-copy p {
+          max-width: 58ch;
+          margin-top: 18px;
+          font-size: 17px;
+        }
+
+        .hero-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 24px;
+        }
+
+        .hero-note {
+          display: grid;
+          gap: 10px;
+          align-content: end;
+          min-height: 100%;
+          padding: 14px 18px 16px;
+          border-radius: var(--frame-radius-md);
+          border: 1px solid var(--border-soft);
+          background:
+            radial-gradient(
+              circle at 50% 0%,
+              rgba(255, 255, 255, 0.045),
+              transparent 32%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.05),
+              rgba(255, 255, 255, 0.018)
+            );
+        }
+
+        .hero-note strong {
+          display: block;
+          color: var(--accent-silver-strong);
+          font-size: 13px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .hero-note p {
+          font-size: 14px;
+          line-height: 1.68;
+        }
+
+        .story {
+          position: relative;
+          padding: 18px 0 22px;
+        }
+
+        .story-progress {
+          position: fixed;
+          left: 24px;
+          right: 24px;
+          bottom: 20px;
+          z-index: 5;
+          height: 3px;
+          border-radius: 999px;
+          overflow: hidden;
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .story-progress::before {
+          content: "";
+          display: block;
+          width: calc(var(--story-video-progress) * 100%);
+          height: 100%;
+          background: linear-gradient(
+            90deg,
+            rgba(207, 214, 223, 0.4),
+            rgba(238, 242, 246, 0.92)
+          );
+          transition: width 120ms linear;
+        }
+
+        .story-cards {
+          display: grid;
+          gap: 24px;
+        }
+
+        .story-step {
+          min-height: 88vh;
+          display: grid;
+          align-items: center;
+          justify-items: center;
+        }
+
+        .story-card,
+        .voice-card,
+        .origin-card {
+          position: relative;
+          max-width: var(--story-card-max);
+          padding: 22px 22px 24px;
+          border-radius: var(--frame-radius-lg);
+          border: 1px solid var(--border-soft);
+          background:
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.045),
+              rgba(255, 255, 255, 0.018)
+            ),
+            rgba(10, 12, 15, 0.6);
+          box-shadow: var(--elevation-inner);
+          backdrop-filter: blur(14px);
+        }
+
+        .story-card.centered {
+          width: min(100%, var(--story-card-max));
+          margin-inline: auto;
+        }
+
+        .story-card strong,
+        .origin-card strong {
+          display: inline-block;
+          margin-bottom: 12px;
+          color: var(--accent-silver);
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .story-card h2,
+        .origin-card h2,
+        .section-head h2 {
+          font-size: clamp(30px, 3.6vw, 48px);
+          margin-bottom: 16px;
+        }
+
+        .story-card p + p,
+        .origin-card p + p,
+        .text-panel p + p {
+          margin-top: 14px;
+        }
+
+        .story-pair {
+          --pair-progress: 0;
+          display: grid;
+          grid-template-columns: repeat(
+            2,
+            minmax(0, var(--story-pair-card-max))
+          );
+          gap: var(--story-pair-gap);
+          justify-content: center;
+          align-items: start;
+          width: 100%;
+        }
+
+        .story-pair .story-card {
+          width: 100%;
+          max-width: var(--story-pair-card-max);
+          transition: transform 180ms ease;
+        }
+
+        .story-pair .story-card:first-child {
+          transform: translateX(calc(var(--pair-progress) * -104px));
+        }
+
+        .story-pair .story-card:last-child {
+          transform: translateX(calc(var(--pair-progress) * 104px));
+        }
+
+        .text-panel {
+          padding: 28px 30px 30px;
+        }
+
+        .text-panel.is-centered {
+          width: min(100%, 600px);
+          margin-inline: auto;
+          text-align: center;
+        }
+
+        .text-panel.is-centered .section-head {
+          justify-items: center;
+        }
+
+        .text-panel.is-centered p {
+          margin-inline: auto;
+        }
+
+        .text-panel.tone-warm .eyebrow,
+        .text-panel.tone-warm strong,
+        .origin-link-card.tone-warm strong,
+        .cta-panel.tone-ember .eyebrow {
+          color: var(--accent-ember);
+        }
+
+        .text-panel p {
+          max-width: 62ch;
+          font-size: 16px;
+        }
+
+        .section-head {
+          display: grid;
+          gap: 6px;
+          margin-bottom: 20px;
+        }
+
+        .voices-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .voice-card {
+          min-height: 100%;
+          padding-top: 20px;
+        }
+
+        .voice-avatar {
+          width: 68px;
+          height: 68px;
+          margin-bottom: 16px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background:
+            radial-gradient(
+              circle at 30% 30%,
+              rgba(255, 255, 255, 0.06),
+              transparent 35%
+            ),
+            linear-gradient(180deg, #262a2f, #171a1d);
+          box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+        }
+
+        .voice-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+        }
+
+        .voice-card h3 {
+          font-size: 30px;
+          margin-bottom: 12px;
+        }
+
+        .origin-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 320px;
+          gap: 18px;
+          align-items: stretch;
+        }
+
+        .origin-card a {
+          color: var(--accent-silver-strong);
+          text-decoration: underline;
+          text-underline-offset: 0.18em;
+        }
+
+        .origin-link-card {
+          display: grid;
+          gap: 14px;
+          align-content: start;
+          padding: 20px 18px;
+          border-radius: var(--frame-radius-lg);
+        }
+
+        .origin-link-card strong {
+          display: block;
+          color: var(--accent-silver);
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+        }
+
+        .origin-link-card h3 {
+          font-size: 28px;
+          line-height: 1.02;
+        }
+
+        .cta-panel {
+          padding: 30px 32px 32px;
+        }
+
+        .cta-panel p {
+          max-width: 54ch;
+          margin-top: 14px;
+          font-size: 16px;
+        }
+
+        .cta-actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          margin-top: 22px;
+        }
+
+        .footer {
+          padding: 32px 0 20px;
+          color: var(--text-muted);
+          font-size: 13px;
+        }
+
+        .footer .container {
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+          flex-wrap: wrap;
+          padding-top: 22px;
+          border-top: 1px solid rgba(243, 241, 234, 0.08);
+        }
+      }
+
+      @layer responsive {
+        @media (max-width: 68.75rem) {
+          .container {
+            width: min(
+              calc(100% - var(--page-gutter-tablet)),
+              var(--layout-content-max)
+            );
+          }
+
+          .section {
+            padding: var(--section-padding-tablet) 0;
+          }
+
+          .hero-grid,
+          .origin-grid,
+          .voices-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .hero-shell {
+            padding: 28px 28px 26px;
+          }
+
+          .hero-copy h1 {
+            max-width: none;
+          }
+
+          .hero-note {
+            min-height: auto;
+          }
+
+          .story-step {
+            min-height: auto;
+          }
+
+          .story-card,
+          .origin-card {
+            max-width: none;
+          }
+
+          .story-pair {
+            grid-template-columns: 1fr;
+            justify-items: center;
+          }
+
+          .story-pair .story-card:first-child,
+          .story-pair .story-card:last-child {
+            transform: none;
+          }
+
+          .origin-link-card {
+            max-width: 420px;
+          }
+
+          .text-panel.is-centered {
+            width: 100%;
+            text-align: left;
+          }
+
+          .text-panel.is-centered .section-head {
+            justify-items: start;
+          }
+
+          .text-panel.is-centered p {
+            margin-inline: 0;
+          }
+        }
+
+        @media (max-width: 47.5rem) {
+          .container {
+            width: min(
+              calc(100% - var(--page-gutter-mobile)),
+              var(--layout-content-max)
+            );
+          }
+
+          .site-header {
+            padding: 14px 0 12px;
+          }
+
+          .site-header .container {
+            gap: 12px;
+            align-items: stretch;
+            flex-direction: column;
+          }
+
+          .nav {
+            width: 100%;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            justify-content: start;
+            gap: 14px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+          }
+
+          .nav::-webkit-scrollbar {
+            display: none;
+          }
+
+          .nav a {
+            white-space: nowrap;
+            font-size: 13px;
+          }
+
+          .hero {
+            padding-top: 24px;
+          }
+
+          .hero-shell,
+          .text-panel,
+          .cta-panel {
+            border-radius: 24px;
+          }
+
+          .hero-shell {
+            padding: 22px 18px 18px;
+          }
+
+          .hero-copy h1 {
+            font-size: clamp(32px, 10vw, 42px);
+          }
+
+          .hero-copy p,
+          .text-panel p,
+          .cta-panel p {
+            font-size: 15px;
+            line-height: 1.68;
+          }
+
+          .hero-actions,
+          .cta-actions {
+            gap: 10px;
+          }
+
+          .button {
+            width: 100%;
+          }
+
+          .story-card,
+          .voice-card,
+          .origin-card {
+            padding: 18px 18px 20px;
+          }
+
+          .story-card h2,
+          .origin-card h2,
+          .section-head h2 {
+            font-size: 32px;
+          }
+
+          .voice-card h3 {
+            font-size: 26px;
+          }
+        }
+
+        @media (max-width: 32.5rem) {
+          .brand-copy span {
+            display: none;
+          }
+
+          .story-progress {
+            left: 16px;
+            right: 16px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          html {
+            scroll-behavior: auto;
+          }
+        }
+      }
+    </style>
+  </head>
+      <body>
+    <div class="page-shell">
+      <div class="background-media" aria-hidden="true">
+        <img class="background-frame" id="story-frame" alt="" />
+        <div class="background-grain"></div>
+      </div>
+
+      <header class="site-header">
+        <div class="container">
+          <div class="brand">
+            <div class="brand-mark">T</div>
+            <div class="brand-copy">
+              <strong>TOLK</strong>
+              <span>Библия для всех: разговоры о вечном и личном</span>
+            </div>
+          </div>
+          <nav class="nav">
+            <a href="../home/home-mvp.html">Главная</a>
+            <a href="#" class="is-active">О нас</a>
+            <a href="../home/home-mvp.html#episodes">Выпуски</a>
+            <a href="../home/home-mvp.html">Очные чтения</a>
+            <a href="../home/home-mvp.html">Мерч</a>
+            <a href="#" class="social">Telegram</a>
+            <a href="#" class="social">YouTube</a>
+            <a href="#" class="social">Boosty</a>
+          </nav>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="container">
+            <div class="hero-shell tone-neutral">
+              <div class="hero-grid">
+                <div class="hero-copy">
+                  <div class="eyebrow">О Проекте</div>
+                  <h1>
+                    Место честного разговора о Библии с разных точек зрения
+                  </h1>
+                  <p>
+                    Мы создали TOLK, потому что о Библии слишком часто говорят
+                    либо как о неприкосновенной догме, либо как о мёртвом
+                    памятнике прошлого. Нам ближе другой путь: внимательное,
+                    честное и человеческое чтение текста, который по-прежнему
+                    формирует наш язык, воображение, культуру и представление о
+                    человеке.
+                  </p>
+                  <div class="hero-actions">
+                    <a
+                      class="button button-primary"
+                      href="../home/home-mvp.html"
+                      >Перейти на главную</a
+                    >
+                    <a class="button" href="#story">Читать дальше</a>
+                  </div>
+                </div>
+
+                <aside class="hero-note tone-soft">
+                  <strong>Тон Страницы</strong>
+                  <p>
+                    Не пафос, не проповедь и не готовый ответ. Скорее тёплый
+                    огонь в непроглядной тьме: пространство, где можно
+                    остановиться, всмотреться и говорить о важном без догм.
+                  </p>
+                </aside>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section story" id="story">
+          <div class="container">
+            <div class="story-cards" id="story-cards">
+              <article class="story-step" data-progress="0.12">
+                <div class="story-card centered tone-neutral">
+                  <strong>Почему Библия</strong>
+                  <h2>Почему мы снова и снова возвращаемся к этой книге</h2>
+                  <p>
+                    Библию можно читать как религиозный текст. Можно — как
+                    культурный фундамент. Можно — как философский архив
+                    человеческого опыта. Во всех этих измерениях она остаётся
+                    живой.
+                  </p>
+                  <p>
+                    Это книга, из которой во многом выросли наша культура,
+                    моральный язык, образ человека и само представление о добре,
+                    вине, спасении, надежде, любви и жертве.
+                  </p>
+                </div>
+              </article>
+
+              <article class="story-step" data-progress="0.38">
+                <div class="story-card centered tone-soft">
+                  <strong>Текст И Человек</strong>
+                  <h2>В ней сохранилась внутренняя жизнь целых эпох</h2>
+                  <p>
+                    Библия важна не только как источник влияния. В ней
+                    сохранились быт, страхи, надежды, образ мысли и внутренняя
+                    жизнь людей своего времени.
+                  </p>
+                  <p>
+                    И при всём этом она остаётся неисчерпаемым источником
+                    мудрости, к которому снова и снова возвращаются самые разные
+                    люди: верующие, сомневающиеся, неверующие, читатели,
+                    мыслители и художники.
+                  </p>
+                </div>
+              </article>
+
+              <article class="story-step" data-progress="0.62">
+                <div class="story-pair" data-pair>
+                  <div class="story-card tone-soft">
+                    <strong>Как Мы Читаем</strong>
+                    <h2>Как читать без догм</h2>
+                    <p>
+                      Мы не стремимся свести разговор к заранее известному
+                      выводу. Мы не прячем различия и не делаем вид, будто любой
+                      серьёзный текст обязан быстро привести всех к согласию.
+                    </p>
+                  </div>
+                  <div class="story-card tone-soft">
+                    <strong>Способ Разговора</strong>
+                    <h2>Важнее понять, чем победить</h2>
+                    <p>
+                      Для нас важно читать внимательно, спорить честно, слушать
+                      друг друга и не бояться вопросов, которые не укладываются
+                      в готовые ответы.
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="story-step" data-progress="0.9">
+                <div class="story-card centered tone-warm">
+                  <strong>Рождение Проекта</strong>
+                  <h2>Сначала был разговор. Потом появился TOLK.</h2>
+                  <p>
+                    Проект начался не как готовая медийная концепция. Сначала
+                    была отдельная беседа о главных сюжетах Писания — единичный
+                    разговор, в котором уже почувствовалась важность такого
+                    формата.
+                  </p>
+                  <p>
+                    После этого стало ясно, что этот разговор не должен остаться
+                    разовым. Так появился TOLK — как пространство, где к
+                    библейскому тексту можно возвращаться снова и снова.
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <article class="text-panel tone-soft is-centered">
+              <div class="section-head">
+                <div class="eyebrow">О Проекте</div>
+                <h2>
+                  Не канал с готовыми ответами, а пространство внимательного
+                  чтения
+                </h2>
+              </div>
+              <p>
+                TOLK — это не попытка заменить живой разговор о Библии очередной
+                удобной схемой. Для нас важнее сохранить пространство, в котором
+                текст можно читать всерьёз: не упрощая его до набора тезисов и
+                не пряча сложность там, где она действительно есть.
+              </p>
+              <p>
+                Мы не ищем декоративного баланса мнений. Нам важно другое:
+                увидеть, как один и тот же текст раскрывается перед людьми с
+                разным опытом, разной верой, разным языком внутренней жизни и
+                разной мерой доверия к традиции.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <div class="section-head">
+              <div class="eyebrow">Три Оптики</div>
+              <h2>Один текст, несколько взглядов</h2>
+            </div>
+
+            <div class="voices-grid">
+              <article class="voice-card tone-soft">
+                <div class="voice-avatar">
+                  <img src="../home/assets/host-taras.jpg" alt="Тарас" />
+                </div>
+                <h3>Тарас</h3>
+                <p>
+                  Скептический и атеистический взгляд. Это оптика сомнения,
+                  критического мышления и готовности не принимать значимые слова
+                  только потому, что они освящены традицией.
+                </p>
+              </article>
+
+              <article class="voice-card tone-soft">
+                <div class="voice-avatar">
+                  <img src="../home/assets/host-murat.jpg" alt="Мурат" />
+                </div>
+                <h3>Мурат</h3>
+                <p>
+                  Ортодоксальная перспектива традиции. Это взгляд человека, для
+                  которого Библия принадлежит живому религиозному наследию и не
+                  может быть отделена от опыта веры.
+                </p>
+              </article>
+
+              <article class="voice-card tone-soft">
+                <div class="voice-avatar">
+                  <img src="../home/assets/host-valentin.jpg" alt="Валентин" />
+                </div>
+                <h3>Валентин</h3>
+                <p>
+                  Личный внеконфессиональный поиск. Это взгляд человека, который
+                  относится к тексту серьёзно и внутренне, но не сводит его
+                  значение к одной институциональной рамке.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <div class="origin-grid">
+              <article class="origin-card tone-warm">
+                <strong>С Чего Всё Началось</strong>
+                <h2>
+                  Проект вырос из одного разговора, который нельзя было оставить
+                  разовым
+                </h2>
+                <p>
+                  TOLK начался не как заранее собранный бренд. Сначала была
+                  отдельная беседа о главных сюжетах Писания — вне основного
+                  канала, как единичный разговор, в котором уже почувствовалась
+                  важность такого формата.
+                </p>
+                <p>
+                  Именно после этого стало ясно, что этот разговор не должен
+                  закончиться первым удачным выпуском. Так появился TOLK — как
+                  продолжение уже начавшегося движения мысли.
+                </p>
+              </article>
+
+              <aside class="origin-link-card tone-warm">
+                <strong>Отправная Точка</strong>
+                <h3>Беседа о Главных Сюжетах Писания</h3>
+                <p>
+                  Теолог vs Философ vs Я... — тот разговор, после которого идея
+                  отдельного проекта стала неизбежной.
+                </p>
+                <a
+                  class="button button-primary"
+                  href="https://youtu.be/Dtw2rMFq6NA?si=SsY4QBbvS98as8yQ"
+                  >Открыть видео</a
+                >
+              </aside>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <article class="text-panel tone-warm is-centered">
+              <div class="section-head">
+                <div class="eyebrow">Для Кого TOLK</div>
+                <h2>
+                  Для тех, кто хочет не просто иметь мнение, а действительно
+                  встретиться с текстом
+                </h2>
+              </div>
+              <p>
+                TOLK открыт не только для тех, кто уже находится внутри
+                религиозной традиции. Он и для тех, кто верит, и для тех, кто
+                сомневается, и для тех, кто не верит, но понимает, что без этих
+                текстов невозможно до конца понять историю культуры, устройство
+                морали и сам способ, которым человечество говорило о надежде и
+                отчаянии.
+              </p>
+              <p>
+                Нам важно, чтобы рядом с этим текстом мог оказаться человек с
+                разным опытом: церковным, философским, ищущим, скептическим,
+                культурным. Не для того, чтобы стереть различия, а для того,
+                чтобы они могли сосуществовать внутри внимательного разговора.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="container">
+            <article class="cta-panel tone-ember">
+              <div class="eyebrow">Продолжение</div>
+              <h2>Если вам близок такой способ чтения</h2>
+              <p>
+                На главной странице собраны выпуски, записи чтений и дальнейший
+                маршрут по проекту. Если вам откликается этот тон разговора,
+                начните с неё: там TOLK уже живёт в голосах, текстах, встречах и
+                спорах.
+              </p>
+              <div class="cta-actions">
+                <a class="button button-primary" href="../home/home-mvp.html"
+                  >Перейти на главную</a
+                >
+                <a class="button" href="../home/home-mvp.html#episodes"
+                  >Смотреть выпуски</a
+                >
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <div class="story-progress" aria-hidden="true"></div>
+
+      <footer class="footer">
+        <div class="container">
+          <div>TOLK 2026</div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const storyFrame = document.getElementById("story-frame");
+      const storyPairs = document.querySelectorAll("[data-pair]");
+      const mobileQuery = window.matchMedia("(max-width: 760px)");
+      const totalFrames = 60;
+      const preloadBuffer = 6;
+      const loadedFrames = new Set();
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const sceneProgressMap = (x) => {
+        const clamped = clamp(x, 0, 1);
+
+        if (clamped <= 0.84) {
+          return (clamped / 0.84) * 0.9;
+        }
+
+        return 0.9 + ((clamped - 0.84) / 0.16) * 0.1;
+      };
+
+      const setStoryProgress = (progress) => {
+        document.documentElement.style.setProperty(
+          "--story-video-progress",
+          progress.toFixed(4),
+        );
+      };
+
+      let frameSources = [];
+      let currentVariant = "";
+      let targetProgress = 0;
+      let renderedProgress = 0;
+      let currentFrameIndex = -1;
+      let hasInitialFrame = false;
+
+      const buildFrameSources = (variant) =>
+        Array.from({ length: totalFrames }, (_, index) => {
+          const frameNumber = String(index + 1).padStart(3, "0");
+          return `./assets/angel-sequence/${variant}/frame-${frameNumber}.webp`;
+        });
+
+      const loadFrameAtIndex = (index) => {
+        if (index < 0 || index >= totalFrames) return;
+        if (loadedFrames.has(index)) return;
+
+        const image = new Image();
+        image.decoding = "async";
+        image.src = frameSources[index];
+        loadedFrames.add(index);
+      };
+
+      const preloadBufferWindow = (centerIndex) => {
+        const start = Math.max(centerIndex - preloadBuffer, 0);
+        const end = Math.min(centerIndex + preloadBuffer, totalFrames - 1);
+
+        for (let index = start; index <= end; index += 1) {
+          loadFrameAtIndex(index);
+        }
+      };
+
+      const syncVariant = (forceReset = false) => {
+        const nextVariant = mobileQuery.matches ? "mobile" : "desktop";
+        if (!forceReset && nextVariant === currentVariant) return;
+
+        currentVariant = nextVariant;
+        frameSources = buildFrameSources(currentVariant);
+        loadedFrames.clear();
+        currentFrameIndex = -1;
+        setFrame(Math.max(Math.round(renderedProgress * (totalFrames - 1)), 0));
+      };
+
+      const setFrame = (index) => {
+        if (index === currentFrameIndex) return;
+        currentFrameIndex = index;
+
+        if (!hasInitialFrame) {
+          storyFrame.addEventListener(
+            "load",
+            () => {
+              hasInitialFrame = true;
+              storyFrame.classList.add("is-ready");
+            },
+            { once: true },
+          );
+        }
+
+        storyFrame.src = frameSources[index];
+        loadFrameAtIndex(index);
+        preloadBufferWindow(index);
+      };
+
+      const updateTargets = () => {
+        const scrollTop = window.scrollY || window.pageYOffset;
+        const maxScroll = Math.max(
+          document.documentElement.scrollHeight - window.innerHeight,
+          1,
+        );
+
+        targetProgress = sceneProgressMap(scrollTop / maxScroll);
+        setStoryProgress(targetProgress);
+
+        const sceneReveal = clamp((targetProgress - 0.04) / 0.92, 0, 1);
+        const sceneDim = (0.36 - sceneReveal * 0.22).toFixed(3);
+        const sceneContrast = (0.96 + sceneReveal * 0.08).toFixed(3);
+        const sceneSaturate = (0.9 + sceneReveal * 0.08).toFixed(3);
+        const sceneGrain = (0.1 - sceneReveal * 0.045).toFixed(4);
+
+        document.documentElement.style.setProperty("--scene-dim", sceneDim);
+        document.documentElement.style.setProperty(
+          "--scene-contrast",
+          sceneContrast,
+        );
+        document.documentElement.style.setProperty(
+          "--scene-saturate",
+          sceneSaturate,
+        );
+        document.documentElement.style.setProperty("--scene-grain", sceneGrain);
+
+        storyPairs.forEach((pair) => {
+          const pairRect = pair.getBoundingClientRect();
+          const pairProgress = clamp(
+            (window.innerHeight * 0.72 - pairRect.top) /
+              Math.max(window.innerHeight * 0.92, 1),
+            0,
+            1,
+          );
+          pair.style.setProperty(
+            "--pair-progress",
+            sceneProgressMap(pairProgress).toFixed(4),
+          );
+        });
+      };
+
+      const render = () => {
+        updateTargets();
+        renderedProgress += (targetProgress - renderedProgress) * 0.14;
+
+        if (Math.abs(targetProgress - renderedProgress) < 0.0008) {
+          renderedProgress = targetProgress;
+        }
+
+        const nextFrame = Math.round(renderedProgress * (totalFrames - 1));
+        setFrame(nextFrame);
+        requestAnimationFrame(render);
+      };
+
+      const startSequence = () => {
+        updateTargets();
+        renderedProgress = targetProgress;
+        syncVariant(true);
+        setFrame(Math.round(renderedProgress * (totalFrames - 1)));
+        requestAnimationFrame(render);
+      };
+
+      mobileQuery.addEventListener("change", () => syncVariant());
+      requestAnimationFrame(() => {
+        requestAnimationFrame(startSequence);
+      });
+    </script>
+  </body>
+</html>
