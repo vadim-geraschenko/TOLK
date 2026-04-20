@@ -75,6 +75,7 @@
 
         html {
           scroll-behavior: smooth;
+          overflow-x: clip;
         }
 
         body {
@@ -89,7 +90,7 @@
           );
           font-family: var(--font-body);
           letter-spacing: 0.01em;
-          overflow-x: hidden;
+          overflow-x: clip;
         }
 
         body::before {
@@ -894,7 +895,7 @@
 
         @media (max-width: 47.5rem) {
           .background-cloud {
-            width: min(96vw, 820px);
+            display: none;
           }
 
           .container {
@@ -912,16 +913,31 @@
             gap: 12px;
             align-items: stretch;
             flex-direction: column;
+            min-width: 0;
+            justify-content: center;
+          }
+
+          .brand {
+            justify-content: center;
+          }
+
+          .brand-copy {
+            text-align: center;
+          }
+
+          .brand-copy span {
+            font-size: 11px;
           }
 
           .nav {
             width: 100%;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            justify-content: start;
+            max-width: 100%;
+            min-width: 0;
+            flex-wrap: wrap;
+            overflow-x: visible;
+            justify-content: center;
             gap: 14px;
             padding-bottom: 4px;
-            scrollbar-width: none;
           }
 
           .nav::-webkit-scrollbar {
@@ -929,7 +945,7 @@
           }
 
           .nav a {
-            white-space: nowrap;
+            white-space: normal;
             font-size: 13px;
           }
 
@@ -1005,13 +1021,13 @@
         <img
           class="background-cloud"
           id="cloud-left"
-          src="../../for-codex/clouds.png"
+          src="./assets/clouds.png"
           alt=""
         />
         <img
           class="background-cloud"
           id="cloud-right"
-          src="../../for-codex/clouds.png"
+          src="./assets/clouds.png"
           alt=""
         />
         <div class="background-grain"></div>
@@ -1310,6 +1326,7 @@
       const totalFrames = 60;
       const preloadBuffer = 6;
       const loadedFrames = new Set();
+      const mobileStaticFrame = "./assets/angel-sequence/mobile/frame-028.webp";
 
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
       const mix = (from, to, t) => from + (to - from) * t;
@@ -1336,6 +1353,7 @@
       let renderedProgress = 0;
       let currentFrameIndex = -1;
       let hasInitialFrame = false;
+      let animationFrameId = 0;
 
       const buildFrameSources = (variant) =>
         Array.from({ length: totalFrames }, (_, index) => {
@@ -1363,6 +1381,8 @@
       };
 
       const syncVariant = (forceReset = false) => {
+        if (mobileQuery.matches) return;
+
         const nextVariant = mobileQuery.matches ? "mobile" : "desktop";
         if (!forceReset && nextVariant === currentVariant) return;
 
@@ -1391,6 +1411,24 @@
         storyFrame.src = frameSources[index];
         loadFrameAtIndex(index);
         preloadBufferWindow(index);
+      };
+
+      const setStaticMobileFrame = () => {
+        currentVariant = "mobile";
+        currentFrameIndex = -1;
+
+        if (!hasInitialFrame) {
+          storyFrame.addEventListener(
+            "load",
+            () => {
+              hasInitialFrame = true;
+              storyFrame.classList.add("is-ready");
+            },
+            { once: true },
+          );
+        }
+
+        storyFrame.src = mobileStaticFrame;
       };
 
       const updateTargets = () => {
@@ -1491,18 +1529,29 @@
         leftCloud.style.opacity = opacity.toFixed(3);
         rightCloud.style.opacity = (opacity * 0.98).toFixed(3);
 
-        requestAnimationFrame(render);
+        animationFrameId = requestAnimationFrame(render);
       };
 
       const startSequence = () => {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = 0;
+        }
+
         updateTargets();
         renderedProgress = targetProgress;
+
+        if (mobileQuery.matches) {
+          setStaticMobileFrame();
+          return;
+        }
+
         syncVariant(true);
         setFrame(Math.round(renderedProgress * (totalFrames - 1)));
-        requestAnimationFrame(render);
+        animationFrameId = requestAnimationFrame(render);
       };
 
-      mobileQuery.addEventListener("change", () => syncVariant());
+      mobileQuery.addEventListener("change", startSequence);
       requestAnimationFrame(() => {
         requestAnimationFrame(startSequence);
       });
