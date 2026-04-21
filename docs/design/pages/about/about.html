@@ -88,29 +88,6 @@
           overflow-x: clip;
         }
 
-        body::before {
-          content: "";
-          position: fixed;
-          inset: 0;
-          pointer-events: none;
-          opacity: 0.08;
-          background-image:
-            linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-            linear-gradient(
-              90deg,
-              rgba(255, 255, 255, 0.03) 1px,
-              transparent 1px
-            );
-          background-size:
-            100% 100%,
-            64px 64px;
-          mask-image: radial-gradient(
-            circle at center,
-            black 58%,
-            transparent 100%
-          );
-        }
-
         a {
           color: inherit;
           text-decoration: none;
@@ -162,7 +139,7 @@
               rgba(255, 255, 255, 0.06),
               transparent 32%
             ),
-            linear-gradient(180deg, #0a0c10, #090b0f);
+            linear-gradient(180deg, #000000, #03050a);
         }
 
         .background-frame {
@@ -194,10 +171,6 @@
           opacity: 0.9;
           will-change: transform;
           z-index: 2;
-        }
-
-        .background-cloud-wrap.is-behind {
-          z-index: -1;
         }
 
         #cloud-right {
@@ -287,16 +260,6 @@
         .page-shell {
           position: relative;
           isolation: isolate;
-        }
-
-        .page-shell::before,
-        .page-shell::after {
-          content: "";
-          position: absolute;
-          pointer-events: none;
-          filter: blur(18px);
-          z-index: -1;
-          border-radius: 50%;
         }
 
         @keyframes cloud-float-left {
@@ -936,7 +899,6 @@
         }
 
         @media (max-width: 47.5rem) {
-
           .container {
             width: min(
               calc(100% - var(--page-gutter-mobile)),
@@ -1389,7 +1351,6 @@
       let backgroundPreloadCursor = 0;
       let backgroundPreloadInFlight = 0;
       let backgroundPreloadOrder = [];
-      let cloudsAreBehind = false;
 
       const buildFrameSources = (variant) =>
         Array.from({ length: totalFrames }, (_, index) => {
@@ -1468,7 +1429,8 @@
       };
 
       const pumpBackgroundPreload = (token) => {
-        if (token !== backgroundPreloadToken || staticSceneQuery.matches) return;
+        if (token !== backgroundPreloadToken || staticSceneQuery.matches)
+          return;
 
         while (
           backgroundPreloadInFlight < backgroundPreloadConcurrency &&
@@ -1611,7 +1573,7 @@
         const leftStartX = width * 0.28;
         const leftEndX = -width * 0.3;
         const rightStartX = width * 0.27;
-        const rightEndX = width * 0.85;
+        const rightEndX = width * 0.8;
         const startY = height * 0.07;
         const endY = height * 0.02;
         const startScale = 1.42;
@@ -1623,16 +1585,8 @@
         const rightY = mix(startY + 8, endY - 4, reveal);
         const leftScale = mix(startScale, endScale, reveal);
         const rightScale = mix(startScale * 1.03, endScale * 1.01, reveal);
-        const nextCloudsAreBehind = reveal >= 0.99;
-
         leftCloud.style.transform = `translate3d(${leftX}px, ${leftY}px, 0) scale(${leftScale})`;
         rightCloud.style.transform = `translate3d(${rightX}px, ${rightY}px, 0) scale(${rightScale})`;
-
-        if (nextCloudsAreBehind !== cloudsAreBehind) {
-          cloudsAreBehind = nextCloudsAreBehind;
-          leftCloud.classList.toggle("is-behind", cloudsAreBehind);
-          rightCloud.classList.toggle("is-behind", cloudsAreBehind);
-        }
 
         animationFrameId = requestAnimationFrame(render);
       };
