@@ -182,22 +182,52 @@
           opacity: 1;
         }
 
-        .background-cloud {
+        .background-cloud-wrap {
           position: absolute;
-          top: 50%;
+          top: 80%;
+          /* # чек: меняй top, если хочешь поднять или опустить оба облака сразу */
           left: 0;
           width: min(62vw, 1100px);
+          /* # чек: увеличь width, если хочешь сделать облака крупнее */
           max-width: none;
           pointer-events: none;
           user-select: none;
           transform-origin: center center;
-          mix-blend-mode: screen;
-          opacity: 0.02;
-          filter: brightness(0.34) contrast(1.4) saturate(0)
-            drop-shadow(0 0 20px rgba(0, 0, 0, 0.12))
-            drop-shadow(0 0 90px rgba(36, 66, 119, 0.1));
-          will-change: transform, opacity;
+          opacity: 0.9;
+          will-change: transform;
           z-index: 2;
+        }
+
+        .background-cloud-wrap.is-behind {
+          z-index: -1;
+        }
+
+        #cloud-right {
+          opacity: 0.882;
+        }
+
+        .background-cloud {
+          width: 100%;
+          height: auto;
+          pointer-events: none;
+          user-select: none;
+          transform-origin: center center;
+          opacity: 1;
+          /* # чек: уменьши opacity, если облака слишком навязчивые */
+          filter: brightness(0.32) contrast(1.1) saturate(0);
+          /* # чек: brightness делает облака светлее или темнее */
+          /* # чек: contrast делает края мягче или резче */
+          will-change: transform;
+        }
+
+        #cloud-left .background-cloud {
+          animation: cloud-float-left 12s ease-in-out infinite;
+          /* # чек: увеличь 14s, если хочешь более медленное парение левого облака */
+        }
+
+        #cloud-right .background-cloud {
+          animation: cloud-float-right 12s ease-in-out infinite;
+          /* # чек: поменяй 16s, если хочешь другой темп у правого облака */
         }
 
         .background-grain {
@@ -274,6 +304,38 @@
           filter: blur(18px);
           z-index: -1;
           border-radius: 50%;
+        }
+
+        @keyframes cloud-float-left {
+          0%,
+          100% {
+            transform: translate3d(0, 0, 0) translateY(-90%) rotate(36deg)
+              scale(1.2);
+            /* # чек: translateY(-90%) поднимает левое облако выше; ближе к 0 — ниже */
+            /* # чек: rotate(36deg) сильнее наклоняет левое облако по часовой стрелке */
+            /* # чек: scale(1.2) делает левое облако крупнее или мельче */
+          }
+          50% {
+            transform: translate3d(0, 0, 0) translateY(-89.5%) rotate(36deg)
+              scale(1.225);
+            /* # чек: первые два числа translate3d задают силу парения по горизонтали и вертикали */
+          }
+        }
+
+        @keyframes cloud-float-right {
+          0%,
+          100% {
+            transform: translate3d(0, 0, 0) translateY(-80%) rotate(-25deg)
+              scaleX(-1) scale(1.5);
+            /* # чек: translateY(-80%) поднимает правое облако выше; ближе к 0 — ниже */
+            /* # чек: rotate(-25deg) меняй по модулю, если хочешь сильнее или слабее наклон */
+            /* # чек: scale(1.5) делает правое облако крупнее или компактнее */
+          }
+          50% {
+            transform: translate3d(0, 0, 0) translateY(-79.5%) rotate(-25deg)
+              scaleX(-1) scale(1.525);
+            /* # чек: здесь регулируется амплитуда лёгкого парения правого облака */
+          }
         }
 
         .page-shell::before {
@@ -883,7 +945,7 @@
         }
 
         @media (max-width: 47.5rem) {
-          .background-cloud {
+          .background-cloud-wrap {
             display: none;
           }
 
@@ -1007,18 +1069,12 @@
     <div class="page-shell">
       <div class="background-media" aria-hidden="true">
         <img class="background-frame" id="story-frame" alt="" />
-        <img
-          class="background-cloud"
-          id="cloud-left"
-          src="./assets/clouds.png"
-          alt=""
-        />
-        <img
-          class="background-cloud"
-          id="cloud-right"
-          src="./assets/clouds.png"
-          alt=""
-        />
+        <div class="background-cloud-wrap" id="cloud-left">
+          <img class="background-cloud" src="./assets/clouds.png" alt="" />
+        </div>
+        <div class="background-cloud-wrap" id="cloud-right">
+          <img class="background-cloud" src="./assets/clouds.png" alt="" />
+        </div>
         <div class="background-grain"></div>
       </div>
 
@@ -1345,6 +1401,7 @@
       let backgroundPreloadCursor = 0;
       let backgroundPreloadInFlight = 0;
       let backgroundPreloadOrder = [];
+      let cloudsAreBehind = false;
 
       const buildFrameSources = (variant) =>
         Array.from({ length: totalFrames }, (_, index) => {
@@ -1393,7 +1450,10 @@
 
         for (let index = start; index <= end; index += 1) {
           const distance = Math.abs(index - centerIndex);
-          loadFrameAtIndex(index, distance <= eagerPreloadRadius ? "high" : "low");
+          loadFrameAtIndex(
+            index,
+            distance <= eagerPreloadRadius ? "high" : "low",
+          );
         }
       };
 
@@ -1557,14 +1617,8 @@
           0,
           1,
         );
-        const time = performance.now() * 0.00016;
         const width = viewportWidth;
         const height = viewportHeight;
-
-        const leftSwayX = Math.sin(time) * 14 * settled;
-        const leftSwayY = Math.cos(time * 1.08) * 10 * settled;
-        const rightSwayX = Math.sin(time * 0.82 + 1.3) * 12 * settled;
-        const rightSwayY = Math.cos(time * 0.94 + 0.7) * 9 * settled;
 
         const leftStartX = width * 0.28;
         const leftEndX = -width * 0.3;
@@ -1573,23 +1627,28 @@
         const startY = height * 0.07;
         const endY = height * 0.02;
         const startScale = 1.42;
-        const endScale = 1.06;
+        const endScale = 1.16;
+        // # чек: leftStartX/rightStartX определяют, насколько облака заходят в центр на старте
+        // # чек: leftEndX/rightEndX определяют, насколько далеко облака разъезжаются к краям
+        // # чек: startY/endY определяют общую высоту облаков до и после разъезда
+        // # чек: startScale/endScale определяют общий размер wrapper при скролле
 
-        const leftX = mix(leftStartX, leftEndX, reveal) + leftSwayX;
-        const rightX = mix(rightStartX, rightEndX, reveal) + rightSwayX;
-        const leftY = mix(startY, endY, reveal) + leftSwayY;
-        const rightY = mix(startY + 8, endY - 4, reveal) + rightSwayY;
+        const leftX = mix(leftStartX, leftEndX, reveal);
+        const rightX = mix(rightStartX, rightEndX, reveal);
+        const leftY = mix(startY, endY, reveal);
+        const rightY = mix(startY + 8, endY - 4, reveal);
         const leftScale = mix(startScale, endScale, reveal);
         const rightScale = mix(startScale * 1.03, endScale * 1.01, reveal);
-        const opacity = mix(1, 0.9, reveal) - settled * 0.03;
-        const zIndexValue = reveal < 0.99 ? 2 : -1;
+        const nextCloudsAreBehind = reveal >= 0.99;
 
-        leftCloud.style.transform = `translate3d(${leftX}px, ${leftY}px, 0) translateY(-90%) rotate(36deg) scale(${leftScale * 1.2})`;
-        rightCloud.style.transform = `translate3d(${rightX}px, ${rightY}px, 0) translateY(-80%) rotate(-25deg) scaleX(-1) scale(${rightScale * 1.5})`;
-        leftCloud.style.zIndex = zIndexValue;
-        rightCloud.style.zIndex = zIndexValue;
-        leftCloud.style.opacity = opacity.toFixed(3);
-        rightCloud.style.opacity = (opacity * 0.98).toFixed(3);
+        leftCloud.style.transform = `translate3d(${leftX}px, ${leftY}px, 0) scale(${leftScale})`;
+        rightCloud.style.transform = `translate3d(${rightX}px, ${rightY}px, 0) scale(${rightScale})`;
+
+        if (nextCloudsAreBehind !== cloudsAreBehind) {
+          cloudsAreBehind = nextCloudsAreBehind;
+          leftCloud.classList.toggle("is-behind", cloudsAreBehind);
+          rightCloud.classList.toggle("is-behind", cloudsAreBehind);
+        }
 
         animationFrameId = requestAnimationFrame(render);
       };
@@ -1609,7 +1668,9 @@
         }
 
         syncVariant(true);
-        const initialFrameIndex = Math.round(renderedProgress * (totalFrames - 1));
+        const initialFrameIndex = Math.round(
+          renderedProgress * (totalFrames - 1),
+        );
         setFrame(initialFrameIndex);
         scheduleBackgroundPreload(initialFrameIndex);
         animationFrameId = requestAnimationFrame(render);
@@ -1617,7 +1678,9 @@
 
       mobileQuery.addEventListener("change", startSequence);
       window.addEventListener("scroll", updateTargets, { passive: true });
-      window.addEventListener("resize", handleViewportUpdate, { passive: true });
+      window.addEventListener("resize", handleViewportUpdate, {
+        passive: true,
+      });
       requestAnimationFrame(() => {
         requestAnimationFrame(startSequence);
       });
