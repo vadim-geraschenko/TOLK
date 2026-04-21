@@ -57,11 +57,6 @@
           --story-card-max: 600px;
           --story-pair-card-max: 400px;
           --story-pair-gap: 24px;
-          --story-video-progress: 0;
-          --scene-dim: 0.36;
-          --scene-contrast: 0.96;
-          --scene-saturate: 0.9;
-          --scene-grain: 0.1;
           --bp-tablet-max: 68.75rem; /* 1100px */
           --bp-mobile-max: 47.5rem; /* 760px */
           --bp-mobile-tight-max: 32.5rem; /* 520px */
@@ -179,8 +174,7 @@
           object-position: center;
           padding: 24px;
           transform: translateZ(0);
-          filter: brightness(calc(1 - var(--scene-dim)))
-            contrast(var(--scene-contrast)) saturate(var(--scene-saturate));
+          filter: brightness(0.74) contrast(1.04) saturate(0.94);
           opacity: 0;
         }
 
@@ -216,7 +210,7 @@
           content: "";
           position: absolute;
           inset: 0;
-          opacity: var(--scene-grain);
+          opacity: 0.055;
           background-image:
             radial-gradient(
               rgba(255, 255, 255, 0.22) 0.3px,
@@ -249,12 +243,7 @@
             ),
             radial-gradient(
               circle at 50% 24%,
-              rgba(
-                208,
-                216,
-                226,
-                calc(0.01 + var(--story-video-progress) * 0.02)
-              ),
+              rgba(208, 216, 226, 0.018),
               transparent 30%
             ),
             radial-gradient(
@@ -1343,13 +1332,6 @@
         return 0.9 + ((clamped - 0.84) / 0.16) * 0.1;
       };
 
-      const setStoryProgress = (progress) => {
-        document.documentElement.style.setProperty(
-          "--story-video-progress",
-          progress.toFixed(4),
-        );
-      };
-
       let frameSources = [];
       let currentVariant = "";
       let targetProgress = 0;
@@ -1532,24 +1514,6 @@
         );
 
         targetProgress = sceneProgressMap(scrollTop / maxScroll);
-        setStoryProgress(targetProgress);
-
-        const sceneReveal = clamp((targetProgress - 0.04) / 0.92, 0, 1);
-        const sceneDim = (0.36 - sceneReveal * 0.22).toFixed(3);
-        const sceneContrast = (0.96 + sceneReveal * 0.08).toFixed(3);
-        const sceneSaturate = (0.9 + sceneReveal * 0.08).toFixed(3);
-        const sceneGrain = (0.1 - sceneReveal * 0.045).toFixed(4);
-
-        document.documentElement.style.setProperty("--scene-dim", sceneDim);
-        document.documentElement.style.setProperty(
-          "--scene-contrast",
-          sceneContrast,
-        );
-        document.documentElement.style.setProperty(
-          "--scene-saturate",
-          sceneSaturate,
-        );
-        document.documentElement.style.setProperty("--scene-grain", sceneGrain);
 
         storyPairs.forEach((pair) => {
           const pairRect = pair.getBoundingClientRect();
