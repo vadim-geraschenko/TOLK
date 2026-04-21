@@ -185,10 +185,8 @@
         .background-cloud-wrap {
           position: absolute;
           top: 80%;
-          /* # чек: меняй top, если хочешь поднять или опустить оба облака сразу */
           left: 0;
           width: min(62vw, 1100px);
-          /* # чек: увеличь width, если хочешь сделать облака крупнее */
           max-width: none;
           pointer-events: none;
           user-select: none;
@@ -213,21 +211,16 @@
           user-select: none;
           transform-origin: center center;
           opacity: 1;
-          /* # чек: уменьши opacity, если облака слишком навязчивые */
           filter: brightness(0.32) contrast(1.1) saturate(0);
-          /* # чек: brightness делает облака светлее или темнее */
-          /* # чек: contrast делает края мягче или резче */
           will-change: transform;
         }
 
         #cloud-left .background-cloud {
           animation: cloud-float-left 12s ease-in-out infinite;
-          /* # чек: увеличь 14s, если хочешь более медленное парение левого облака */
         }
 
         #cloud-right .background-cloud {
           animation: cloud-float-right 12s ease-in-out infinite;
-          /* # чек: поменяй 16s, если хочешь другой темп у правого облака */
         }
 
         .background-grain {
@@ -311,14 +304,10 @@
           100% {
             transform: translate3d(0, 0, 0) translateY(-90%) rotate(36deg)
               scale(1.2);
-            /* # чек: translateY(-90%) поднимает левое облако выше; ближе к 0 — ниже */
-            /* # чек: rotate(36deg) сильнее наклоняет левое облако по часовой стрелке */
-            /* # чек: scale(1.2) делает левое облако крупнее или мельче */
           }
           50% {
             transform: translate3d(0, 0, 0) translateY(-89.5%) rotate(36deg)
               scale(1.225);
-            /* # чек: первые два числа translate3d задают силу парения по горизонтали и вертикали */
           }
         }
 
@@ -327,14 +316,10 @@
           100% {
             transform: translate3d(0, 0, 0) translateY(-80%) rotate(-25deg)
               scaleX(-1) scale(1.5);
-            /* # чек: translateY(-80%) поднимает правое облако выше; ближе к 0 — ниже */
-            /* # чек: rotate(-25deg) меняй по модулю, если хочешь сильнее или слабее наклон */
-            /* # чек: scale(1.5) делает правое облако крупнее или компактнее */
           }
           50% {
             transform: translate3d(0, 0, 0) translateY(-79.5%) rotate(-25deg)
               scaleX(-1) scale(1.525);
-            /* # чек: здесь регулируется амплитуда лёгкого парения правого облака */
           }
         }
 
@@ -944,10 +929,13 @@
           }
         }
 
-        @media (max-width: 47.5rem) {
+        @media (max-width: 68.75rem) {
           .background-cloud-wrap {
             display: none;
           }
+        }
+
+        @media (max-width: 47.5rem) {
 
           .container {
             width: min(
@@ -1367,7 +1355,7 @@
       const leftCloud = document.getElementById("cloud-left");
       const rightCloud = document.getElementById("cloud-right");
       const storyPairs = document.querySelectorAll("[data-pair]");
-      const mobileQuery = window.matchMedia("(max-width: 760px)");
+      const staticSceneQuery = window.matchMedia("(max-width: 1100px)");
       const totalFrames = 60;
       const preloadBuffer = 6;
       const eagerPreloadRadius = 10;
@@ -1480,7 +1468,7 @@
       };
 
       const pumpBackgroundPreload = (token) => {
-        if (token !== backgroundPreloadToken || mobileQuery.matches) return;
+        if (token !== backgroundPreloadToken || staticSceneQuery.matches) return;
 
         while (
           backgroundPreloadInFlight < backgroundPreloadConcurrency &&
@@ -1504,7 +1492,7 @@
       };
 
       const scheduleBackgroundPreload = (centerIndex) => {
-        if (mobileQuery.matches) return;
+        if (staticSceneQuery.matches) return;
 
         backgroundPreloadToken += 1;
         backgroundPreloadCursor = 0;
@@ -1514,9 +1502,9 @@
       };
 
       const syncVariant = (forceReset = false) => {
-        if (mobileQuery.matches) return;
+        if (staticSceneQuery.matches) return;
 
-        const nextVariant = mobileQuery.matches ? "mobile" : "desktop";
+        const nextVariant = "desktop";
         if (!forceReset && nextVariant === currentVariant) return;
 
         currentVariant = nextVariant;
@@ -1547,7 +1535,7 @@
         preloadBufferWindow(index);
       };
 
-      const setStaticMobileFrame = () => {
+      const setStaticFallbackFrame = () => {
         currentVariant = "mobile";
         currentFrameIndex = -1;
         backgroundPreloadToken += 1;
@@ -1628,10 +1616,6 @@
         const endY = height * 0.02;
         const startScale = 1.42;
         const endScale = 1.16;
-        // # чек: leftStartX/rightStartX определяют, насколько облака заходят в центр на старте
-        // # чек: leftEndX/rightEndX определяют, насколько далеко облака разъезжаются к краям
-        // # чек: startY/endY определяют общую высоту облаков до и после разъезда
-        // # чек: startScale/endScale определяют общий размер wrapper при скролле
 
         const leftX = mix(leftStartX, leftEndX, reveal);
         const rightX = mix(rightStartX, rightEndX, reveal);
@@ -1662,8 +1646,8 @@
         handleViewportUpdate();
         renderedProgress = targetProgress;
 
-        if (mobileQuery.matches) {
-          setStaticMobileFrame();
+        if (staticSceneQuery.matches) {
+          setStaticFallbackFrame();
           return;
         }
 
@@ -1676,7 +1660,7 @@
         animationFrameId = requestAnimationFrame(render);
       };
 
-      mobileQuery.addEventListener("change", startSequence);
+      staticSceneQuery.addEventListener("change", startSequence);
       window.addEventListener("scroll", updateTargets, { passive: true });
       window.addEventListener("resize", handleViewportUpdate, {
         passive: true,
