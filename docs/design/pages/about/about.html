@@ -1325,7 +1325,10 @@
       const mobileQuery = window.matchMedia("(max-width: 760px)");
       const totalFrames = 60;
       const preloadBuffer = 6;
+      const eagerPreloadRadius = 10;
+      const backgroundPreloadConcurrency = 4;
       const loadedFrames = new Set();
+      const pendingFrameLoads = new Map();
       const mobileStaticFrame = "./assets/angel-sequence/mobile/frame-028.webp";
 
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -1354,6 +1357,12 @@
       let currentFrameIndex = -1;
       let hasInitialFrame = false;
       let animationFrameId = 0;
+      let viewportWidth = window.innerWidth;
+      let viewportHeight = window.innerHeight;
+      let backgroundPreloadToken = 0;
+      let backgroundPreloadCursor = 0;
+      let backgroundPreloadInFlight = 0;
+      let backgroundPreloadOrder = [];
 
       const buildFrameSources = (variant) =>
         Array.from({ length: totalFrames }, (_, index) => {
@@ -1361,14 +1370,39 @@
           return `./assets/angel-sequence/${variant}/frame-${frameNumber}.webp`;
         });
 
-      const loadFrameAtIndex = (index) => {
-        if (index < 0 || index >= totalFrames) return;
-        if (loadedFrames.has(index)) return;
+      const loadFrameAtIndex = (index, priority = "low") => {
+        if (index < 0 || index >= totalFrames) return Promise.resolve(false);
+        if (loadedFrames.has(index)) return Promise.resolve(true);
+        if (pendingFrameLoads.has(index)) return pendingFrameLoads.get(index);
 
         const image = new Image();
         image.decoding = "async";
+        image.fetchPriority = priority;
+        image.loading = "eager";
+
+        const loadPromise = new Promise((resolve) => {
+          image.addEventListener(
+            "load",
+            () => {
+              loadedFrames.add(index);
+              pendingFrameLoads.delete(index);
+              resolve(true);
+            },
+            { once: true },
+          );
+          image.addEventListener(
+            "error",
+            () => {
+              pendingFrameLoads.delete(index);
+              resolve(false);
+            },
+            { once: true },
+          );
+        });
+
         image.src = frameSources[index];
-        loadedFrames.add(index);
+        pendingFrameLoads.set(index, loadPromise);
+        return loadPromise;
       };
 
       const preloadBufferWindow = (centerIndex) => {
@@ -1376,8 +1410,65 @@
         const end = Math.min(centerIndex + preloadBuffer, totalFrames - 1);
 
         for (let index = start; index <= end; index += 1) {
-          loadFrameAtIndex(index);
+          const distance = Math.abs(index - centerIndex);
+          loadFrameAtIndex(index, distance <= eagerPreloadRadius ? "high" : "low");
         }
+      };
+
+      const buildPreloadOrder = (centerIndex) => {
+        const order = [];
+        const seen = new Set();
+
+        for (let offset = 0; offset < totalFrames; offset += 1) {
+          const leftIndex = centerIndex - offset;
+          const rightIndex = centerIndex + offset;
+
+          if (leftIndex >= 0 && !seen.has(leftIndex)) {
+            seen.add(leftIndex);
+            order.push(leftIndex);
+          }
+
+          if (rightIndex < totalFrames && !seen.has(rightIndex)) {
+            seen.add(rightIndex);
+            order.push(rightIndex);
+          }
+        }
+
+        return order;
+      };
+
+      const pumpBackgroundPreload = (token) => {
+        if (token !== backgroundPreloadToken || mobileQuery.matches) return;
+
+        while (
+          backgroundPreloadInFlight < backgroundPreloadConcurrency &&
+          backgroundPreloadCursor < backgroundPreloadOrder.length
+        ) {
+          const nextIndex = backgroundPreloadOrder[backgroundPreloadCursor];
+          backgroundPreloadCursor += 1;
+
+          if (loadedFrames.has(nextIndex) || pendingFrameLoads.has(nextIndex)) {
+            continue;
+          }
+
+          backgroundPreloadInFlight += 1;
+
+          loadFrameAtIndex(nextIndex, "low").finally(() => {
+            if (token !== backgroundPreloadToken) return;
+            backgroundPreloadInFlight -= 1;
+            pumpBackgroundPreload(token);
+          });
+        }
+      };
+
+      const scheduleBackgroundPreload = (centerIndex) => {
+        if (mobileQuery.matches) return;
+
+        backgroundPreloadToken += 1;
+        backgroundPreloadCursor = 0;
+        backgroundPreloadInFlight = 0;
+        backgroundPreloadOrder = buildPreloadOrder(centerIndex);
+        pumpBackgroundPreload(backgroundPreloadToken);
       };
 
       const syncVariant = (forceReset = false) => {
@@ -1389,6 +1480,7 @@
         currentVariant = nextVariant;
         frameSources = buildFrameSources(currentVariant);
         loadedFrames.clear();
+        pendingFrameLoads.clear();
         currentFrameIndex = -1;
         setFrame(Math.max(Math.round(renderedProgress * (totalFrames - 1)), 0));
       };
@@ -1409,13 +1501,14 @@
         }
 
         storyFrame.src = frameSources[index];
-        loadFrameAtIndex(index);
+        loadFrameAtIndex(index, "high");
         preloadBufferWindow(index);
       };
 
       const setStaticMobileFrame = () => {
         currentVariant = "mobile";
         currentFrameIndex = -1;
+        backgroundPreloadToken += 1;
 
         if (!hasInitialFrame) {
           storyFrame.addEventListener(
@@ -1473,8 +1566,13 @@
         });
       };
 
-      const render = () => {
+      const handleViewportUpdate = () => {
+        viewportWidth = window.innerWidth;
+        viewportHeight = window.innerHeight;
         updateTargets();
+      };
+
+      const render = () => {
         renderedProgress += (targetProgress - renderedProgress) * 0.14;
 
         if (Math.abs(targetProgress - renderedProgress) < 0.0008) {
@@ -1496,8 +1594,8 @@
           1,
         );
         const time = performance.now() * 0.00016;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        const width = viewportWidth;
+        const height = viewportHeight;
 
         const leftSwayX = Math.sin(time) * 14 * settled;
         const leftSwayY = Math.cos(time * 1.08) * 10 * settled;
@@ -1538,7 +1636,7 @@
           animationFrameId = 0;
         }
 
-        updateTargets();
+        handleViewportUpdate();
         renderedProgress = targetProgress;
 
         if (mobileQuery.matches) {
@@ -1547,11 +1645,15 @@
         }
 
         syncVariant(true);
-        setFrame(Math.round(renderedProgress * (totalFrames - 1)));
+        const initialFrameIndex = Math.round(renderedProgress * (totalFrames - 1));
+        setFrame(initialFrameIndex);
+        scheduleBackgroundPreload(initialFrameIndex);
         animationFrameId = requestAnimationFrame(render);
       };
 
       mobileQuery.addEventListener("change", startSequence);
+      window.addEventListener("scroll", updateTargets, { passive: true });
+      window.addEventListener("resize", handleViewportUpdate, { passive: true });
       requestAnimationFrame(() => {
         requestAnimationFrame(startSequence);
       });
