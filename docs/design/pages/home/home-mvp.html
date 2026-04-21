@@ -68,10 +68,6 @@
           --episode-cover-height-desktop: 156px;
           --episode-cover-height-mobile: 174px;
           --hero-episode-cover-height-tight-mobile: 188px;
-          --merch-media-height-desktop: 400px;
-          --merch-media-height-tablet: 340px;
-          --merch-media-height-mobile: 300px;
-          --merch-media-height-mobile-tight: 260px;
           --social-icon-size-desktop: 64px;
           --social-icon-size-mobile: 56px;
           --social-icon-size-mobile-tight: 52px;
@@ -1087,7 +1083,7 @@
           display: grid;
           grid-template-columns: 275px minmax(0, 1fr);
           gap: 18px;
-          align-items: center;
+          align-items: stretch;
         }
 
         .merch-card {
@@ -1112,7 +1108,9 @@
         }
 
         .merch-card-media {
-          height: var(--merch-media-height-desktop);
+          width: 100%;
+          height: 100%;
+          aspect-ratio: 4 / 5;
           border-radius: var(--card-radius-md);
           overflow: hidden;
           border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1130,23 +1128,29 @@
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center;
+          object-position: top;
         }
 
         .merch-copy {
           display: grid;
           gap: 14px;
-          padding: 6px 0;
+          padding: 24px 0;
+          align-content: center;
         }
 
-        .merch-copy strong {
-          display: block;
+        .merch-copy h3 {
+          margin: 0;
           font-family: var(--font-display);
-          font-size: clamp(28px, 3vw, 40px);
+          font-size: clamp(26px, 2.2vw, 30px);
           font-weight: 400;
-          letter-spacing: -0.03em;
-          line-height: 0.98;
+          letter-spacing: -0.02em;
+          line-height: 1.02;
           color: var(--text-primary);
+        }
+
+        .merch-copy .strikethrough {
+          text-decoration: line-through;
+          text-decoration-thickness: 1.5px;
         }
 
         .lower-row {
@@ -1158,10 +1162,24 @@
 
         .lower-row .section {
           padding: 0;
+          display: flex;
         }
 
         .lower-row .contact-panel,
         .lower-row .merch-panel {
+          height: 100%;
+          flex: 1;
+        }
+
+        .lower-row .panel-content {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .lower-row .merch-grid,
+        .lower-row .merch-card,
+        .lower-row .merch-layout {
           height: 100%;
         }
 
@@ -1186,9 +1204,9 @@
 
         .social-button {
           display: grid;
-          grid-template-columns: var(
-              --social-button-icon-column-desktop
-            ) minmax(0, 1fr) auto;
+          grid-template-columns:
+            var(--social-button-icon-column-desktop)
+            minmax(0, 1fr) auto;
           gap: 16px;
           align-items: center;
           padding: 14px 16px;
@@ -1422,10 +1440,6 @@
           .merch-layout {
             grid-template-columns: 245px minmax(0, 1fr);
             gap: 16px;
-          }
-
-          .merch-card-media {
-            height: var(--merch-media-height-tablet);
           }
 
           .social-buttons {
@@ -1672,16 +1686,12 @@
           }
 
           .merch-layout {
-            grid-template-columns: 1fr;
-            gap: 14px;
-          }
-
-          .merch-card-media {
-            height: var(--merch-media-height-mobile);
+            grid-template-columns: 245px minmax(0, 1fr);
+            gap: 16px;
           }
 
           .merch-copy {
-            padding: 0;
+            padding: 12px;
           }
 
           .social-buttons {
@@ -1690,9 +1700,9 @@
           }
 
           .social-button {
-            grid-template-columns: var(
-                --social-button-icon-column-mobile
-              ) minmax(0, 1fr);
+            grid-template-columns:
+              var(--social-button-icon-column-mobile)
+              minmax(0, 1fr);
             gap: 14px;
             padding: 14px;
           }
@@ -1751,6 +1761,25 @@
           }
         }
 
+        @media (max-width: 35.0625rem) {
+          .merch-layout {
+            grid-template-columns: 1fr;
+            gap: 14px;
+            align-items: start;
+          }
+
+          .merch-card-media {
+            width: 100%;
+            height: auto;
+          }
+        }
+
+        @media (max-width: 35.0625rem) and (min-width: 26.875rem) {
+          .merch-card-media {
+            aspect-ratio: 1 / 1;
+          }
+        }
+
         @media (max-width: 32.5rem) {
           .brand-copy span {
             display: none;
@@ -1781,14 +1810,10 @@
             margin-left: -6px;
           }
 
-          .merch-card-media {
-            height: var(--merch-media-height-mobile-tight);
-          }
-
           .social-button {
-            grid-template-columns: var(
-                --social-button-icon-column-mobile-tight
-              ) minmax(0, 1fr);
+            grid-template-columns:
+              var(--social-button-icon-column-mobile-tight)
+              minmax(0, 1fr);
             gap: 12px;
             padding: 13px 12px;
           }
@@ -1937,7 +1962,12 @@
               <section class="section merch">
                 <article class="panel merch-panel">
                   <div class="panel-content">
-                    <div class="eyebrow">Мерч</div>
+                    <div class="section-header">
+                      <div>
+                        <div class="eyebrow">Мерч</div>
+                        <h2>Мерч от TOLK</h2>
+                      </div>
+                    </div>
 
                     <div class="merch-grid">
                       <article class="merch-card">
@@ -1951,7 +1981,9 @@
                             />
                           </div>
                           <div class="merch-copy">
-                            <strong>Мерч от TOLK</strong>
+                            <h3>
+                              Вы <span class="strikethrough">не</span> правы
+                            </h3>
                             <p>
                               У Тараса вышел мерч для важных переговоров.
                               Приобретайте и побеждайте в дискуссиях.
