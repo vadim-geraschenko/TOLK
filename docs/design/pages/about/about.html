@@ -518,6 +518,21 @@
           right: 40px;
         }
 
+        .star-6,
+        .star-7 {
+          display: none;
+        }
+
+        .star-6 {
+          top: 8px;
+          right: 58px;
+        }
+
+        .star-7 {
+          bottom: 8px;
+          left: 58px;
+        }
+
         .button .star-1 {
           animation: orbit-a 5.2s linear infinite;
         }
@@ -536,6 +551,14 @@
 
         .button .star-5 {
           animation: orbit-e 5.6s linear infinite;
+        }
+
+        .button .star-6 {
+          animation: orbit-f 6.1s linear infinite;
+        }
+
+        .button .star-7 {
+          animation: orbit-g 5.9s linear infinite;
         }
 
         .button:hover {
@@ -600,6 +623,33 @@
           100% {
             transform: rotate(360deg) translateX(7px) rotate(-360deg)
               scale(0.74);
+          }
+        }
+
+        @keyframes orbit-f {
+          0% {
+            transform: rotate(0deg) translateX(5px) rotate(0deg) scale(0.64);
+          }
+          100% {
+            transform: rotate(360deg) translateX(5px) rotate(-360deg)
+              scale(0.64);
+          }
+        }
+
+        @keyframes orbit-g {
+          0% {
+            transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.68);
+          }
+          100% {
+            transform: rotate(360deg) translateX(6px) rotate(-360deg)
+              scale(0.68);
+          }
+        }
+
+        @media (max-width: 53.375rem) {
+          .star-6,
+          .star-7 {
+            display: block;
           }
         }
 
@@ -1233,7 +1283,9 @@
                         ><span class="star star-sm star-2"></span
                         ><span class="star star-lg star-3"></span
                         ><span class="star star-sm star-4"></span
-                        ><span class="star star-lg star-5"></span></span
+                        ><span class="star star-lg star-5"></span
+                        ><span class="star star-sm star-6"></span
+                        ><span class="star star-sm star-7"></span></span
                     ></a>
                     <a class="button" href="#story"
                       ><span class="button-label">Читать дальше</span
@@ -1242,7 +1294,9 @@
                         ><span class="star star-sm star-2"></span
                         ><span class="star star-lg star-3"></span
                         ><span class="star star-sm star-4"></span
-                        ><span class="star star-lg star-5"></span></span
+                        ><span class="star star-lg star-5"></span
+                        ><span class="star star-sm star-6"></span
+                        ><span class="star star-sm star-7"></span></span
                     ></a>
                   </div>
                 </div>
@@ -1344,7 +1398,9 @@
                         ><span class="star star-sm star-2"></span
                         ><span class="star star-lg star-3"></span
                         ><span class="star star-sm star-4"></span
-                        ><span class="star star-lg star-5"></span></span
+                        ><span class="star star-lg star-5"></span
+                        ><span class="star star-sm star-6"></span
+                        ><span class="star star-sm star-7"></span></span
                     ></a>
                   </div>
                 </div>
@@ -1475,7 +1531,9 @@
                     ><span class="star star-sm star-2"></span
                     ><span class="star star-lg star-3"></span
                     ><span class="star star-sm star-4"></span
-                    ><span class="star star-lg star-5"></span></span
+                    ><span class="star star-lg star-5"></span
+                    ><span class="star star-sm star-6"></span
+                    ><span class="star star-sm star-7"></span></span
                 ></a>
                 <a class="button" href="../home/home-mvp.html#episodes"
                   ><span class="button-label">Смотреть выпуски</span
@@ -1484,7 +1542,9 @@
                     ><span class="star star-sm star-2"></span
                     ><span class="star star-lg star-3"></span
                     ><span class="star star-sm star-4"></span
-                    ><span class="star star-lg star-5"></span></span
+                    ><span class="star star-lg star-5"></span
+                    ><span class="star star-sm star-6"></span
+                    ><span class="star star-sm star-7"></span></span
                 ></a>
               </div>
             </article>
