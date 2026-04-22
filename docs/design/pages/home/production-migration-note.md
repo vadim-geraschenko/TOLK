@@ -9,6 +9,7 @@
 - `reading-card` использует единый layout-механизм через CSS variables, а не набор несвязанных локальных переопределений.
 - Данные для hero episode, episode cards, participants и socials вынесены в `siteData`.
 - Для ключевых изображений добавлены `width`/`height`.
+- Основной тип кнопки унифицирован через `.button`, а `.mini-button` используется только как size-modifier.
 
 ## Что должно стать компонентами
 - `HeroIntro`
@@ -35,6 +36,8 @@
 - На средних mobile-width `reading-card` остаётся двухколоночной.
 - Episode cards не должны шире `320px` в домашней карусели.
 - Участники в mobile-column не должны растягиваться без ограничения ширины.
+- Hover-поведение кнопок должно переноситься как единый button-component, а не дублироваться локальными стилями по секциям.
+- В текущем MVP кнопки используют 7 внутренних звёзд и отдельную mobile/tablet-раскладку при ширине меньше примерно `854px`.
 
 ## Recommended Production Steps
 1. Вынести данные страницы в typed object/module.
@@ -57,3 +60,4 @@
 - Потеря max-width у episode cards.
 - Потеря `width`/`height` и возврат layout shift.
 - Несогласованность token names между MVP и production implementation.
+- Локальное раздвоение кнопочной системы на несколько визуально разных CTA без явного решения в design docs.

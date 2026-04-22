@@ -5,7 +5,11 @@
 - `system/design-tokens.md` — палитра, контуры, состояния, motion и системные правила.
 - `system/image-policy.md` — правила для изображений, aspect ratio, `object-fit` и naming.
 - `pages/home/spec.md` — прикладная спецификация главной страницы.
+- `pages/about/spec.md` — прикладная спецификация страницы `about`.
+- `pages/about/content.md` — актуальный смысловой каркас страницы `about`.
+- `pages/about/background-video-by-images-sequence-animation.md` — правила фоновой сцены `about`.
 - `pages/home/home-mvp.html` — текущее визуальное состояние главной страницы.
+- `pages/about/about.html` — текущее визуальное и техническое состояние страницы `about`.
 
 Сопроводительные технические файлы:
 - `pages/home/production-migration-note.md` — памятка по безопасному переносу MVP в production-стек.
@@ -22,6 +26,8 @@
 ## Implementation Notes
 - В `home-mvp.html` контентные списки `episodes`, `participants` и `socials` должны собираться из структуры данных, а не жить как вручную дублированный HTML.
 - CSS страницы должен оставаться разделённым на `tokens`, `base`, `components`, `responsive`.
+- Текущая система кнопок едина для проекта: базовый класс — `.button`, а `.mini-button` только переопределяет размер.
+- Если между `.md` и реализацией расходятся детали фоновой сцены `about`, приоритет у `pages/about/about.html` и `pages/about/background-video-by-images-sequence-animation.md`.
 
 ## Текущий визуальный курс
 - Основная система страницы: графитовый фон и серебристо-светлые акценты.

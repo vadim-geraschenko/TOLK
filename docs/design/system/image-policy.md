@@ -19,7 +19,7 @@
 - Hero episode thumbnail: `object-fit: contain`, чтобы не терять важные части обложки.
 - Episode cards: `object-fit: cover`, так как карточка допускает controlled crop.
 - Host avatars: `object-fit: cover`.
-- Merch image: `object-fit: cover`, пока это editorial promo block, а не catalog zoom view.
+- Merch image: `object-fit: cover`; в текущем `home-mvp.html` важнее сохранить крупную вертикальную подачу изображения, чем каталоговую точность всего кадра.
 
 ## Aspect Ratio Policy
 - Episode thumbnails: ориентир `16:9`.
