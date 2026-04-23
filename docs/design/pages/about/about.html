@@ -405,10 +405,11 @@
           color: var(--accent-silver);
         }
 
-        .eyebrow {
+        .card-kicker {
           display: inline-flex;
           align-items: center;
-          gap: 10px;
+          justify-content: center;
+          width: auto;
           margin-bottom: 14px;
           color: var(--accent-silver);
           font-size: var(--type-meta-size);
@@ -417,15 +418,16 @@
           text-transform: uppercase;
         }
 
-        .eyebrow::before {
-          content: "";
-          width: 38px;
-          height: 1px;
-          background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(226, 231, 238, 0.78)
-          );
+        .card-kicker.has-lines {
+          width: 100%;
+        }
+
+        .card-kicker.has-lines::before {
+          content: none;
+        }
+
+        .card-kicker-label {
+          padding-inline: 0;
         }
 
         .button {
@@ -900,16 +902,6 @@
           margin-bottom: 80px;
         }
 
-        .story-card strong,
-        .origin-card strong {
-          display: inline-block;
-          margin-bottom: 12px;
-          color: var(--accent-silver);
-          font-size: var(--type-meta-size);
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-        }
-
         .story-card h2,
         .origin-card h2 {
           font-size: var(--card-title-size);
@@ -991,10 +983,6 @@
           text-align: center;
         }
 
-        .text-panel.is-centered .section-head {
-          justify-items: center;
-        }
-
         .text-panel.is-centered p {
           margin-inline: auto;
         }
@@ -1008,28 +996,31 @@
           display: grid;
           gap: 6px;
           margin-bottom: 24px;
+          justify-items: stretch;
         }
 
         .section-head h2,
         .section-head h3 {
           margin-bottom: 0;
           font-size: var(--card-title-size);
+          text-align: center;
         }
 
-        .story-card .eyebrow,
-        .story-card strong,
-        .origin-card strong,
-        .origin-link-card strong,
-        .cta-panel .eyebrow,
-        .text-panel .eyebrow {
+        .mobile-divider {
+          display: none;
+        }
+
+        .story-card .card-kicker,
+        .origin-card .card-kicker,
+        .origin-link-card .card-kicker,
+        .text-panel .card-kicker {
           justify-self: center;
         }
 
         .story-card h2,
         .origin-card h2,
         .origin-link-card h3,
-        .cta-panel h2,
-        .text-panel .section-head {
+        .cta-panel h2 {
           justify-self: center;
         }
 
@@ -1106,14 +1097,6 @@
           border-radius: var(--frame-radius-lg);
         }
 
-        .origin-link-card strong {
-          display: block;
-          color: var(--accent-silver);
-          font-size: var(--type-meta-size);
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-        }
-
         .origin-link-card h3 {
           font-size: var(--card-title-size);
           line-height: 1.02;
@@ -1181,6 +1164,14 @@
             gap: 40px;
           }
 
+          .story-lead {
+            padding-bottom: 40px;
+          }
+
+          .story-cards {
+            gap: 40px;
+          }
+
           .section > .container > .section-head {
             justify-items: center;
             text-align: center;
@@ -1212,7 +1203,7 @@
             position: relative;
             top: auto;
             grid-template-columns: 1fr;
-            gap: 80px;
+            gap: 40px;
             justify-items: center;
             transform: none;
           }
@@ -1226,9 +1217,28 @@
             transform: none;
           }
 
+          .mobile-divider {
+            display: block;
+            width: min(100%, 600px);
+            height: 1px;
+            margin: 40px auto 0;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(226, 231, 238, 0.42),
+              rgba(226, 231, 238, 0.82),
+              rgba(226, 231, 238, 0.42),
+              transparent
+            );
+          }
+
           .voice-card {
             width: min(100%, 600px);
             text-align: center;
+          }
+
+          .voice-intro-card {
+            margin-bottom: 40px;
           }
 
           .origin-link-card {
@@ -1425,7 +1435,9 @@
             <div class="hero-shell tone-neutral">
               <div class="hero-grid">
                 <div class="hero-copy">
-                  <div class="eyebrow">О Проекте</div>
+                  <div class="card-kicker has-lines">
+                    <span class="card-kicker-label">О Проекте</span>
+                  </div>
                   <h1>Поиск истины в честной беседе</h1>
                   <p>
                     TOLK — это искренний разговор о самом живом и нетривиальном
@@ -1439,13 +1451,16 @@
                 </div>
               </div>
             </div>
+            <div class="mobile-divider" aria-hidden="true"></div>
           </div>
         </section>
 
         <section class="section story-lead">
           <div class="container">
             <article class="story-card centered tone-neutral">
-              <strong>Почему Библия</strong>
+              <div class="card-kicker has-lines">
+                <span class="card-kicker-label">Почему Библия</span>
+              </div>
               <h2>Почему мы снова и снова возвращаемся к этой книге</h2>
               <p>
                 Библия — это текстуальная точка сингулярности. Чем глубже
@@ -1471,7 +1486,11 @@
               >
                 <div class="story-pair" data-pair>
                   <div class="story-card tone-soft">
-                    <strong>Архив человеческого опыта</strong>
+                    <div class="card-kicker">
+                      <span class="card-kicker-label"
+                        >Архив человеческого опыта</span
+                      >
+                    </div>
                     <h2>Отпечатки жизни целых эпох</h2>
                     <p>
                       Библия — это не сухой памятник древности. Она честно
@@ -1483,7 +1502,11 @@
                     </p>
                   </div>
                   <div class="story-card tone-soft">
-                    <strong>Занимательный художественный текст</strong>
+                    <div class="card-kicker">
+                      <span class="card-kicker-label"
+                        >Занимательный художественный текст</span
+                      >
+                    </div>
                     <h2>Фэнтези с огромным лором</h2>
                     <p>
                       Лор Библии не уступает Вархаммеру по размаху и гиковской
@@ -1499,7 +1522,11 @@
               <article class="story-step story-step-pair" data-progress="0.38">
                 <div class="story-pair" data-pair>
                   <div class="story-card tone-soft">
-                    <strong>Фундамент культуры и морали</strong>
+                    <div class="card-kicker">
+                      <span class="card-kicker-label"
+                        >Фундамент культуры и морали</span
+                      >
+                    </div>
                     <h2>Культурный код человечества</h2>
                     <p>
                       Всё искусство западной цивилизации пронизано библейским
@@ -1511,7 +1538,11 @@
                     </p>
                   </div>
                   <div class="story-card tone-soft">
-                    <strong>Важный религиозный текст</strong>
+                    <div class="card-kicker">
+                      <span class="card-kicker-label"
+                        >Важный религиозный текст</span
+                      >
+                    </div>
                     <h2>Религиозный фундамент</h2>
                     <p>
                       Библия — это основа авраамических религий. Для милллиардов
@@ -1525,11 +1556,14 @@
                     <p></p>
                   </div>
                 </div>
+                <div class="mobile-divider" aria-hidden="true"></div>
               </article>
 
               <article class="story-step" data-progress="0.62">
                 <div class="story-card centered tone-soft">
-                  <strong>Как Мы Читаем</strong>
+                  <div class="card-kicker has-lines">
+                    <span class="card-kicker-label">Как Мы Читаем</span>
+                  </div>
                   <h2>Чтение без догм</h2>
                   <p>
                     Мы не стремимся свести разговор к заранее известному выводу.
@@ -1553,12 +1587,15 @@
                     переживаниям.
                   </p>
                 </div>
+                <div class="mobile-divider" aria-hidden="true"></div>
               </article>
 
               <article class="story-step story-step-pair" data-progress="0.9">
                 <div class="story-pair" data-pair>
                   <div class="story-card tone-warm">
-                    <strong>Отправная Точка</strong>
+                    <div class="card-kicker">
+                      <span class="card-kicker-label">Отправная Точка</span>
+                    </div>
                     <h2>Беседа о главных сюжетах Писания</h2>
                     <p>
                       Наша
@@ -1573,7 +1610,9 @@
                     </p>
                   </div>
                   <div class="story-card tone-warm">
-                    <strong>Зарождение проекта</strong>
+                    <div class="card-kicker">
+                      <span class="card-kicker-label">Зарождение проекта</span>
+                    </div>
                     <h2>Проект вырос из одного разговора</h2>
                     <p>
                       Сначала мы хотели просто обсуждать отдельные библейские
@@ -1585,6 +1624,7 @@
                     </p>
                   </div>
                 </div>
+                <div class="mobile-divider" aria-hidden="true"></div>
               </article>
             </div>
           </div>
@@ -1594,7 +1634,9 @@
           <div class="container">
             <div class="story-card centered voice-intro-card tone-soft">
               <div class="section-head">
-                <div class="eyebrow">Три точки зрения</div>
+                <div class="card-kicker has-lines">
+                  <span class="card-kicker-label">Три точки зрения</span>
+                </div>
                 <h2>Один текст, несколько взглядов</h2>
               </div>
               <p>
@@ -1647,6 +1689,7 @@
                   нарративы.
                 </p>
               </article>
+              <div class="mobile-divider" aria-hidden="true"></div>
             </div>
           </div>
         </section>
@@ -1655,7 +1698,9 @@
           <div class="container">
             <article class="text-panel tone-warm is-centered">
               <div class="section-head">
-                <div class="eyebrow">Для Кого TOLK</div>
+                <div class="card-kicker has-lines">
+                  <span class="card-kicker-label">Для Кого TOLK</span>
+                </div>
                 <h2>Для тех, кто ищет</h2>
               </div>
               <p>
@@ -1676,6 +1721,7 @@
                 нашем диалоге ориентиры на пути к важным для себя ответам.
               </p>
             </article>
+            <div class="mobile-divider" aria-hidden="true"></div>
           </div>
         </section>
 
@@ -1683,7 +1729,9 @@
           <div class="container">
             <article class="story-card centered tone-soft">
               <div class="section-head">
-                <div class="eyebrow">Продолжение</div>
+                <div class="card-kicker has-lines">
+                  <span class="card-kicker-label">Продолжение</span>
+                </div>
                 <h2>Если вам это близко</h2>
               </div>
               <p>
