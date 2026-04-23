@@ -1317,6 +1317,28 @@
           html {
             scroll-behavior: auto;
           }
+
+          .background-cloud-wrap {
+            display: none;
+          }
+
+          .background-cloud {
+            animation: none;
+          }
+
+          .story-pair {
+            will-change: auto;
+          }
+
+          .story-pair .story-card {
+            will-change: auto;
+            transform: none;
+          }
+
+          .story-pair .story-card:first-child,
+          .story-pair .story-card:last-child {
+            transform: none;
+          }
         }
       }
     </style>
@@ -1402,7 +1424,10 @@
         <section class="section story" id="story">
           <div class="container">
             <div class="story-cards" id="story-cards">
-              <article class="story-step story-step-pair story-step-pair-tight-top" data-progress="0.38">
+              <article
+                class="story-step story-step-pair story-step-pair-tight-top"
+                data-progress="0.38"
+              >
                 <div class="story-pair" data-pair>
                   <div class="story-card tone-soft">
                     <strong>Архив человеческого опыта</strong>
@@ -1446,7 +1471,7 @@
                   </div>
                   <div class="story-card tone-soft">
                     <strong>Важный религиозный текст</strong>
-                    <h2>Религиозный фундмаент</h2>
+                    <h2>Религиозный фундамент</h2>
                     <p>
                       Библия — это основа авраамических религий. Для милллиардов
                       она служит свидетельством контакта человека с Богом. Для
@@ -1648,12 +1673,21 @@
       const storyPairs = Array.from(document.querySelectorAll("[data-pair]"));
       const storyPairStates = storyPairs.map((pair) => ({
         pair,
+        pairStep: pair.closest(".story-step"),
+        stepTop: 0,
+        stepHeight: 0,
+        stickyTravel: 1,
         targetX: 0,
         currentX: 0,
         targetY: 0,
         currentY: 0,
+        appliedX: NaN,
+        appliedY: NaN,
       }));
       const staticSceneQuery = window.matchMedia("(max-width: 1100px)");
+      const reducedMotionQuery = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
       const totalFrames = 60;
       const preloadBuffer = 6;
       const eagerPreloadRadius = 10;
@@ -1661,6 +1695,8 @@
       const loadedFrames = new Set();
       const pendingFrameLoads = new Map();
       const mobileStaticFrame = "./assets/angel-sequence/mobile/frame-028.webp";
+      const desktopStaticFrame =
+        "./assets/angel-sequence/desktop/frame-028.webp";
 
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
       const mix = (from, to, t) => from + (to - from) * t;
@@ -1673,6 +1709,8 @@
 
         return 0.9 + ((clamped - 0.84) / 0.16) * 0.1;
       };
+      const useStaticScene = () =>
+        staticSceneQuery.matches || reducedMotionQuery.matches;
 
       let frameSources = [];
       let currentVariant = "";
@@ -1765,8 +1803,7 @@
       };
 
       const pumpBackgroundPreload = (token) => {
-        if (token !== backgroundPreloadToken || staticSceneQuery.matches)
-          return;
+        if (token !== backgroundPreloadToken || useStaticScene()) return;
 
         while (
           backgroundPreloadInFlight < backgroundPreloadConcurrency &&
@@ -1790,7 +1827,7 @@
       };
 
       const scheduleBackgroundPreload = (centerIndex) => {
-        if (staticSceneQuery.matches) return;
+        if (useStaticScene()) return;
 
         backgroundPreloadToken += 1;
         backgroundPreloadCursor = 0;
@@ -1800,7 +1837,7 @@
       };
 
       const syncVariant = (forceReset = false) => {
-        if (staticSceneQuery.matches) return;
+        if (useStaticScene()) return;
 
         const nextVariant = "desktop";
         if (!forceReset && nextVariant === currentVariant) return;
@@ -1834,7 +1871,7 @@
       };
 
       const setStaticFallbackFrame = () => {
-        currentVariant = "mobile";
+        currentVariant = reducedMotionQuery.matches ? "desktop" : "mobile";
         currentFrameIndex = -1;
         backgroundPreloadToken += 1;
 
@@ -1848,8 +1885,22 @@
             { once: true },
           );
         }
+        storyFrame.src = reducedMotionQuery.matches
+          ? desktopStaticFrame
+          : mobileStaticFrame;
+      };
 
-        storyFrame.src = mobileStaticFrame;
+      const refreshStoryPairMetrics = () => {
+        storyPairStates.forEach((state) => {
+          const step = state.pairStep || state.pair;
+          const stepRect = step.getBoundingClientRect();
+          state.stepTop = stepRect.top + (window.scrollY || window.pageYOffset);
+          state.stepHeight = stepRect.height;
+          state.stickyTravel = Math.max(
+            stepRect.height - window.innerHeight,
+            1,
+          );
+        });
       };
 
       const updateTargets = () => {
@@ -1862,11 +1913,6 @@
         targetProgress = sceneProgressMap(scrollTop / maxScroll);
 
         storyPairStates.forEach((state) => {
-          const { pair } = state;
-          const pairStep = pair.closest(".story-step");
-          const stepRect = pairStep
-            ? pairStep.getBoundingClientRect()
-            : pair.getBoundingClientRect();
           // # чек: `0.72` задаёт, в какой точке viewport начинается активный разъезд.
           // Меньше значение = разъезд стартует позже.
           // Больше значение = стартует раньше, ещё до выхода пары в центр экрана.
@@ -1876,11 +1922,12 @@
           // #хай: это длина sticky-сцены в терминах scroll-progress.
           // Если pair-блоки слишком долго висят и после них остаётся пустой хвост,
           // первым делом проверяй `stickyTravel` вместе с CSS `min-height` pair-step.
-          const stickyTravel = Math.max(
-            stepRect.height - window.innerHeight,
+          const stepTopInViewport = state.stepTop - scrollTop;
+          const pairYProgress = clamp(
+            -stepTopInViewport / state.stickyTravel,
+            0,
             1,
           );
-          const pairYProgress = clamp(-stepRect.top / stickyTravel, 0, 1);
           // # чек: горизонтальный split теперь считается только от геометрии story-step,
           // а не от самого sticky-элемента. Это убирает скачки, вызванные тем, что
           // анимируемый pair влиял на собственный getBoundingClientRect().
@@ -1909,6 +1956,7 @@
       };
 
       let targetsFrameId = 0;
+      const renderEpsilon = 0.0008;
 
       const scheduleTargetsUpdate = () => {
         if (targetsFrameId) {
@@ -1918,19 +1966,31 @@
         targetsFrameId = requestAnimationFrame(() => {
           targetsFrameId = 0;
           updateTargets();
+          ensureRenderLoop();
         });
+      };
+
+      const ensureRenderLoop = () => {
+        if (useStaticScene() || animationFrameId) {
+          return;
+        }
+
+        animationFrameId = requestAnimationFrame(render);
       };
 
       const handleViewportUpdate = () => {
         viewportWidth = window.innerWidth;
         viewportHeight = window.innerHeight;
+        refreshStoryPairMetrics();
         updateTargets();
+        ensureRenderLoop();
       };
 
       const render = () => {
+        animationFrameId = 0;
         renderedProgress += (targetProgress - renderedProgress) * 0.12;
 
-        if (Math.abs(targetProgress - renderedProgress) < 0.0008) {
+        if (Math.abs(targetProgress - renderedProgress) < renderEpsilon) {
           renderedProgress = targetProgress;
         }
 
@@ -1953,22 +2013,35 @@
           state.currentX += (state.targetX - state.currentX) * 0.12;
           state.currentY += (state.targetY - state.currentY) * 0.12;
 
-          if (Math.abs(state.targetX - state.currentX) < 0.0008) {
+          if (Math.abs(state.targetX - state.currentX) < renderEpsilon) {
             state.currentX = state.targetX;
           }
 
-          if (Math.abs(state.targetY - state.currentY) < 0.0008) {
+          if (Math.abs(state.targetY - state.currentY) < renderEpsilon) {
             state.currentY = state.targetY;
           }
 
-          state.pair.style.setProperty(
-            "--pair-progress",
-            state.currentX.toFixed(4),
-          );
-          state.pair.style.setProperty(
-            "--pair-y-progress",
-            state.currentY.toFixed(4),
-          );
+          if (
+            Number.isNaN(state.appliedX) ||
+            Math.abs(state.currentX - state.appliedX) >= renderEpsilon
+          ) {
+            state.pair.style.setProperty(
+              "--pair-progress",
+              state.currentX.toFixed(4),
+            );
+            state.appliedX = state.currentX;
+          }
+
+          if (
+            Number.isNaN(state.appliedY) ||
+            Math.abs(state.currentY - state.appliedY) >= renderEpsilon
+          ) {
+            state.pair.style.setProperty(
+              "--pair-y-progress",
+              state.currentY.toFixed(4),
+            );
+            state.appliedY = state.currentY;
+          }
         });
 
         const width = viewportWidth;
@@ -1992,7 +2065,17 @@
         leftCloud.style.transform = `translate3d(${leftX}px, ${leftY}px, 0) scale(${leftScale})`;
         rightCloud.style.transform = `translate3d(${rightX}px, ${rightY}px, 0) scale(${rightScale})`;
 
-        animationFrameId = requestAnimationFrame(render);
+        const progressSettled =
+          Math.abs(targetProgress - renderedProgress) < renderEpsilon;
+        const pairsSettled = storyPairStates.every(
+          (state) =>
+            Math.abs(state.targetX - state.currentX) < renderEpsilon &&
+            Math.abs(state.targetY - state.currentY) < renderEpsilon,
+        );
+
+        if (!progressSettled || !pairsSettled) {
+          animationFrameId = requestAnimationFrame(render);
+        }
       };
 
       const startSequence = () => {
@@ -2009,7 +2092,7 @@
         handleViewportUpdate();
         renderedProgress = targetProgress;
 
-        if (staticSceneQuery.matches) {
+        if (useStaticScene()) {
           setStaticFallbackFrame();
           return;
         }
@@ -2020,10 +2103,11 @@
         );
         setFrame(initialFrameIndex);
         scheduleBackgroundPreload(initialFrameIndex);
-        animationFrameId = requestAnimationFrame(render);
+        ensureRenderLoop();
       };
 
       staticSceneQuery.addEventListener("change", startSequence);
+      reducedMotionQuery.addEventListener("change", startSequence);
       window.addEventListener("scroll", scheduleTargetsUpdate, {
         passive: true,
       });
