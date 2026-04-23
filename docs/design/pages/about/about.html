@@ -849,6 +849,10 @@
           box-sizing: border-box;
         }
 
+        .story-step.story-step-pair.story-step-pair-tight-top {
+          --pair-stage-enter-space: 0px;
+        }
+
         .story-card,
         .voice-card,
         .origin-card {
@@ -932,7 +936,8 @@
              ритм обычно становится стабильнее.
              Чем сильнее это значение уходит вниз/вверх при скролле,
              тем легче сломать равные интервалы между рядами. */
-          transform: translateY(calc(var(--pair-y-progress) * -50%));
+          transform: translateY(0%);
+          will-change: transform;
         }
 
         .story-pair .story-card {
@@ -943,6 +948,8 @@
              Больше duration = мягче, но более "вязко".
              Меньше duration или linear = движение ближе к реальному скроллу. */
           transition: none;
+          will-change: transform;
+          transform: translateZ(0);
         }
 
         .story-pair .story-card:first-child {
@@ -1395,7 +1402,7 @@
         <section class="section story" id="story">
           <div class="container">
             <div class="story-cards" id="story-cards">
-              <article class="story-step story-step-pair" data-progress="0.38">
+              <article class="story-step story-step-pair story-step-pair-tight-top" data-progress="0.38">
                 <div class="story-pair" data-pair>
                   <div class="story-card tone-soft">
                     <strong>Архив человеческого опыта</strong>
@@ -1897,7 +1904,20 @@
           // # чек: здесь применяется easing к самому прогрессу разъезда.
           // Если нужен строго линейный ход, убери `sceneProgressMap(...)`
           // и передавай `pairProgress.toFixed(4)` напрямую.
-          state.targetX = sceneProgressMap(pairProgress);
+          state.targetX = pairProgress;
+        });
+      };
+
+      let targetsFrameId = 0;
+
+      const scheduleTargetsUpdate = () => {
+        if (targetsFrameId) {
+          return;
+        }
+
+        targetsFrameId = requestAnimationFrame(() => {
+          targetsFrameId = 0;
+          updateTargets();
         });
       };
 
@@ -1908,7 +1928,7 @@
       };
 
       const render = () => {
-        renderedProgress += (targetProgress - renderedProgress) * 0.14;
+        renderedProgress += (targetProgress - renderedProgress) * 0.12;
 
         if (Math.abs(targetProgress - renderedProgress) < 0.0008) {
           renderedProgress = targetProgress;
@@ -1918,20 +1938,20 @@
         setFrame(nextFrame);
 
         const revealEnd = 0.3;
-        const revealInput = clamp(targetProgress / revealEnd, 0, 1);
+        const revealInput = clamp(renderedProgress / revealEnd, 0, 1);
         const reveal =
           revealInput < 0.5
             ? 2 * revealInput * revealInput
             : 1 - Math.pow(-2 * revealInput + 2, 2) / 2;
         const settled = clamp(
-          (targetProgress - revealEnd) / (1 - revealEnd),
+          (renderedProgress - revealEnd) / (1 - revealEnd),
           0,
           1,
         );
 
         storyPairStates.forEach((state) => {
-          state.currentX += (state.targetX - state.currentX) * 0.14;
-          state.currentY += (state.targetY - state.currentY) * 0.14;
+          state.currentX += (state.targetX - state.currentX) * 0.12;
+          state.currentY += (state.targetY - state.currentY) * 0.12;
 
           if (Math.abs(state.targetX - state.currentX) < 0.0008) {
             state.currentX = state.targetX;
@@ -1981,6 +2001,11 @@
           animationFrameId = 0;
         }
 
+        if (targetsFrameId) {
+          cancelAnimationFrame(targetsFrameId);
+          targetsFrameId = 0;
+        }
+
         handleViewportUpdate();
         renderedProgress = targetProgress;
 
@@ -1999,7 +2024,9 @@
       };
 
       staticSceneQuery.addEventListener("change", startSequence);
-      window.addEventListener("scroll", updateTargets, { passive: true });
+      window.addEventListener("scroll", scheduleTargetsUpdate, {
+        passive: true,
+      });
       window.addEventListener("resize", handleViewportUpdate, {
         passive: true,
       });
