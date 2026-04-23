@@ -4,6 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TOLK — Home MVP</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Source+Sans+3:wght@500;600;700&display=swap"
+    />
     <style>
       @layer tokens, base, components, responsive;
 
@@ -74,10 +80,9 @@
           --social-button-icon-column-desktop: 64px;
           --social-button-icon-column-mobile: 56px;
           --social-button-icon-column-mobile-tight: 52px;
-          --font-display:
-            "Iowan Old Style", "Palatino Linotype", "Book Antiqua",
-            "URW Palladio L", serif;
-          --font-body: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
+          --font-display: "Cormorant Garamond", "Times New Roman", serif;
+          --font-body:
+            "Source Sans 3", "Segoe UI", "Helvetica Neue", sans-serif;
           /*
           Breakpoint tokens are mirrored in media queries below.
           Plain CSS custom properties are not available inside media conditions.
@@ -111,6 +116,7 @@
             ),
             linear-gradient(180deg, #0b0d10 0%, #0f1114 34%, #12151a 100%);
           font-family: var(--font-body);
+          font-weight: 500;
           letter-spacing: 0.01em;
           overflow-x: clip;
         }
@@ -276,7 +282,7 @@
         h3 {
           margin: 0;
           font-family: var(--font-display);
-          font-weight: 400;
+          font-weight: 600;
           line-height: 0.96;
           letter-spacing: -0.03em;
         }
@@ -1366,7 +1372,7 @@
           margin: 0;
           font-family: var(--font-display);
           font-size: clamp(26px, 2.2vw, 30px);
-          font-weight: 400;
+          font-weight: 600;
           letter-spacing: -0.02em;
           line-height: 1.02;
           color: var(--text-primary);

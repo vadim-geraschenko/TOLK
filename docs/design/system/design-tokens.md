@@ -113,7 +113,9 @@ Note:
 - In plain CSS these breakpoint tokens still need to be duplicated numerically inside `@media`, because custom properties are not available in media conditions.
 
 ## Typography Scale
-Font families are directional placeholders; final implementation can select exact licensed fonts later.
+Detailed typography rules now live in [typography.md](/home/rotvein/Desktop/TOLK_design/docs/design/system/typography.md).
+
+Font families below describe the system roles. Exact implementation choices should follow `typography.md`.
 
 - `font.display`
   High-contrast editorial serif or serif-adjacent display family with sculptural forms.
