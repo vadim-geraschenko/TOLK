@@ -644,6 +644,19 @@
             inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
+        .button:active {
+          transform: translateY(1px) scale(0.988);
+          border-color: rgba(255, 255, 255, 0.16);
+          box-shadow:
+            0 8px 18px rgba(0, 0, 0, 0.22),
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        }
+
+        .button:focus-visible {
+          outline: 2px solid rgba(238, 242, 246, 0.78);
+          outline-offset: 3px;
+        }
+
         @keyframes orbit-a {
           0% {
             transform: translate3d(0, 0, 0) rotate(0deg) translateX(8px)
