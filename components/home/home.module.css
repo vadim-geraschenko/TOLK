@@ -1,0 +1,750 @@
+.pageShell {
+  position: relative;
+  isolation: isolate;
+}
+
+.pageShell::before,
+.pageShell::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  filter: blur(18px);
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.pageShell::before {
+  top: 120px;
+  right: -140px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.04), transparent 68%);
+  animation: drift 18s ease-in-out infinite;
+}
+
+.pageShell::after {
+  top: 720px;
+  left: -140px;
+  width: 340px;
+  height: 340px;
+  background: radial-gradient(circle, rgba(126, 142, 160, 0.06), transparent 70%);
+  animation: drift 16s ease-in-out infinite reverse;
+}
+
+.container {
+  width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
+  margin: 0 auto;
+}
+
+.sectionDivider {
+  position: relative;
+  width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
+  height: var(--section-divider-height);
+  margin: 0 auto;
+}
+
+.sectionDivider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 14%,
+    rgba(255, 255, 255, 0.1) 40%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0.1) 86%,
+    transparent 100%
+  );
+}
+
+.sectionDivider::after {
+  content: "●";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 38px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  color: rgba(230, 235, 241, 0.26);
+  font-size: 18px;
+  letter-spacing: 0.3em;
+}
+
+.hero {
+  padding: 34px 0 14px;
+}
+
+.heroRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.heroFrame,
+.panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--frame-radius-xl);
+  border: 1px solid var(--border-panel);
+  box-shadow: var(--elevation-shadow), var(--elevation-inner);
+  backdrop-filter: blur(12px);
+}
+
+.heroFrame {
+  height: 100%;
+  padding: var(--space-6xl) 30px;
+  background:
+    radial-gradient(circle at 82% 0%, rgba(255, 255, 255, 0.04), transparent 28%),
+    linear-gradient(140deg, rgba(17, 20, 24, 0.96), rgba(23, 26, 31, 0.94));
+}
+
+.heroFrame::before,
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 30%);
+}
+
+.heroFrame::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -60px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--hero-side-width-desktop);
+  gap: var(--space-2xl);
+  align-items: stretch;
+}
+
+.heroCopy {
+  max-width: var(--hero-copy-max-width-desktop);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.heroCopy h1 {
+  font-size: clamp(34px, 4.2vw, 50px);
+  max-width: var(--hero-title-max-width-desktop);
+}
+
+.heroCopy p {
+  margin-top: 0;
+  max-width: none;
+  font-size: 16px;
+}
+
+.heroActions {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.heroManifest {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.heroManifest p {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.heroSide {
+  min-width: 0;
+}
+
+.heroEpisode {
+  height: 100%;
+  display: grid;
+  overflow: hidden;
+  border-radius: var(--card-radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 84% 0%, rgba(255, 255, 255, 0.04), transparent 26%),
+    linear-gradient(180deg, #1e2329, #15191e);
+}
+
+.heroEpisodeCover {
+  position: relative;
+  height: var(--episode-cover-height-desktop);
+  overflow: hidden;
+}
+
+.heroEpisodeCover img,
+.episodeCover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.duration {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(10, 12, 15, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.heroEpisodeBody {
+  display: grid;
+  gap: 10px;
+  padding: 18px 18px 20px;
+}
+
+.heroEpisodeMeta,
+.meta {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.heroEpisodeBody h3,
+.participantsHead h3,
+.episodeCard h3 {
+  font-size: 24px;
+  line-height: 1.02;
+}
+
+.heroEpisodeBody p,
+.episodeCard p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.readingCard {
+  position: relative;
+  display: grid;
+  align-self: stretch;
+  overflow: hidden;
+  border-radius: var(--frame-radius-xl);
+  border: 1px solid rgba(243, 241, 234, 0.1);
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.05), transparent 30%),
+    linear-gradient(180deg, rgba(12, 14, 18, 0.96), rgba(17, 20, 25, 0.96));
+  box-shadow: var(--elevation-shadow), var(--elevation-inner);
+}
+
+.readingCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 32%);
+}
+
+.readingCardBody {
+  display: grid;
+  gap: 12px;
+  padding: 22px 22px 24px;
+}
+
+.readingStatus {
+  color: var(--accent-silver);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.readingCard h3 {
+  font-size: 24px;
+  line-height: 1.04;
+}
+
+.readingCard p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.readingMeta {
+  display: grid;
+  gap: 10px;
+}
+
+.readingMetaRow {
+  display: grid;
+  gap: 4px;
+}
+
+.readingMetaRow span {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.readingMetaRow strong {
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.readingActions {
+  display: grid;
+  gap: 18px;
+}
+
+.participantsStrip {
+  padding: 8px 0 var(--section-padding-home);
+}
+
+.participantsHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.participantsHead h3 {
+  color: var(--text-secondary);
+  font-size: 26px;
+}
+
+.participantsList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.participant {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(243, 241, 234, 0.05);
+  background: transparent;
+}
+
+.avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.participant strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.participant p {
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.episodes {
+  padding: var(--section-padding-home) 0;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.sectionHeader h2,
+.merchPanel h2 {
+  font-size: clamp(34px, 4vw, 56px);
+}
+
+.episodesTrack {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(var(--episode-card-min-width), var(--episode-card-max-width)));
+  gap: 16px;
+}
+
+.episodeCard {
+  display: grid;
+  border-radius: var(--card-radius-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.016)), rgba(17,20,24,.7);
+}
+
+.episodeCover {
+  position: relative;
+  height: var(--episode-cover-height-desktop);
+  overflow: hidden;
+}
+
+.episodeBody {
+  display: grid;
+  gap: 10px;
+  padding: 18px 18px 20px;
+}
+
+.episodeParticipants {
+  display: grid;
+  gap: 8px;
+}
+
+.episodeParticipantsLabel {
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.episodeParticipantsLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.episodeHostStack {
+  display: flex;
+  align-items: center;
+}
+
+.episodeHostAvatar {
+  width: 28px;
+  height: 28px;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.1);
+  margin-left: -8px;
+}
+
+.episodeHostAvatar:first-child {
+  margin-left: 0;
+}
+
+.episodeGuestBadge {
+  color: var(--accent-silver);
+  font-size: 11px;
+}
+
+.lowerRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.merch {
+  padding: 0;
+}
+
+.merchPanel,
+.supportPanel {
+  height: 100%;
+}
+
+.panelContent {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--frame-radius-xl);
+  border: 1px solid var(--border-panel);
+  background:
+    radial-gradient(circle at 85% 0%, rgba(255,255,255,.04), transparent 26%),
+    linear-gradient(140deg, rgba(16, 19, 24, 0.96), rgba(23, 26, 31, 0.94));
+  box-shadow: var(--elevation-shadow), var(--elevation-inner);
+  backdrop-filter: blur(12px);
+  padding: 32px;
+  padding-bottom: 0;
+  height: 100%;
+}
+
+.lowerRow section {
+  padding: 0;
+  display: flex;
+}
+
+.lowerRow .panelContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.lowerRow .merchGrid,
+.lowerRow .merchCard,
+.lowerRow .merchLayout {
+  height: 100%;
+}
+
+.merchGrid {
+  display: grid;
+}
+
+.merchCard {
+  display: grid;
+}
+
+.merchLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 22px;
+  align-items: stretch;
+}
+
+.merchCardMedia {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--card-radius-md);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.04), transparent 34%),
+    linear-gradient(180deg, #20242a, #171a1f);
+}
+
+.merchCopy {
+  display: grid;
+  gap: 14px;
+  padding: 24px 0;
+  align-content: center;
+}
+
+.merchCopy h3 {
+  font-size: clamp(26px, 2.2vw, 30px);
+  line-height: 1.02;
+}
+
+.strikethrough {
+  text-decoration: line-through;
+}
+
+.socialButtons {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.socialButton {
+  display: grid;
+  grid-template-columns: var(--social-button-icon-column-desktop) minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: var(--card-radius-md);
+  border: 1px solid rgba(255,255,255,.08);
+  background: linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.016)), rgba(17,20,24,.7);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.socialButton:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.14);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)), rgba(17,20,24,.88);
+}
+
+.socialIcon {
+  width: var(--social-icon-size-desktop);
+  height: var(--social-icon-size-desktop);
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.socialIcon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.socialCopy strong {
+  display: block;
+  color: var(--text-primary);
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.socialCopy p {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.socialArrow {
+  color: var(--accent-silver);
+  font-size: 24px;
+}
+
+.supportTitle {
+  font-size: clamp(28px, 3vw, 42px);
+  margin-bottom: 12px;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -18px, 0);
+  }
+}
+
+@media (max-width: 68.75rem) {
+  .container {
+    width: min(calc(100% - var(--page-gutter-tablet)), var(--layout-content-max));
+  }
+
+  .heroFrame {
+    padding: 28px 28px 26px;
+  }
+
+  .heroRow {
+    grid-template-columns: minmax(0, 1fr) var(--hero-row-side-width-tablet);
+  }
+
+  .heroGrid {
+    grid-template-columns: minmax(0, 1fr) var(--hero-side-width-tablet);
+    gap: 16px;
+  }
+
+  .heroCopy h1 {
+    max-width: var(--hero-title-max-width-tablet);
+    font-size: clamp(32px, 4.8vw, 44px);
+  }
+
+  .participantsList {
+    grid-template-columns: 1fr;
+  }
+
+  .participantsHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .episodesTrack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lowerRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 61.1875rem) {
+  .heroRow {
+    grid-template-columns: 1fr;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 47.5rem) {
+  .hero {
+    padding-top: 24px;
+  }
+
+  .container {
+    width: min(calc(100% - var(--page-gutter-mobile)), var(--layout-content-max));
+  }
+
+  .heroFrame,
+  .panelContent,
+  .readingCard {
+    border-radius: 24px;
+  }
+
+  .heroFrame {
+    padding: 22px 18px 18px;
+  }
+
+  .heroCopy p {
+    font-size: 15px;
+  }
+
+  .heroActions {
+    gap: 10px;
+  }
+
+  .readingCardBody {
+    padding: 20px 18px 18px;
+  }
+
+  .sectionDivider {
+    height: var(--section-divider-height-mobile);
+  }
+
+  .sectionDivider::after {
+    width: 30px;
+    font-size: 16px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .episodesTrack,
+  .merchLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .socialButton {
+    grid-template-columns: var(--social-button-icon-column-mobile) minmax(0, 1fr) auto;
+  }
+
+  .socialIcon {
+    width: var(--social-icon-size-mobile);
+    height: var(--social-icon-size-mobile);
+  }
+}
+
+@media (max-width: 32.5rem) {
+  .heroCopy h1 {
+    font-size: clamp(30px, 10.2vw, 38px);
+  }
+
+  .socialButton {
+    grid-template-columns: var(--social-button-icon-column-mobile-tight) minmax(0, 1fr);
+  }
+
+  .socialArrow {
+    display: none;
+  }
+
+  .socialIcon {
+    width: var(--social-icon-size-mobile-tight);
+    height: var(--social-icon-size-mobile-tight);
+    border-radius: 16px;
+  }
+}

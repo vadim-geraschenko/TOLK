@@ -1,0 +1,135 @@
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 18px 0 14px;
+  backdrop-filter: blur(18px);
+  background: linear-gradient(
+    180deg,
+    rgba(10, 11, 14, 0.84),
+    rgba(10, 11, 14, 0.42)
+  );
+  border-bottom: 1px solid rgba(243, 241, 234, 0.04);
+}
+
+.container {
+  width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brandMark {
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(226, 231, 238, 0.16);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  box-shadow: var(--elevation-inner);
+  color: var(--accent-silver-strong);
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+
+.brandCopy strong {
+  display: block;
+  font-size: 14px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.brandCopy span {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: var(--type-meta-size);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.navLink {
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition: color 180ms ease;
+}
+
+.navLink:hover,
+.active {
+  color: var(--text-primary);
+}
+
+.social {
+  color: var(--accent-silver);
+}
+
+@media (max-width: 68.75rem) {
+  .container {
+    width: min(calc(100% - var(--page-gutter-tablet)), var(--layout-content-max));
+  }
+}
+
+@media (max-width: 47.5rem) {
+  .siteHeader {
+    padding: 14px 0 12px;
+  }
+
+  .container {
+    width: min(calc(100% - var(--page-gutter-mobile)), var(--layout-content-max));
+    gap: 12px;
+    align-items: stretch;
+    flex-direction: column;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .brandCopy {
+    text-align: center;
+  }
+
+  .brandCopy span {
+    font-size: 11px;
+  }
+
+  .nav {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+    gap: 14px;
+    padding-bottom: 4px;
+  }
+
+  .navLink {
+    white-space: normal;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 32.5rem) {
+  .brandCopy span {
+    display: none;
+  }
+}
