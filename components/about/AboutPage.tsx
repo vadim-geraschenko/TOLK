@@ -1,6 +1,13 @@
 import Script from "next/script";
 
 import { parseLegacyHtml } from "../../lib/legacy-source";
+import {
+  AboutAudienceSection,
+  AboutClosingSection,
+  AboutHeroSection,
+  AboutStoryLeadSection,
+  AboutVoicesSection,
+} from "./sections";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
 
@@ -25,10 +32,10 @@ const backgroundHtml = extractRequiredFragment(
   "background media",
 );
 
-const mainHtml = extractRequiredFragment(
+const storyHtml = extractRequiredFragment(
   aboutLegacy.bodyHtml,
-  /<main>[\s\S]*<\/main>/i,
-  "main content",
+  /<section class="section story" id="story">[\s\S]*?<\/section>/i,
+  "story section",
 );
 
 const aboutNavItems = [
@@ -55,7 +62,14 @@ export function AboutPage() {
       <div className="page-shell">
         <div dangerouslySetInnerHTML={{ __html: backgroundHtml }} />
         <SiteHeader navItems={aboutNavItems} />
-        <div dangerouslySetInnerHTML={{ __html: mainHtml }} />
+        <main>
+          <AboutHeroSection />
+          <AboutStoryLeadSection />
+          <div dangerouslySetInnerHTML={{ __html: storyHtml }} />
+          <AboutVoicesSection />
+          <AboutAudienceSection />
+          <AboutClosingSection />
+        </main>
         <SiteFooter text="TOLK 2026" />
       </div>
 
