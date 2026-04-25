@@ -41,17 +41,17 @@ const STATES = [
   },
   {
     name: "episode-card-hover",
-    selector: "#episodes-slot .episode-card:first-child",
+    selector: ".episodes-track .episode-card:first-child",
     pseudo: ["hover"],
   },
   {
     name: "participant-hover",
-    selector: "#participants-slot .participant:nth-child(2)",
+    selector: ".participants-list .participant:nth-child(2)",
     pseudo: ["hover"],
   },
   {
     name: "social-button-hover",
-    selector: "#socials-slot .social-button:first-child",
+    selector: ".social-buttons .social-button:first-child",
     pseudo: ["hover"],
   },
 ];
@@ -78,9 +78,10 @@ function parseArgs(argv) {
 async function ensureHomeDataReady(page) {
   await page.waitForFunction(() => {
     return (
-      document.querySelectorAll("#episodes-slot .episode-card").length >= 1 &&
-      document.querySelectorAll("#participants-slot .participant").length >= 1 &&
-      document.querySelectorAll("#socials-slot .social-button").length >= 1 &&
+      document.querySelectorAll(".episodes-track .episode-card").length >= 1 &&
+      document.querySelectorAll(".participants-list .participant").length >= 1 &&
+      document.querySelectorAll(".social-buttons .social-button").length >= 1 &&
+      document.querySelector(".hero-side .hero-episode") &&
       document.querySelector(".hero-actions .button")
     );
   });
