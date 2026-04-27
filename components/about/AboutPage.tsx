@@ -1,10 +1,10 @@
-import Script from "next/script";
-
 import { parseLegacyHtml } from "../../lib/legacy-source";
+import { AboutMotion } from "./AboutMotion";
 import {
   AboutAudienceSection,
   AboutClosingSection,
   AboutHeroSection,
+  AboutStorySection,
   AboutStoryLeadSection,
   AboutVoicesSection,
 } from "./sections";
@@ -30,12 +30,6 @@ const backgroundHtml = extractRequiredFragment(
   aboutLegacy.bodyHtml,
   /<div class="background-media"[\s\S]*?<\/div>\s*(?=<header class="site-header">)/i,
   "background media",
-);
-
-const storyHtml = extractRequiredFragment(
-  aboutLegacy.bodyHtml,
-  /<section class="section story" id="story">[\s\S]*?<\/section>/i,
-  "story section",
 );
 
 const aboutNavItems = [
@@ -65,22 +59,14 @@ export function AboutPage() {
         <main>
           <AboutHeroSection />
           <AboutStoryLeadSection />
-          <div dangerouslySetInnerHTML={{ __html: storyHtml }} />
+          <AboutStorySection />
           <AboutVoicesSection />
           <AboutAudienceSection />
           <AboutClosingSection />
         </main>
         <SiteFooter text="TOLK 2026" />
       </div>
-
-      {aboutLegacy.inlineScripts.map((script, index) => (
-        <Script
-          id={`about-script-${index}`}
-          key={`about-script-${index}`}
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{ __html: script }}
-        />
-      ))}
+      <AboutMotion />
     </>
   );
 }
