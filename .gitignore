@@ -28,6 +28,7 @@ pnpm-debug.log*
 
 # test coverage
 coverage/
+.playwright-mcp/
 
 # OS / editors
 .DS_Store

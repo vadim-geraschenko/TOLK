@@ -1,4 +1,9 @@
-import { aboutVoices } from "../../content/about";
+import {
+  aboutStorySteps,
+  aboutVoices,
+  type AboutStoryCard,
+  type AboutStoryStep,
+} from "../../content/about";
 import { Button } from "../site/Button";
 import { CardKicker } from "../site/CardKicker";
 
@@ -47,6 +52,72 @@ export function AboutStoryLeadSection() {
             любви и жертве.
           </p>
         </article>
+      </div>
+    </section>
+  );
+}
+
+function StoryParagraphs({ paragraphs }: { paragraphs: string[] }) {
+  return (
+    <>
+      {paragraphs.map((paragraph, index) => (
+        <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
+      ))}
+    </>
+  );
+}
+
+function StoryCard({ card }: { card: AboutStoryCard }) {
+  const classes = [
+    "story-card",
+    card.centered ? "centered" : "",
+    card.tone ?? "tone-soft",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <div className={classes}>
+      <CardKicker hasLines={card.kickerHasLines} label={card.kicker} />
+      <h2>{card.title}</h2>
+      <StoryParagraphs paragraphs={card.paragraphs} />
+    </div>
+  );
+}
+
+function StoryStep({ step }: { step: AboutStoryStep }) {
+  const stepClasses = [
+    "story-step",
+    step.kind === "pair" ? "story-step-pair" : "",
+    step.kind === "pair" ? step.className ?? "" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  return (
+    <article className={stepClasses} data-progress={step.progress}>
+      {step.kind === "pair" ? (
+        <div className="story-pair" data-pair>
+          <StoryCard card={step.cards[0]} />
+          <StoryCard card={step.cards[1]} />
+        </div>
+      ) : (
+        <StoryCard card={step.card} />
+      )}
+      {step.hasMobileDivider ? <div className="mobile-divider" aria-hidden="true" /> : null}
+    </article>
+  );
+}
+
+export function AboutStorySection() {
+  return (
+    <section className="section story" id="story">
+      <div className="container">
+        <div className="story-cards" id="story-cards">
+          {aboutStorySteps.map((step, index) => (
+            <StoryStep key={index} step={step} />
+          ))}
+        </div>
       </div>
     </section>
   );
