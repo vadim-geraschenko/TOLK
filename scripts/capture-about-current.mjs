@@ -75,7 +75,7 @@ async function ensureAboutDataReady(page) {
     return (
       document.querySelectorAll("[data-pair]").length >= 3 &&
       document.querySelectorAll(".voice-card").length >= 3 &&
-      document.getElementById("story-frame")
+      document.querySelector("[data-about-frame]")
     );
   });
 }
@@ -102,13 +102,13 @@ async function waitForRenderReady(page) {
   });
 
   await page.waitForFunction(() => {
-    const frame = document.getElementById("story-frame");
+    const frame = document.querySelector("[data-about-frame]");
     return !!frame && frame.getAttribute("src");
   });
 
   try {
     await page.waitForFunction(() => {
-      const frame = document.getElementById("story-frame");
+      const frame = document.querySelector("[data-about-frame]");
       return !!frame && frame.classList.contains("is-ready");
     }, { timeout: 4000 });
   } catch {
@@ -171,7 +171,7 @@ async function scrollToPairState(page, pairIndex, pairYProgress) {
         throw new Error(`Pair not found at index ${targetPairIndex}`);
       }
 
-      const step = pair.closest(".story-step");
+      const step = pair.closest("[data-story-step]");
       if (!step) {
         throw new Error(`Pair step not found at index ${targetPairIndex}`);
       }
