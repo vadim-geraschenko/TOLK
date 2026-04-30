@@ -1,77 +1,28 @@
 # TOLK Design Docs
 
-## Что считать источником истины
-- `system/visual-direction.md` — общий визуальный характер проекта.
-- `system/design-tokens.md` — палитра, контуры, состояния, motion и системные правила.
-- `system/typography.md` — типографическая система и допустимые размеры/веса текста.
-- `system/image-policy.md` — правила для изображений, aspect ratio, `object-fit` и naming.
-- `pages/home/source/spec.md` — прикладная спецификация главной страницы.
-- `pages/about/source/spec.md` — прикладная спецификация страницы `about`.
-- `pages/about/source/content.md` — актуальный смысловой каркас страницы `about`.
-- `pages/about/source/background-video-by-images-sequence-animation.md` — правила фоновой сцены `about`.
-- `pages/home/source/home-mvp.html` — текущее визуальное состояние главной страницы.
-- `pages/about/source/about.html` — текущее визуальное и техническое состояние страницы `about`.
+## Read First
+- `source-of-truth.md`
 
-Сопроводительные технические файлы:
-- `pages/home/production-migration-note.md` — памятка по безопасному переносу MVP в production-стек.
-- `memory.md` — короткая operational memory по проекту.
-- `parity-rules.md` — что обязано совпадать при parity/migration.
-- `visual-regression.md` — правила визуальных сверок и baseline-подход.
-- `viewports.md` — контрольные ширины для проверки.
+## Core Contracts
+- `memory.md`
+- `parity-rules.md`
+- `visual-regression.md`
+- `viewports.md`
 
-Практический workflow по скриншотам сейчас такой:
-- baseline capture для HTML MVP через `npm run baseline:home` и `npm run baseline:about`;
-- current capture для migrated-реализации через `npm run current:home` и `npm run current:about`;
-- сравнение делается только между одинаковыми viewport/state.
+## System Layer
+- `system/visual-direction.md`
+- `system/design-tokens.md`
+- `system/typography.md`
+- `system/image-policy.md`
 
-Если между старыми экспериментами и текущими файлами есть расхождение, источником истины считаются файлы выше.
+## Page Layer
+- `pages/home/source/spec.md`
+- `pages/home/source/home-mvp.html`
+- `pages/about/source/spec.md`
+- `pages/about/source/content.md`
+- `pages/about/source/background-video-by-images-sequence-animation.md`
+- `pages/about/source/about.html`
 
-## Структура папок
-- `system/` — переиспользуемые визуальные директивы проекта.
-- `pages/` — прикладные спецификации, HTML-источники и snapshot-артефакты конкретных страниц.
-- `references/` — входные и референсные материалы.
-- `assets/` — общие визуальные ассеты проекта.
-- `for-codex/` — вспомогательные рабочие материалы для текущих задач и сверок; это не источник истины для дизайна.
-
-## Implementation Notes
-- В `home-mvp.html` контентные списки `episodes`, `participants` и `socials` должны собираться из структуры данных, а не жить как вручную дублированный HTML.
-- CSS страницы должен оставаться разделённым на `tokens`, `base`, `components`, `responsive`.
-- Текущая система кнопок едина для проекта: базовый класс — `.button`, а `.mini-button` только переопределяет размер.
-- Если между `.md` и реализацией расходятся детали фоновой сцены `about`, приоритет у `pages/about/source/about.html` и `pages/about/source/background-video-by-images-sequence-animation.md`.
-- Для visual parity по умолчанию baseline — HTML MVP, а не текущий Next.js-рендер, пока пользователь явно не утвердит новый baseline.
-- Если `.md` и HTML расходятся, не выбирать новый источник истины молча: сначала зафиксировать расхождение.
-
-## Текущий визуальный курс
-- Основная система страницы: графитовый фон и серебристо-светлые акценты.
-- Интерфейс должен быть чистым, сухим и редакционным.
-- Золотистые разводы визуально грязные и создают ощущение шарлатанства, поэтому их следует избегать.
-- “Премиальность” не должна выражаться через золото, мистический glow или псевдо-роскошную декоративность.
-- Символические мотивы допустимы только в редуцированном виде: тонкие линии, halo, орнамент малой амплитуды.
-
-## Главная страница: ключевые правила
-- Ввод в проект уже встроен в `hero`; отдельный большой блок `О нас` под ним не нужен.
-- `Очные чтения` на главной живут как отдельная карточка рядом с `hero` на широких экранах и уходят ниже `hero` на более узких.
-- `Выпуски` остаются главным контентным маршрутом после первого экрана.
-- Нижний ряд на десктопе состоит из двух блоков: `Мерч` и `Контакты и поддержка`.
-- Текущая пропорция нижнего ряда: примерно `65 / 35`.
-- `Мерч` не должен быть целиком hover-интерактивным; интерактивной должна читаться только кнопка `Приобрести`.
-- Нижняя кнопка `Boosty` должна визуально доходить до нижней линии merch-блока.
-- Блок `Контакты и поддержка` не должен стартовать выше блока `Мерч` по линии eyebrow.
-- Декоративные внеэкранные слои `home` по возможности нужно переработать так, чтобы они не раздували scrollable width/height и не мешали baseline-capture или visual-regression workflow.
-
-## Разделители секций
-- Между крупными секциями используются горизонтальные разделители.
-- Это не декоративные эмблемы, а навигационные элементы ритма страницы.
-- Центральный знак должен оставаться лёгким и вторичным.
-
-## Реализация и интерпретация
-- В `home-mvp.html` использовать семантические имена CSS-переменных: `accent-silver`, `text-primary`, `surface-panel` и т.д.
-- Breakpoint-токены должны быть заведены в `:root` и зеркалиться теми же значениями в media queries.
-- Внутри page-spec и implementation-файлов не держать параллельно старые и новые имена для одной и той же сущности.
-- `home` и `about` не обязаны иметь одинаковый набор брейкпойнтов; их responsive-логика может различаться, если это оправдано композицией страницы.
-- Для проверок использовать контрольные ширины из `viewports.md`, а не случайный набор viewport’ов.
-
-## Что не нужно документировать повторно
-- Не вести исторический журнал визуальных проб внутри основных spec-файлов.
-- Не дублировать одни и те же правила одновременно в `system/` и в page-spec без необходимости.
-- Не описывать explorations как актуальное состояние продукта.
+## Non-authoritative
+- `for-codex/*` is working reference material (screenshots, debug captures), not a source of truth.
+- `.local/*` is local workflow/tooling context, not design truth.
