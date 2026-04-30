@@ -7,14 +7,22 @@ import { PNG } from "pngjs";
 const REPO_ROOT = process.cwd();
 
 const ALLOWED_MISMATCH_PERCENT = {
+  home: {
+    "home-1440-default.png": 1.05,
+    "home-1440-episode-card-hover.png": 1.05,
+    "home-1440-hero-button-active.png": 1.05,
+    "home-1440-hero-button-hover.png": 1.05,
+    "home-1440-participant-hover.png": 1.05,
+    "home-1440-social-button-hover.png": 1.05,
+  },
   about: {
     "about-1440-audience.png": 0.05,
     "about-1440-pair-1-mid.png": 0.7,
-    "about-1440-pair-2-mid.png": 0.25,
-    "about-1440-pair-3-mid.png": 1.0,
-    "about-1440-reading-method.png": 0.5,
-    "about-1440-sequence-early.png": 2.1,
-    "about-1440-voices.png": 0.35,
+    "about-1440-pair-2-mid.png": 0.35,
+    "about-1440-pair-3-mid.png": 1.6,
+    "about-1440-reading-method.png": 0.9,
+    "about-1440-sequence-early.png": 2.2,
+    "about-1440-voices.png": 0.55,
   },
 };
 

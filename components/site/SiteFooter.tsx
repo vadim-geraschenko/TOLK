@@ -1,11 +1,13 @@
+import type { StyledComponentProps } from "./types";
+
 type SiteFooterProps = {
   text: string;
-};
+} & StyledComponentProps;
 
-export function SiteFooter({ text }: SiteFooterProps) {
+export function SiteFooter({ text, cx }: SiteFooterProps) {
   return (
-    <footer className="footer">
-      <div className="container">
+    <footer className={cx("footer")}>
+      <div className={cx("container")}>
         <div>{text}</div>
       </div>
     </footer>
