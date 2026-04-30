@@ -28,3 +28,9 @@ If documents conflict, resolve by this priority list.
 - Do not treat exploratory notes or screenshots as truth sources.
 - `docs/design/for-codex/*` is reference material only.
 - If a conflict remains unresolved, escalate to explicit user decision.
+
+## Baseline Status
+- Current approved visual baseline for parity and regression is HTML MVP:
+  - `docs/design/pages/home/source/home-mvp.html`
+  - `docs/design/pages/about/source/about.html`
+- Switch to Next.js baseline only after explicit approval and baseline recapture.

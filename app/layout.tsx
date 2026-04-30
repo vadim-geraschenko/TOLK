@@ -20,6 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Source+Sans+3:wght@500;600;700&display=swap"
         />
+        <link rel="icon" href="/shared-assets/socials-telegram.svg" type="image/svg+xml" />
       </head>
       <body>{children}</body>
     </html>

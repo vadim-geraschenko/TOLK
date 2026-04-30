@@ -40,3 +40,6 @@ Thumbs.db
 
 # misc
 *.local
+.wl
+project_contents.txt
+docs/design/for-codex/*.png
