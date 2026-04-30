@@ -1,5 +1,8 @@
 # TOLK operational memory
 
+> Status: active operational guide.
+> Authority order is defined in `docs/design/source-of-truth.md`.
+
 ## Purpose
 This file is not a full project spec.
 

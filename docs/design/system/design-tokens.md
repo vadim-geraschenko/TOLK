@@ -1,5 +1,8 @@
 # TOLK Design Tokens
 
+> Status: active system-level guidance.
+> If implementation-level token values differ, approved page source files and actual shipped CSS win for parity tasks.
+
 ## Token Basis
 Source direction: `Nocturnal Editorial`
 
