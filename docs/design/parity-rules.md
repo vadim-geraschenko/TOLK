@@ -10,8 +10,11 @@ Use it during:
 
 ## Default source of truth
 Unless the user says otherwise, parity is judged against:
-- `docs/design/pages/home/source/home-mvp.html`
-- `docs/design/pages/about/source/about.html`
+- current Next.js implementation (`app/*`, `components/*`) validated by approved snapshot baselines in:
+  - `docs/design/pages/home/snapshots/baselines/`
+  - `docs/design/pages/about/snapshots/baselines/`
+
+Legacy HTML MVP stays as reserve reference only.
 
 ## Must match
 

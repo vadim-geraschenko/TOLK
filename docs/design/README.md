@@ -3,6 +3,10 @@
 ## Read First
 - `source-of-truth.md`
 
+Baseline note:
+- Active baseline: Next.js implementation + snapshot baselines.
+- HTML MVP files are retained as reserve references.
+
 ## Core Contracts
 - `memory.md`
 - `parity-rules.md`

@@ -9,8 +9,8 @@ This file is not a full project spec.
 It exists to reduce avoidable mistakes during design, layout, parity, and migration work.
 
 ## Current project state
-- The project is in an in-between state: approved HTML MVP sources exist, and a Next.js migration has already started.
-- For visual and content parity work, the HTML MVP remains the safer source of truth unless the user explicitly approves the Next.js version as the new baseline.
+- Next.js migration stage is approved as the active baseline.
+- HTML MVP remains in the repo as a reserve reference and rollback anchor, not the default parity target.
 - `home` and `about` should not be treated as if they share one universal responsive composition. `about` is intentionally more authored and more fragile.
 
 ## Source of truth
@@ -23,20 +23,26 @@ It exists to reduce avoidable mistakes during design, layout, parity, and migrat
 
 ### Page level
 - `docs/design/pages/home/source/spec.md`
-- `docs/design/pages/home/source/home-mvp.html`
 - `docs/design/pages/about/source/spec.md`
 - `docs/design/pages/about/source/content.md`
 - `docs/design/pages/about/source/background-video-by-images-sequence-animation.md`
-- `docs/design/pages/about/source/about.html`
+- active implementation:
+  - `app/page.tsx`
+  - `app/about/page.tsx`
+  - `components/home/*`
+  - `components/about/*`
+- reserve reference:
+  - `docs/design/pages/home/source/home-mvp.html`
+  - `docs/design/pages/about/source/about.html`
 
 ### Migration context
 - `docs/design/pages/home/production-migration-note.md`
 - `.local/nextjs-migration-plan.md`
 
 ## Conflict handling
-- If `.md` and current HTML differ, do not silently pick a new truth source.
+- If `.md` and current Next implementation differ, do not silently pick a new truth source.
 - Report the mismatch unless the user already defined a priority for that exact case.
-- For `about` background and motion details, `about.html` plus `background-video-by-images-sequence-animation.md` have higher authority than stale descriptive text.
+- For `about` background and motion details, current `components/about/*` behavior plus `background-video-by-images-sequence-animation.md` have higher authority than stale descriptive text.
 
 ## Current design direction guardrails
 - The approved direction is still `Nocturnal Editorial`.

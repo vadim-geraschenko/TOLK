@@ -14,11 +14,11 @@ It is intentionally pragmatic:
 - `about`
 
 ## Source of truth for baselines
-Until the user explicitly re-approves the Next.js output as the new visual baseline:
-- `docs/design/pages/home/source/home-mvp.html`
-- `docs/design/pages/about/source/about.html`
+Current approved baseline is Next.js snapshot baselines:
+- `docs/design/pages/home/snapshots/baselines/*`
+- `docs/design/pages/about/snapshots/baselines/*`
 
-This means current screenshots should be compared against the HTML MVP unless another baseline is explicitly approved.
+HTML MVP remains a reserve visual reference, not the default compare target.
 
 ## Folder structure
 
