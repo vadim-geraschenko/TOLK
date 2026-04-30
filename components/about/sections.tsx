@@ -16,7 +16,7 @@ export function AboutHeroSection() {
   return (
     <section className={cx("hero")}>
       <div className={cx("container")}>
-        <div className={cx("hero-shell", "tone-neutral")}>
+        <div className={cx("hero-shell", "tone-neutral")} data-about-reveal-target>
           <div className={cx("hero-grid")}>
             <div className={cx("hero-copy")}>
               <CardKicker cx={cx} hasLines label="О Проекте" />
@@ -151,7 +151,10 @@ export function AboutStorySection() {
 
 function VoiceIntroCard() {
   return (
-    <div className={cx("story-card", "centered", "voice-intro-card", "tone-soft")}>
+    <div
+      className={cx("story-card", "centered", "voice-intro-card", "tone-soft")}
+      data-about-reveal-target
+    >
       <div className={cx("section-head")}>
         <CardKicker cx={cx} hasLines label="Три точки зрения" />
         <h2>Один текст, несколько взглядов</h2>
@@ -175,7 +178,7 @@ function VoiceCard({
   description: string;
 }) {
   return (
-    <article className={cx("voice-card", "tone-soft")}>
+    <article className={cx("voice-card", "tone-soft")} data-about-reveal-target>
       <div className={cx("voice-avatar")}>
         <img src={avatar} alt={name} />
       </div>
@@ -206,7 +209,10 @@ export function AboutAudienceSection() {
   return (
     <section className={cx("section")}>
       <div className={cx("container")}>
-        <article className={cx("text-panel", "tone-warm", "is-centered")}>
+        <article
+          className={cx("text-panel", "tone-warm", "is-centered")}
+          data-about-reveal-target
+        >
           <div className={cx("section-head")}>
             <CardKicker cx={cx} hasLines label="Для Кого TOLK" />
             <h2>Для тех, кто ищет</h2>
@@ -239,7 +245,10 @@ export function AboutClosingSection() {
   return (
     <section className={cx("section")}>
       <div className={cx("container")}>
-        <article className={cx("story-card", "centered", "tone-soft")}>
+        <article
+          className={cx("story-card", "centered", "tone-soft")}
+          data-about-reveal-target
+        >
           <div className={cx("section-head")}>
             <CardKicker cx={cx} hasLines label="Продолжение" />
             <h2>Если вам это близко</h2>
