@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { bindStyles } from "../../lib/bind-styles";
 import {
   aboutStorySteps,
@@ -91,6 +92,14 @@ function StoryStep({
   step: AboutStoryStep;
   pairIndex?: number;
 }) {
+  const pairVarsStyle =
+    step.kind === "pair"
+      ? ({
+          "--about-pair-progress-var": `var(--about-pair-${pairIndex ?? 0}-progress, 0)`,
+          "--about-pair-y-var": `var(--about-pair-${pairIndex ?? 0}-y, 0)`,
+        } as CSSProperties)
+      : undefined;
+
   return (
     <article
       className={cx(
@@ -108,6 +117,7 @@ function StoryStep({
           data-pair
           data-about-pair
           data-pair-index={pairIndex}
+          style={pairVarsStyle}
         >
           <StoryCard card={step.cards[0]} />
           <StoryCard card={step.cards[1]} />

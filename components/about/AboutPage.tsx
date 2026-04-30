@@ -30,7 +30,6 @@ function AboutBackgroundMedia() {
     <div className={cx("background-media")} aria-hidden="true">
       <img
         className={cx("background-frame")}
-        id="story-frame"
         data-about-frame
         data-about-reveal-target
         alt=""
@@ -38,8 +37,7 @@ function AboutBackgroundMedia() {
       />
       <div
         className={cx("background-cloud-wrap", "cloud-left")}
-        id="cloud-left"
-        data-about-cloud
+        data-about-cloud="left"
         data-about-reveal-target
       >
         <img
@@ -50,8 +48,7 @@ function AboutBackgroundMedia() {
       </div>
       <div
         className={cx("background-cloud-wrap", "cloud-right")}
-        id="cloud-right"
-        data-about-cloud
+        data-about-cloud="right"
         data-about-reveal-target
       >
         <img

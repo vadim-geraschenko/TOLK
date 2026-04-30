@@ -52,9 +52,7 @@
     --story-card-max: 600px;
     --story-pair-card-max: 400px;
     --story-pair-gap: 48px;
-    /* #хай: главный шаг вертикального ритма между рядами карточек.
-             Увеличивай, если все ряды стоят слишком плотно.
-             Уменьшай, если страница кажется слишком растянутой. */
+    /* Main vertical rhythm between story rows. */
     --story-row-gap: 80px;
     --bp-tablet-max: 68.75rem; /* 1100px */
     --bp-mobile-max: 47.5rem; /* 760px */
@@ -196,6 +194,9 @@
     will-change: transform;
   }
 
+  /* Reveal-gated targets stay hidden until motion vars are synced to current scroll.
+     Reveal is applied by runtime/preinit via style#__about-reveal.
+     We intentionally avoid display:none to preserve pair scene geometry for calculations. */
   .root :global([data-about-reveal-target]) {
     visibility: hidden;
     opacity: 0;
@@ -801,15 +802,12 @@
   }
 
   .story-lead {
-    /* #хай: это отступ после вынесенной одиночной карточки
-             `Почему Библия` до начала story-секции с парами.
-             Если именно тут воздуха мало/много, крути это значение. */
+    /* Space between lead card ("Почему Библия") and story scene grid. */
     padding-bottom: var(--story-row-gap);
   }
 
   .story-cards {
-    /* #хай: базовое расстояние между всеми рядами внутри story-сетки:
-             пара → пара, пара → одиночка, одиночка → пара. */
+    /* Base spacing between all rows in the story grid. */
     display: grid;
     gap: var(--story-row-gap);
   }
@@ -822,17 +820,11 @@
   }
 
   .story-step.story-step-pair {
-    /* #хай: верхний буфер pair-сцены.
-             Увеличивай, если пара визуально налезает на предыдущий ряд.
-             Уменьшай, если между рядами слишком большая дыра перед парой. */
+    /* Extra spacing before a pair scene starts. */
     --pair-stage-enter-space: 30px;
-    /* #хай: нижний буфер после pair-сцены.
-             Уменьшай, если после пары остаётся слишком большой пустой хвост.
-             Увеличивай, если следующий ряд поднимается слишком рано. */
+    /* Extra spacing after a pair scene ends. */
     --pair-stage-exit-space: 0px;
-    /* #хай: общая высота pair-сцены.
-             Больше = дольше живёт sticky-фаза и чаще появляется пустое пространство.
-             Меньше = сцена компактнее, но разъезд может не успевать доиграть. */
+    /* Total pair-scene height; controls sticky phase duration. */
     min-height: calc(
       158vh + var(--pair-stage-enter-space) + var(--pair-stage-exit-space)
     );
@@ -896,16 +888,12 @@
   }
 
   .story-pair {
-    --pair-progress: 0;
-    --pair-y-progress: 0;
+    --pair-progress: var(--about-pair-progress-var, 0);
+    --pair-y-progress: var(--about-pair-y-var, 0);
     --pair-spread-max: 50vw;
-    /* # чек: если нужно, чтобы карточки стояли дальше друг от друга в покое,
-             увеличивай `--story-pair-gap`; если нужно, чтобы базовая пара была компактнее,
-             уменьшай его в root-токенах. */
+    /* Tune horizontal resting distance between cards via --story-pair-gap. */
     position: sticky;
-    /* #хай: точка вертикической фиксации пары в viewport.
-             Меньше значение = пара фиксируется выше и чаще налезает на предыдущий ряд.
-             Больше значение = пара сидит ниже и получает больше воздуха сверху. */
+    /* Sticky anchor point in viewport; affects overlap risk with previous rows. */
     top: calc(24% + clamp(20px, 3vh, 40px));
     display: grid;
     grid-template-columns: repeat(2, minmax(0, var(--story-pair-card-max)));
@@ -913,54 +901,30 @@
     justify-content: center;
     align-items: stretch;
     width: 100%;
-    /* #хай: вертикальное поведение sticky-пары внутри своей сцены.
-             Если убрать динамику и оставить просто `translateY(-50%)`,
-             ритм обычно становится стабильнее.
-             Чем сильнее это значение уходит вниз/вверх при скролле,
-             тем легче сломать равные интервалы между рядами. */
+    /* Keep neutral translate for stable row rhythm in sticky scenes. */
     transform: translateY(0%);
     will-change: transform;
-  }
-
-  .story-pair[data-pair-index="0"] {
-    --pair-progress: var(--about-pair-0-progress, 0);
-    --pair-y-progress: var(--about-pair-0-y, 0);
-  }
-
-  .story-pair[data-pair-index="1"] {
-    --pair-progress: var(--about-pair-1-progress, 0);
-    --pair-y-progress: var(--about-pair-1-y, 0);
-  }
-
-  .story-pair[data-pair-index="2"] {
-    --pair-progress: var(--about-pair-2-progress, 0);
-    --pair-y-progress: var(--about-pair-2-y, 0);
   }
 
   .story-pair .story-card {
     width: 100%;
     max-width: var(--story-pair-card-max);
     min-height: 100%;
-    /* # чек: это сглаживание визуально догоняет scroll.
-             Больше duration = мягче, но более "вязко".
-             Меньше duration или linear = движение ближе к реальному скроллу. */
+    /* Keep transition disabled: motion is driven directly by scroll sync. */
     transition: none;
     will-change: transform;
     transform: translateZ(0);
   }
 
   .story-pair .story-card:first-child {
-    /* # чек: это амплитуда разъезда влево.
-             Если нужно раздвигать шире, увеличивай `104px`.
-             Если нужно слабее, уменьшай. */
+    /* Left spread amplitude. Keep symmetrical with right card when needed. */
     transform: translateX(
       calc(var(--pair-progress) * var(--pair-spread-max) * -1)
     );
   }
 
   .story-pair .story-card:last-child {
-    /* # чек: это амплитуда разъезда вправо.
-             Держи её симметричной с левой карточкой, если нужен ровный split. */
+    /* Right spread amplitude. */
     transform: translateX(calc(var(--pair-progress) * var(--pair-spread-max)));
   }
 
