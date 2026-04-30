@@ -1,7 +1,8 @@
-import { getLegacyInlineStyles } from "../../lib/legacy-source";
+import { bindStyles } from "../../lib/bind-styles";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
 import { SectionDivider } from "../site/SectionDivider";
+import styles from "./home.module.css";
 import {
   HomeBottomSections,
   HomeEpisodesSection,
@@ -9,9 +10,8 @@ import {
   HomeParticipantsSection,
 } from "./sections";
 
-const homeInlineStyles = getLegacyInlineStyles("docs/design/pages/home/source/home-mvp.html");
-
 export function HomePage() {
+  const cx = bindStyles(styles);
   const navItems = [
     { label: "Главная", href: "#", isActive: true },
     { label: "О нас", href: "/about" },
@@ -24,29 +24,20 @@ export function HomePage() {
   ];
 
   return (
-    <>
-      {homeInlineStyles.map((style, index) => (
-        <style
-          key={`home-style-${index}`}
-          dangerouslySetInnerHTML={{ __html: style }}
-        />
-      ))}
+    <div className={cx("root", "page-shell")}>
+      <SiteHeader navItems={navItems} cx={cx} />
 
-      <div className="page-shell">
-        <SiteHeader navItems={navItems} />
+      <main>
+        <HomeHeroSection />
+        <SectionDivider cx={cx} />
+        <HomeParticipantsSection />
+        <SectionDivider cx={cx} />
+        <HomeEpisodesSection />
+        <SectionDivider cx={cx} />
+        <HomeBottomSections />
+      </main>
 
-        <main>
-          <HomeHeroSection />
-          <SectionDivider />
-          <HomeParticipantsSection />
-          <SectionDivider />
-          <HomeEpisodesSection />
-          <SectionDivider />
-          <HomeBottomSections />
-        </main>
-
-        <SiteFooter text="TOLK 2026" />
-      </div>
-    </>
+      <SiteFooter text="TOLK 2026" cx={cx} />
+    </div>
   );
 }

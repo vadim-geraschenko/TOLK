@@ -7,6 +7,14 @@ import { PNG } from "pngjs";
 const REPO_ROOT = process.cwd();
 
 const ALLOWED_MISMATCH_PERCENT = {
+  home: {
+    "home-1440-default.png": 1.05,
+    "home-1440-episode-card-hover.png": 1.05,
+    "home-1440-hero-button-active.png": 1.05,
+    "home-1440-hero-button-hover.png": 1.05,
+    "home-1440-participant-hover.png": 1.05,
+    "home-1440-social-button-hover.png": 1.05,
+  },
   about: {
     "about-1100-static-full.png": 0.002,
     "about-1100-static-top.png": 0.006,

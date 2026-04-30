@@ -1,4 +1,4 @@
-import { parseLegacyHtml } from "../../lib/legacy-source";
+import { bindStyles } from "../../lib/bind-styles";
 import { AboutMotion } from "./AboutMotion";
 import {
   AboutAudienceSection,
@@ -10,27 +10,9 @@ import {
 } from "./sections";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
+import styles from "./about.module.css";
 
-const aboutLegacy = parseLegacyHtml("docs/design/pages/about/source/about.html", [
-  ["../home/home-mvp.html", "/"],
-  ["../../home/source/assets/", "/home/assets/"],
-  ["./assets/", "/about/assets/"],
-]);
-
-function extractRequiredFragment(source: string, pattern: RegExp, label: string) {
-  const match = source.match(pattern);
-  if (!match) {
-    throw new Error(`Unable to extract ${label} from about legacy markup`);
-  }
-
-  return match[0];
-}
-
-const backgroundHtml = extractRequiredFragment(
-  aboutLegacy.bodyHtml,
-  /<div class="background-media"[\s\S]*?<\/div>\s*(?=<header class="site-header">)/i,
-  "background media",
-);
+const cx = bindStyles(styles);
 
 const aboutNavItems = [
   { label: "Главная", href: "/" },
@@ -43,30 +25,61 @@ const aboutNavItems = [
   { label: "Boosty", href: "#", isSocial: true },
 ];
 
+function AboutBackgroundMedia() {
+  return (
+    <div className={cx("background-media")} aria-hidden="true">
+      <img
+        className={cx("background-frame")}
+        id="story-frame"
+        data-about-frame
+        data-about-reveal-target
+        alt=""
+        suppressHydrationWarning
+      />
+      <div
+        className={cx("background-cloud-wrap", "cloud-left")}
+        id="cloud-left"
+        data-about-cloud
+        data-about-reveal-target
+      >
+        <img
+          className={cx("background-cloud")}
+          src="/about/assets/clouds.png"
+          alt=""
+        />
+      </div>
+      <div
+        className={cx("background-cloud-wrap", "cloud-right")}
+        id="cloud-right"
+        data-about-cloud
+        data-about-reveal-target
+      >
+        <img
+          className={cx("background-cloud")}
+          src="/about/assets/clouds.png"
+          alt=""
+        />
+      </div>
+      <div className={cx("background-grain")} />
+    </div>
+  );
+}
+
 export function AboutPage() {
   return (
-    <>
-      {aboutLegacy.inlineStyles.map((style, index) => (
-        <style
-          key={`about-style-${index}`}
-          dangerouslySetInnerHTML={{ __html: style }}
-        />
-      ))}
-
-      <div className="page-shell">
-        <div dangerouslySetInnerHTML={{ __html: backgroundHtml }} />
-        <SiteHeader navItems={aboutNavItems} />
-        <main>
-          <AboutHeroSection />
-          <AboutStoryLeadSection />
-          <AboutStorySection />
-          <AboutVoicesSection />
-          <AboutAudienceSection />
-          <AboutClosingSection />
-        </main>
-        <SiteFooter text="TOLK 2026" />
-      </div>
+    <div className={cx("root", "page-shell")} data-about-root>
+      <AboutBackgroundMedia />
+      <SiteHeader navItems={aboutNavItems} cx={cx} />
+      <main>
+        <AboutHeroSection />
+        <AboutStoryLeadSection />
+        <AboutStorySection />
+        <AboutVoicesSection />
+        <AboutAudienceSection />
+        <AboutClosingSection />
+      </main>
+      <SiteFooter text="TOLK 2026" cx={cx} />
       <AboutMotion />
-    </>
+    </div>
   );
 }

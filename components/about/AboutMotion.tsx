@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 type StoryPairState = {
   pair: HTMLElement;
@@ -40,7 +40,18 @@ const sceneProgressMap = (x: number) => {
 };
 
 export function AboutMotion() {
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const ensureRevealStyle = () => {
+      let styleEl = document.getElementById("__about-reveal") as HTMLStyleElement | null;
+      if (styleEl) return styleEl;
+      styleEl = document.createElement("style");
+      styleEl.id = "__about-reveal";
+      styleEl.textContent =
+        "[data-about-reveal-target]{visibility:visible !important;opacity:1 !important;transition:opacity 180ms ease;}";
+      document.head.appendChild(styleEl);
+      return styleEl;
+    };
+
     const storyFrame = document.getElementById("story-frame") as HTMLImageElement | null;
     const leftCloud = document.getElementById("cloud-left") as HTMLElement | null;
     const rightCloud = document.getElementById("cloud-right") as HTMLElement | null;
@@ -52,7 +63,7 @@ export function AboutMotion() {
     const storyPairs = Array.from(document.querySelectorAll<HTMLElement>("[data-pair]"));
     const storyPairStates: StoryPairState[] = storyPairs.map((pair) => ({
       pair,
-      pairStep: pair.closest(".story-step"),
+      pairStep: pair.closest("[data-story-step]"),
       stepTop: 0,
       stepHeight: 0,
       stickyTravel: 1,
@@ -86,6 +97,43 @@ export function AboutMotion() {
     let backgroundPreloadCursor = 0;
     let backgroundPreloadInFlight = 0;
     let backgroundPreloadOrder: number[] = [];
+    let initialCloudSettleFrame = 0;
+
+    const writePreinitVarsSnapshot = (
+      progress: number,
+      leftX: number,
+      leftY: number,
+      leftScale: number,
+      rightX: number,
+      rightY: number,
+      rightScale: number,
+    ) => {
+      let styleEl = document.getElementById("__about-preinit-vars") as HTMLStyleElement | null;
+      if (!styleEl) {
+        styleEl = document.createElement("style");
+        styleEl.id = "__about-preinit-vars";
+        document.head.appendChild(styleEl);
+      }
+      const frameIndex = Math.round(progress * (totalFrames - 1)) + 1;
+      const frameNumber = String(frameIndex).padStart(3, "0");
+      const frameSrc = `/about/assets/angel-sequence/desktop/frame-${frameNumber}.webp`;
+      const css = [
+        ":root{",
+        `--about-cloud-left-x:${leftX.toFixed(3)}px;`,
+        `--about-cloud-left-y:${leftY.toFixed(3)}px;`,
+        `--about-cloud-left-scale:${leftScale.toFixed(6)};`,
+        `--about-cloud-right-x:${rightX.toFixed(3)}px;`,
+        `--about-cloud-right-y:${rightY.toFixed(3)}px;`,
+        `--about-cloud-right-scale:${rightScale.toFixed(6)};`,
+        `--about-frame-src:url("${frameSrc}");`,
+        ...storyPairStates.flatMap((state, index) => [
+          `--about-pair-${index}-progress:${state.currentX.toFixed(4)};`,
+          `--about-pair-${index}-y:${state.currentY.toFixed(4)};`,
+        ]),
+        "}",
+      ].join("");
+      styleEl.textContent = css;
+    };
 
     const buildFrameSources = (variant: string) =>
       Array.from({ length: totalFrames }, (_, index) => {
@@ -306,6 +354,36 @@ export function AboutMotion() {
       ensureRenderLoop();
     };
 
+    const applyCloudTransforms = (progress: number) => {
+      const revealEnd = 0.3;
+      const revealInput = clamp(progress / revealEnd, 0, 1);
+      const reveal =
+        revealInput < 0.5
+          ? 2 * revealInput * revealInput
+          : 1 - Math.pow(-2 * revealInput + 2, 2) / 2;
+
+      const width = viewportWidth;
+      const height = viewportHeight;
+      const leftStartX = width * 0.28;
+      const leftEndX = -width * 0.3;
+      const rightStartX = width * 0.27;
+      const rightEndX = width * 0.8;
+      const startY = height * 0.07;
+      const endY = height * 0.02;
+      const startScale = 1.42;
+      const endScale = 1.16;
+
+      const leftX = mix(leftStartX, leftEndX, reveal);
+      const rightX = mix(rightStartX, rightEndX, reveal);
+      const leftY = mix(startY, endY, reveal);
+      const rightY = mix(startY + 8, endY - 4, reveal);
+      const leftScale = mix(startScale, endScale, reveal);
+      const rightScale = mix(startScale * 1.03, endScale * 1.01, reveal);
+
+      leftCloud.style.transform = `translate3d(${leftX}px, ${leftY}px, 0) scale(${leftScale})`;
+      rightCloud.style.transform = `translate3d(${rightX}px, ${rightY}px, 0) scale(${rightScale})`;
+    };
+
     const render = () => {
       animationFrameId = 0;
       renderedProgress += (targetProgress - renderedProgress) * 0.12;
@@ -316,13 +394,6 @@ export function AboutMotion() {
 
       const nextFrame = Math.round(renderedProgress * (totalFrames - 1));
       setFrame(nextFrame);
-
-      const revealEnd = 0.3;
-      const revealInput = clamp(renderedProgress / revealEnd, 0, 1);
-      const reveal =
-        revealInput < 0.5
-          ? 2 * revealInput * revealInput
-          : 1 - Math.pow(-2 * revealInput + 2, 2) / 2;
 
       storyPairStates.forEach((state) => {
         state.currentX += (state.targetX - state.currentX) * 0.12;
@@ -353,26 +424,7 @@ export function AboutMotion() {
         }
       });
 
-      const width = viewportWidth;
-      const height = viewportHeight;
-      const leftStartX = width * 0.28;
-      const leftEndX = -width * 0.3;
-      const rightStartX = width * 0.27;
-      const rightEndX = width * 0.8;
-      const startY = height * 0.07;
-      const endY = height * 0.02;
-      const startScale = 1.42;
-      const endScale = 1.16;
-
-      const leftX = mix(leftStartX, leftEndX, reveal);
-      const rightX = mix(rightStartX, rightEndX, reveal);
-      const leftY = mix(startY, endY, reveal);
-      const rightY = mix(startY + 8, endY - 4, reveal);
-      const leftScale = mix(startScale, endScale, reveal);
-      const rightScale = mix(startScale * 1.03, endScale * 1.01, reveal);
-
-      leftCloud.style.transform = `translate3d(${leftX}px, ${leftY}px, 0) scale(${leftScale})`;
-      rightCloud.style.transform = `translate3d(${rightX}px, ${rightY}px, 0) scale(${rightScale})`;
+      applyCloudTransforms(renderedProgress);
 
       const progressSettled = Math.abs(targetProgress - renderedProgress) < renderEpsilon;
       const pairsSettled = storyPairStates.every(
@@ -400,8 +452,43 @@ export function AboutMotion() {
       handleViewportUpdate();
       renderedProgress = targetProgress;
 
+      // Snap initial visual state to restored scroll position before smooth lerp starts.
+      storyPairStates.forEach((state) => {
+        state.currentX = state.targetX;
+        state.currentY = state.targetY;
+        state.appliedX = state.currentX;
+        state.appliedY = state.currentY;
+        state.pair.style.setProperty("--pair-progress", state.currentX.toFixed(4));
+        state.pair.style.setProperty("--pair-y-progress", state.currentY.toFixed(4));
+      });
+      applyCloudTransforms(renderedProgress);
+      {
+        const revealEnd = 0.3;
+        const revealInput = clamp(renderedProgress / revealEnd, 0, 1);
+        const reveal =
+          revealInput < 0.5
+            ? 2 * revealInput * revealInput
+            : 1 - Math.pow(-2 * revealInput + 2, 2) / 2;
+        const leftX = mix(viewportWidth * 0.28, -viewportWidth * 0.3, reveal);
+        const rightX = mix(viewportWidth * 0.27, viewportWidth * 0.8, reveal);
+        const leftY = mix(viewportHeight * 0.07, viewportHeight * 0.02, reveal);
+        const rightY = mix(viewportHeight * 0.07 + 8, viewportHeight * 0.02 - 4, reveal);
+        const leftScale = mix(1.42, 1.16, reveal);
+        const rightScale = mix(1.42 * 1.03, 1.16 * 1.01, reveal);
+        writePreinitVarsSnapshot(
+          renderedProgress,
+          leftX,
+          leftY,
+          leftScale,
+          rightX,
+          rightY,
+          rightScale,
+        );
+      }
+
       if (useStaticScene()) {
         setStaticFallbackFrame();
+        ensureRevealStyle();
         return;
       }
 
@@ -409,7 +496,56 @@ export function AboutMotion() {
       const initialFrameIndex = Math.round(renderedProgress * (totalFrames - 1));
       setFrame(initialFrameIndex);
       scheduleBackgroundPreload(initialFrameIndex);
-      ensureRenderLoop();
+      ensureRevealStyle();
+    };
+
+    const settleInitialCloudPosition = () => {
+      if (initialCloudSettleFrame) {
+        cancelAnimationFrame(initialCloudSettleFrame);
+        initialCloudSettleFrame = 0;
+      }
+
+      let frames = 0;
+      let stableFrames = 0;
+      let lastScroll = -1;
+      const needsCompleteLoad = document.readyState !== "complete";
+
+      const tick = () => {
+        handleViewportUpdate();
+        renderedProgress = targetProgress;
+        storyPairStates.forEach((state) => {
+          state.currentX = state.targetX;
+          state.currentY = state.targetY;
+          state.appliedX = state.currentX;
+          state.appliedY = state.currentY;
+          state.pair.style.setProperty("--pair-progress", state.currentX.toFixed(4));
+          state.pair.style.setProperty("--pair-y-progress", state.currentY.toFixed(4));
+        });
+        applyCloudTransforms(renderedProgress);
+
+        const scrollNow = window.scrollY || window.pageYOffset;
+        if (Math.abs(scrollNow - lastScroll) < 1) {
+          stableFrames += 1;
+        } else {
+          stableFrames = 0;
+        }
+        lastScroll = scrollNow;
+        frames += 1;
+
+        const loadSettled = !needsCompleteLoad || document.readyState === "complete";
+        const enoughFrames = frames >= 90;
+        const stableEnough = stableFrames >= 8;
+
+        if (!(loadSettled && stableEnough) && !enoughFrames) {
+          initialCloudSettleFrame = requestAnimationFrame(tick);
+          return;
+        }
+
+        initialCloudSettleFrame = 0;
+        ensureRenderLoop();
+      };
+
+      initialCloudSettleFrame = requestAnimationFrame(tick);
     };
 
     const onStaticSceneChange = () => startSequence();
@@ -419,21 +555,25 @@ export function AboutMotion() {
     reducedMotionQuery.addEventListener("change", onReducedMotionChange);
     window.addEventListener("scroll", scheduleTargetsUpdate, { passive: true });
     window.addEventListener("resize", handleViewportUpdate, { passive: true });
+    startSequence();
+    settleInitialCloudPosition();
 
-    const bootstrapFrame = requestAnimationFrame(() => {
-      requestAnimationFrame(startSequence);
-    });
+    const onPageShow = () => {
+      settleInitialCloudPosition();
+    };
+
+    window.addEventListener("pageshow", onPageShow);
 
     return () => {
-      cancelAnimationFrame(bootstrapFrame);
-
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (targetsFrameId) cancelAnimationFrame(targetsFrameId);
+      if (initialCloudSettleFrame) cancelAnimationFrame(initialCloudSettleFrame);
 
       staticSceneQuery.removeEventListener("change", onStaticSceneChange);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
       window.removeEventListener("scroll", scheduleTargetsUpdate);
       window.removeEventListener("resize", handleViewportUpdate);
+      window.removeEventListener("pageshow", onPageShow);
     };
   }, []);
 

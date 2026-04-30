@@ -1,3 +1,4 @@
+import { bindStyles } from "../../lib/bind-styles";
 import {
   aboutStorySteps,
   aboutVoices,
@@ -6,15 +7,18 @@ import {
 } from "../../content/about";
 import { Button } from "../site/Button";
 import { CardKicker } from "../site/CardKicker";
+import styles from "./about.module.css";
+
+const cx = bindStyles(styles);
 
 export function AboutHeroSection() {
   return (
-    <section className="hero">
-      <div className="container">
-        <div className="hero-shell tone-neutral">
-          <div className="hero-grid">
-            <div className="hero-copy">
-              <CardKicker hasLines label="О Проекте" />
+    <section className={cx("hero")}>
+      <div className={cx("container")}>
+        <div className={cx("hero-shell", "tone-neutral")}>
+          <div className={cx("hero-grid")}>
+            <div className={cx("hero-copy")}>
+              <CardKicker cx={cx} hasLines label="О Проекте" />
               <h1>Поиск истины в честной беседе</h1>
               <p>
                 TOLK — это искренний разговор о самом живом и нетривиальном тексте в
@@ -27,7 +31,7 @@ export function AboutHeroSection() {
             </div>
           </div>
         </div>
-        <div className="mobile-divider" aria-hidden="true" />
+        <div className={cx("mobile-divider")} aria-hidden="true" />
       </div>
     </section>
   );
@@ -35,10 +39,13 @@ export function AboutHeroSection() {
 
 export function AboutStoryLeadSection() {
   return (
-    <section className="section story-lead">
-      <div className="container">
-        <article className="story-card centered tone-neutral">
-          <CardKicker hasLines label="Почему Библия" />
+    <section className={cx("section", "story-lead")}>
+      <div className={cx("container")}>
+        <article
+          className={cx("story-card", "centered", "tone-neutral")}
+          data-about-reveal-target
+        >
+          <CardKicker cx={cx} hasLines label="Почему Библия" />
           <h2>Почему мы снова и снова возвращаемся к этой книге</h2>
           <p>
             Библия — это текстуальная точка сингулярности. Чем глубже вглядываешься
@@ -68,55 +75,64 @@ function StoryParagraphs({ paragraphs }: { paragraphs: string[] }) {
 }
 
 function StoryCard({ card }: { card: AboutStoryCard }) {
-  const classes = [
-    "story-card",
-    card.centered ? "centered" : "",
-    card.tone ?? "tone-soft",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
-    <div className={classes}>
-      <CardKicker hasLines={card.kickerHasLines} label={card.kicker} />
+    <div className={cx("story-card", card.centered ? "centered" : "", card.tone ?? "tone-soft")}>
+      <CardKicker cx={cx} hasLines={card.kickerHasLines} label={card.kicker} />
       <h2>{card.title}</h2>
       <StoryParagraphs paragraphs={card.paragraphs} />
     </div>
   );
 }
 
-function StoryStep({ step }: { step: AboutStoryStep }) {
-  const stepClasses = [
-    "story-step",
-    step.kind === "pair" ? "story-step-pair" : "",
-    step.kind === "pair" ? step.className ?? "" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
+function StoryStep({
+  step,
+  pairIndex,
+}: {
+  step: AboutStoryStep;
+  pairIndex?: number;
+}) {
   return (
-    <article className={stepClasses} data-progress={step.progress}>
+    <article
+      className={cx(
+        "story-step",
+        step.kind === "pair" ? "story-step-pair" : "",
+        step.kind === "pair" ? step.className ?? "" : "",
+      )}
+      data-progress={step.progress}
+      data-story-step
+      data-about-reveal-target
+    >
       {step.kind === "pair" ? (
-        <div className="story-pair" data-pair>
+        <div
+          className={cx("story-pair")}
+          data-pair
+          data-about-pair
+          data-pair-index={pairIndex}
+        >
           <StoryCard card={step.cards[0]} />
           <StoryCard card={step.cards[1]} />
         </div>
       ) : (
         <StoryCard card={step.card} />
       )}
-      {step.hasMobileDivider ? <div className="mobile-divider" aria-hidden="true" /> : null}
+      {step.hasMobileDivider ? (
+        <div className={cx("mobile-divider")} aria-hidden="true" />
+      ) : null}
     </article>
   );
 }
 
 export function AboutStorySection() {
+  let pairCounter = 0;
+
   return (
-    <section className="section story" id="story">
-      <div className="container">
-        <div className="story-cards" id="story-cards">
-          {aboutStorySteps.map((step, index) => (
-            <StoryStep key={index} step={step} />
-          ))}
+    <section className={cx("section", "story")} id="story">
+      <div className={cx("container")}>
+        <div className={cx("story-cards")} id="story-cards">
+          {aboutStorySteps.map((step, index) => {
+            const pairIndex = step.kind === "pair" ? pairCounter++ : undefined;
+            return <StoryStep key={index} step={step} pairIndex={pairIndex} />;
+          })}
         </div>
       </div>
     </section>
@@ -125,9 +141,9 @@ export function AboutStorySection() {
 
 function VoiceIntroCard() {
   return (
-    <div className="story-card centered voice-intro-card tone-soft">
-      <div className="section-head">
-        <CardKicker hasLines label="Три точки зрения" />
+    <div className={cx("story-card", "centered", "voice-intro-card", "tone-soft")}>
+      <div className={cx("section-head")}>
+        <CardKicker cx={cx} hasLines label="Три точки зрения" />
         <h2>Один текст, несколько взглядов</h2>
       </div>
       <p>
@@ -149,8 +165,8 @@ function VoiceCard({
   description: string;
 }) {
   return (
-    <article className="voice-card tone-soft">
-      <div className="voice-avatar">
+    <article className={cx("voice-card", "tone-soft")}>
+      <div className={cx("voice-avatar")}>
         <img src={avatar} alt={name} />
       </div>
       <h3>{name}</h3>
@@ -161,15 +177,15 @@ function VoiceCard({
 
 export function AboutVoicesSection() {
   return (
-    <section className="section">
-      <div className="container">
+    <section className={cx("section")}>
+      <div className={cx("container")}>
         <VoiceIntroCard />
 
-        <div className="voices-grid">
+        <div className={cx("voices-grid")}>
           {aboutVoices.map((voice) => (
             <VoiceCard key={voice.name} {...voice} />
           ))}
-          <div className="mobile-divider" aria-hidden="true" />
+          <div className={cx("mobile-divider")} aria-hidden="true" />
         </div>
       </div>
     </section>
@@ -178,11 +194,11 @@ export function AboutVoicesSection() {
 
 export function AboutAudienceSection() {
   return (
-    <section className="section">
-      <div className="container">
-        <article className="text-panel tone-warm is-centered">
-          <div className="section-head">
-            <CardKicker hasLines label="Для Кого TOLK" />
+    <section className={cx("section")}>
+      <div className={cx("container")}>
+        <article className={cx("text-panel", "tone-warm", "is-centered")}>
+          <div className={cx("section-head")}>
+            <CardKicker cx={cx} hasLines label="Для Кого TOLK" />
             <h2>Для тех, кто ищет</h2>
           </div>
           <p>
@@ -203,7 +219,7 @@ export function AboutAudienceSection() {
             диалоге ориентиры на пути к важным для себя ответам.
           </p>
         </article>
-        <div className="mobile-divider" aria-hidden="true" />
+        <div className={cx("mobile-divider")} aria-hidden="true" />
       </div>
     </section>
   );
@@ -211,19 +227,19 @@ export function AboutAudienceSection() {
 
 export function AboutClosingSection() {
   return (
-    <section className="section">
-      <div className="container">
-        <article className="story-card centered tone-soft">
-          <div className="section-head">
-            <CardKicker hasLines label="Продолжение" />
+    <section className={cx("section")}>
+      <div className={cx("container")}>
+        <article className={cx("story-card", "centered", "tone-soft")}>
+          <div className={cx("section-head")}>
+            <CardKicker cx={cx} hasLines label="Продолжение" />
             <h2>Если вам это близко</h2>
           </div>
           <p>
             На главной странице вы найдёте записи стримов, новые выпуски, анонсы
             очных чтений, ссылки на наши соцсети и витрину мерча от TOLK.
           </p>
-          <div className="cta-actions">
-            <Button href="/" label="Перейти на главную" />
+          <div className={cx("cta-actions")}>
+            <Button cx={cx} href="/" label="Перейти на главную" />
           </div>
         </article>
       </div>
