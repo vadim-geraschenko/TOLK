@@ -43,3 +43,4 @@ Thumbs.db
 .wl
 project_contents.txt
 docs/design/for-codex/*.png
+docs/design/pages/*/snapshots/diffs/*.png
