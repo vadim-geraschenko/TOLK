@@ -16,13 +16,19 @@ const ALLOWED_MISMATCH_PERCENT = {
     "home-1440-social-button-hover.png": 1.05,
   },
   about: {
+    "about-1100-static-full.png": 0.002,
+    "about-1100-static-top.png": 0.006,
     "about-1440-audience.png": 0.05,
+    "about-1440-default-full.png": 0.001,
     "about-1440-pair-1-mid.png": 0.7,
     "about-1440-pair-2-mid.png": 0.35,
     "about-1440-pair-3-mid.png": 1.6,
     "about-1440-reading-method.png": 0.9,
     "about-1440-sequence-early.png": 2.2,
+    "about-1440-top-viewport.png": 0.004,
     "about-1440-voices.png": 0.55,
+    "about-390-default-full.png": 0.003,
+    "about-390-voices.png": 0.03,
   },
 };
 
