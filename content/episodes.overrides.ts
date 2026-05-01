@@ -1,4 +1,9 @@
-export type EpisodeKind = "episode" | "special" | "stream-record" | "video";
+export type EpisodeKind =
+  | "episode"
+  | "special"
+  | "stream-record"
+  | "video"
+  | "shorts";
 
 export type EpisodeTimestamp = {
   label: string;
@@ -22,7 +27,7 @@ export type EpisodeSupportLink = {
 export type EpisodeOverride = {
   slug?: string;
   kind?: EpisodeKind;
-  dateLabel?: string;
+  description?: string;
   cover?: string;
   coverAlt?: string;
   participants?: EpisodeParticipant[];
@@ -36,10 +41,11 @@ export const defaultSupportLinks: EpisodeSupportLink[] = [
 ];
 
 export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
-  "aqz-KE-bpKQ": {
+  "2bNB5xfAAI8": {
     slug: "ecclesiastes",
     kind: "special",
-    dateLabel: "9 дней назад",
+    description:
+      "Спецвыпуск наших чтений. Вместе с Кириллом Кириченко читаем и обсуждаем Екклесиаста — одну из самых мрачных, странных и философски насыщенных книг Библии.",
     cover: "/home/assets/episode-ecclesiastes.jpg",
     coverAlt: "Превью выпуска про Екклесиаста",
     participants: [
@@ -64,7 +70,8 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
   ipCHGXdNtAo: {
     slug: "samson",
     kind: "special",
-    dateLabel: "3 недели назад",
+    description:
+      "Спецвыпуск наших чтений. Вместе с Артемом Широковым читаем Книгу Судей, а именно историю Самсона. Пытаемся понять какого происхождения сила Самсона и в чем праведность этого персонажа Библии.",
     cover: "/home/assets/episode-samson.jpg",
     coverAlt: "Превью выпуска про Самсона",
     participants: [
@@ -82,10 +89,11 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     timestamps: [],
     supportLinks: defaultSupportLinks,
   },
-  "thomas-demo-video-id": {
+  lRx_FEXKac0: {
     slug: "thomas",
     kind: "video",
-    dateLabel: "1 месяц назад",
+    description:
+      "Спецвыпуск: обсуждаем один из самых известных раннехристианских апокрифов и сравниваем его с каноническими текстами.",
     cover: "/home/assets/episode-thomas.jpg",
     coverAlt: "Превью выпуска про Евангелие от Фомы",
     participants: [
@@ -100,10 +108,11 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     ],
     supportLinks: defaultSupportLinks,
   },
-  "isaac-demo-video-id": {
+  "Na-LoqoMp4I": {
     slug: "isaac",
     kind: "episode",
-    dateLabel: "2 месяца назад",
+    description:
+      "Читаем и обсуждаем Бытие 23–25: смерть Сарры, женитьбу Исаака и последствия решений патриархов.",
     cover: "/home/assets/episode-isaac.jpg",
     coverAlt: "Превью выпуска про женитьбу Исаака",
     participants: [

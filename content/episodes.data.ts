@@ -33,9 +33,24 @@ type EpisodeBaseRecord = {
   thumbnailUrl: string;
 };
 
+const DEFAULT_PARTICIPANTS: EpisodeParticipant[] = [
+  { name: "Валентин", avatar: "/home/assets/host-valentin.jpg", role: "Ведущий" },
+  { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
+  { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
+];
+
+const DESCRIPTION_PLACEHOLDER = "Описание скоро будет.";
+
 function assertString(value: unknown, field: string): string {
   if (typeof value !== "string" || !value.trim()) {
     throw new Error(`Invalid ${field}: expected non-empty string`);
+  }
+  return value;
+}
+
+function assertMaybeEmptyString(value: unknown, field: string): string {
+  if (typeof value !== "string") {
+    throw new Error(`Invalid ${field}: expected string`);
   }
   return value;
 }
@@ -48,7 +63,10 @@ function assertBaseRecord(value: unknown, index: number): EpisodeBaseRecord {
   return {
     youtubeId: assertString(record.youtubeId, `episodes.base[${index}].youtubeId`),
     title: assertString(record.title, `episodes.base[${index}].title`),
-    description: assertString(record.description, `episodes.base[${index}].description`),
+    description: assertMaybeEmptyString(
+      record.description,
+      `episodes.base[${index}].description`,
+    ),
     publishedAt: assertString(record.publishedAt, `episodes.base[${index}].publishedAt`),
     durationIso: assertString(record.durationIso, `episodes.base[${index}].durationIso`),
     thumbnailUrl: assertString(record.thumbnailUrl, `episodes.base[${index}].thumbnailUrl`),
@@ -88,21 +106,31 @@ function toClockDuration(durationIso: string): string {
   return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
+function toDurationSeconds(durationIso: string): number {
+  const match = durationIso.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!match) return 0;
+  const hours = Number.parseInt(match[1] ?? "0", 10);
+  const minutes = Number.parseInt(match[2] ?? "0", 10);
+  const seconds = Number.parseInt(match[3] ?? "0", 10);
+  return hours * 3600 + minutes * 60 + seconds;
+}
+
+function inferEpisodeKind(durationIso: string): EpisodeKind {
+  const seconds = toDurationSeconds(durationIso);
+  if (seconds <= 180) return "shorts";
+  if (seconds > 180 && seconds < 25 * 60) return "video";
+  return "episode";
+}
+
 function getRelativeDateLabel(isoDate: string): string {
-  const now = new Date();
   const published = new Date(isoDate);
   if (Number.isNaN(published.getTime())) return "Недавно";
-
-  const diffDays = Math.max(
-    0,
-    Math.floor((now.getTime() - published.getTime()) / (1000 * 60 * 60 * 24)),
-  );
-
-  if (diffDays < 1) return "Сегодня";
-  if (diffDays === 1) return "1 день назад";
-  if (diffDays < 7) return `${diffDays} дней назад`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} нед. назад`;
-  return `${Math.floor(diffDays / 30)} мес. назад`;
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(published);
 }
 
 function normalizeEpisodes(): Episode[] {
@@ -115,15 +143,15 @@ function normalizeEpisodes(): Episode[] {
       const generatedSlug = slugify(title);
       return {
         slug: (override?.slug ?? generatedSlug) || record.youtubeId.toLowerCase(),
-        kind: override?.kind ?? "video",
+        kind: override?.kind ?? inferEpisodeKind(record.durationIso),
         title: record.title,
-        dateLabel: override?.dateLabel ?? getRelativeDateLabel(record.publishedAt),
+        dateLabel: getRelativeDateLabel(record.publishedAt),
         publishedAt: record.publishedAt.slice(0, 10),
         duration: toClockDuration(record.durationIso),
         youtubeId: record.youtubeId,
-        description: record.description,
-        participants: override?.participants ?? [],
-        timestamps: override?.timestamps ?? [],
+        description: override?.description ?? DESCRIPTION_PLACEHOLDER,
+        participants: override?.participants ?? DEFAULT_PARTICIPANTS,
+        timestamps: [],
         supportLinks: override?.supportLinks ?? defaultSupportLinks,
         cover: override?.cover ?? record.thumbnailUrl,
         coverAlt: override?.coverAlt ?? `Превью выпуска ${record.title}`,
@@ -139,6 +167,7 @@ export const episodeKindLabels: Record<EpisodeKind, string> = {
   special: "Спецвыпуск",
   "stream-record": "Запись стрима",
   video: "Видео",
+  shorts: "Shorts",
 };
 
 export function getEpisodeBySlug(slug: string): Episode | undefined {
@@ -147,6 +176,9 @@ export function getEpisodeBySlug(slug: string): Episode | undefined {
 
 export function getEpisodeNeighbors(slug: string, count = 4): Episode[] {
   const index = episodes.findIndex((episode) => episode.slug === slug);
-  if (index < 0) return episodes.slice(0, count);
-  return episodes.filter((episode) => episode.slug !== slug).slice(0, count);
+  const candidates = episodes.filter(
+    (episode) => episode.slug !== slug && episode.kind !== "shorts",
+  );
+  if (index < 0) return candidates.slice(0, count);
+  return candidates.slice(0, count);
 }
