@@ -18,6 +18,8 @@
     radial-gradient(circle at 50% -12%, rgba(255, 255, 255, 0.04), transparent 35%),
     linear-gradient(180deg, #0b0d10 0%, #0f1114 34%, #12151a 100%);
   font-family: var(--font-body);
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
 .root *,
@@ -66,9 +68,12 @@
   border-radius: 50%;
   display: grid;
   place-items: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 0 32px rgba(255, 255, 255, 0.015);
+  color: #eef2f6;
   font-family: var(--font-display);
-  font-size: 32px;
-  line-height: 1;
+  font-size: 18px;
 }
 
 .brand-copy {
@@ -77,30 +82,42 @@
 }
 
 .brand-copy strong {
+  display: block;
+  text-transform: uppercase;
   letter-spacing: 0.2em;
-  font-size: 28px;
+  font-size: 14px;
   font-weight: 700;
+  color: var(--text-primary);
 }
 
 .brand-copy span {
+  display: block;
+  margin-top: 2px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 22px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .nav a {
   color: var(--text-secondary);
-  font-weight: 600;
   font-size: 14px;
+  transition: color 180ms ease;
 }
 
+.nav a:hover,
 .nav a.is-active {
   color: var(--text-primary);
+}
+
+.nav .social {
+  color: var(--accent-silver);
 }
 
 .main {
