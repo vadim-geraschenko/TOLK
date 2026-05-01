@@ -59,7 +59,12 @@ function HeroEpisode({ episode }: { episode: HomeEpisode }) {
         <h3>{episode.title}</h3>
         <EpisodeParticipants episode={episode} />
         <p>{episode.summary ?? episode.description}</p>
-        <Button cx={cx} className="mini-button" href="#" label="Открыть выпуск" />
+        <Button
+          cx={cx}
+          className="mini-button"
+          href={`/episodes/${episode.id}`}
+          label="Открыть выпуск"
+        />
       </div>
     </article>
   );
@@ -81,7 +86,7 @@ function ParticipantCard({ participant }: { participant: HomeParticipant }) {
 
 function EpisodeCard({ episode }: { episode: HomeEpisode }) {
   return (
-    <article className={cx("episode-card")}>
+    <a className={cx("episode-card")} href={`/episodes/${episode.id}`}>
       <div className={cx("episode-cover")}>
         <img
           src={episode.image}
@@ -97,7 +102,7 @@ function EpisodeCard({ episode }: { episode: HomeEpisode }) {
         <EpisodeParticipants episode={episode} />
         <p>{episode.description}</p>
       </div>
-    </article>
+    </a>
   );
 }
 
