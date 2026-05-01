@@ -10,6 +10,7 @@
     "current:about": "node scripts/capture-about-current.mjs",
     "current:home": "node scripts/capture-home-current.mjs",
     "dev": "next dev",
+    "sync:episodes": "node scripts/sync-youtube-episodes.mjs",
     "start": "next start"
   },
   "devDependencies": {
