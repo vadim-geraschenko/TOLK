@@ -2,6 +2,7 @@
 
 ## Read First
 - `source-of-truth.md`
+- `../developer/README.md` (developer runbooks and data workflows)
 
 Baseline note:
 - Active baseline: Next.js implementation + snapshot baselines.
