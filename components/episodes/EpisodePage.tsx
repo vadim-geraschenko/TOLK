@@ -1,11 +1,14 @@
 import { bindStyles } from "../../lib/bind-styles";
 import {
   episodeKindLabels,
+  getMoreShortsFromSameSource,
   getEpisodeNeighbors,
+  getSourceEpisodeForShort,
   type Episode,
 } from "../../content/episodes";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
+import { EpisodePreviewCard } from "./EpisodePreviewCard";
 import styles from "./episode.module.css";
 
 const cx = bindStyles(styles);
@@ -36,7 +39,7 @@ export function EpisodePage({ episode }: { episode: Episode }) {
   const navItems = [
     { label: "Главная", href: "/" },
     { label: "О нас", href: "/about" },
-    { label: "Выпуски", href: "#", isActive: true },
+    { label: "Выпуски", href: "/episodes", isActive: true },
     { label: "Очные чтения", href: "#" },
     { label: "Мерч", href: "#" },
     { label: "Telegram", href: "#", isSocial: true },
@@ -44,6 +47,8 @@ export function EpisodePage({ episode }: { episode: Episode }) {
     { label: "Boosty", href: "#", isSocial: true },
   ];
   const related = getEpisodeNeighbors(episode.slug, 4);
+  const sourceEpisode = getSourceEpisodeForShort(episode);
+  const shortFragments = getMoreShortsFromSameSource(episode, 8);
   const hosts = episode.participants.filter((participant) => !participant.isGuest);
   const guest = episode.participants.find((participant) => participant.isGuest);
 
@@ -60,14 +65,88 @@ export function EpisodePage({ episode }: { episode: Episode }) {
 
   return (
     <div className={cx("root", "page-shell")}>
-      <SiteHeader navItems={navItems} cx={cx} />
+      <SiteHeader navItems={navItems} />
 
       <main className={cx("main")}>
+        {episode.kind === "shorts" ? (
+          <>
+            <section className={cx("hero", "container")}>
+              <div className={cx("breadcrumbs")}>
+                <a href="/">Главная</a>
+                <span>›</span>
+                <a href="/episodes">Выпуски</a>
+                <span>›</span>
+                <span>Shorts</span>
+              </div>
+
+              <div className={cx("short-layout")}>
+                <article className={cx("panel", "short-player-panel")}>
+                  <p className={cx("meta")}>
+                    {episode.dateLabel} · {episode.duration}
+                  </p>
+                  <h1>{episode.title}</h1>
+                  <div className={cx("short-player-wrap")}>
+                    <iframe
+                      title={episode.title}
+                      src={buildEmbedSrc(episode.youtubeId)}
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  </div>
+                </article>
+
+                <article className={cx("panel", "short-info-panel")}>
+                  <div className={cx("short-source-block")}>
+                    {sourceEpisode ? (
+                      <EpisodePreviewCard
+                        episode={sourceEpisode}
+                        href={`/episodes/${sourceEpisode.slug}`}
+                        className="short-source-card"
+                      />
+                    ) : (
+                      <p className={cx("timestamps-empty")}>Исходный выпуск скоро будет добавлен.</p>
+                    )}
+                    {sourceEpisode ? (
+                      <a className={cx("button", "support-link")} href={`/episodes/${sourceEpisode.slug}`}>
+                        <span className={cx("button-label")}>Смотреть полный разговор</span>
+                        <span className={cx("stars")}>
+                          <span className={cx("star", "star-lg", "star-1")} />
+                          <span className={cx("star", "star-sm", "star-2")} />
+                          <span className={cx("star", "star-lg", "star-3")} />
+                          <span className={cx("star", "star-sm", "star-4")} />
+                          <span className={cx("star", "star-lg", "star-5")} />
+                          <span className={cx("star", "star-sm", "star-6")} />
+                          <span className={cx("star", "star-sm", "star-7")} />
+                        </span>
+                      </a>
+                    ) : null}
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section className={cx("container", "related")}>
+              <h2>Ещё фрагменты из этого выпуска</h2>
+              <div className={cx("related-track")}>
+                {shortFragments.length > 0 ? (
+                  shortFragments.map((item) => (
+                    <EpisodePreviewCard key={item.slug} episode={item} href={`/episodes/${item.slug}`} />
+                  ))
+                ) : (
+                  <p className={cx("timestamps-empty")}>Скоро добавим ещё фрагменты.</p>
+                )}
+              </div>
+            </section>
+          </>
+        ) : (
+          <>
         <section className={cx("hero", "container")}>
           <div className={cx("breadcrumbs")}>
             <a href="/">Главная</a>
             <span>›</span>
-            <a href="#">Выпуски</a>
+            <a href="/episodes">Выпуски</a>
             <span>›</span>
             <span>{episodeKindLabels[episode.kind]}</span>
           </div>
@@ -85,44 +164,50 @@ export function EpisodePage({ episode }: { episode: Episode }) {
                 />
               </div>
 
-              <div className={cx("participants")}>
-                <h2>Участники</h2>
-                <div className={cx("participants-list")}>
-                  {hosts.length > 0 ? (
-                    <article className={cx("hosts-row")}>
-                      <div className={cx("host-stack")}>
-                        {hosts.map((host) => (
-                          <div key={host.name} className={cx("host-avatar")} title={host.name}>
-                            <img src={host.avatar} alt={host.name} />
-                          </div>
-                        ))}
-                      </div>
-                      <div className={cx("hosts-copy")}>
-                        <strong>{hosts.map((host) => host.name).join(" · ")}</strong>
-                        <p>Ведущие</p>
-                      </div>
-                    </article>
-                  ) : (
-                    <article className={cx("guest-row")}>
-                      <div />
-                      <div>
-                        <strong>Состав будет добавлен</strong>
-                        <p className={cx("guest-note")}>Данные участников скоро появятся.</p>
-                      </div>
-                    </article>
-                  )}
+              {episode.kind !== "video" ? (
+                <div className={cx("participants")}>
+                  <h2>Участники</h2>
+                  <div className={cx("participants-list")}>
+                    {hosts.length > 0 ? (
+                      <article
+                        className={cx("hosts-row", hosts.length === 2 ? "hosts-row-two" : "")}
+                      >
+                        <div className={cx("host-stack")}>
+                          {hosts.map((host) => (
+                            <div key={host.name} className={cx("host-avatar")} title={host.name}>
+                              <img src={host.avatar} alt={host.name} />
+                            </div>
+                          ))}
+                        </div>
+                        <div className={cx("hosts-copy")}>
+                          <strong>{hosts.map((host) => host.name).join(" · ")}</strong>
+                          <p>Ведущие</p>
+                        </div>
+                      </article>
+                    ) : (
+                      <article className={cx("guest-row")}>
+                        <div />
+                        <div>
+                          <strong>Состав будет добавлен</strong>
+                          <p className={cx("guest-note")}>Данные участников скоро появятся.</p>
+                        </div>
+                      </article>
+                    )}
 
-                  {guest ? (
-                    <article className={cx("guest-row")}>
-                      <img src={guest.avatar} alt={guest.name} />
-                      <div>
-                        <strong>Гость: {guest.name}</strong>
-                        {guest.guestNote ? <p className={cx("guest-note")}>{guest.guestNote}</p> : null}
-                      </div>
-                    </article>
-                  ) : null}
+                    {guest ? (
+                      <article className={cx("guest-row")}>
+                        <img src={guest.avatar} alt={guest.name} />
+                        <div>
+                          <strong>Гость: {guest.name}</strong>
+                          {guest.guestNote ? (
+                            <p className={cx("guest-note")}>{guest.guestNote}</p>
+                          ) : null}
+                        </div>
+                      </article>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </article>
 
             <article className={cx("panel", "content-panel")}>
@@ -177,44 +262,12 @@ export function EpisodePage({ episode }: { episode: Episode }) {
           <h2>Смотреть ещё</h2>
           <div className={cx("related-track")}>
             {related.map((item) => (
-              <a key={item.slug} className={cx("related-card")} href={`/episodes/${item.slug}`}>
-                <div className={cx("related-cover")}>
-                  <img src={item.cover} alt={item.coverAlt} width={1280} height={720} />
-                  <span className={cx("episode-duration")}>{item.duration}</span>
-                </div>
-                <div className={cx("related-body")}>
-                  <p className={cx("related-meta")}>{item.dateLabel}</p>
-                  <h3>{item.title}</h3>
-                  <div className={cx("related-participants")}>
-                    <span className={cx("related-participants-label")}>Участники</span>
-                    <div className={cx("related-participants-line")}>
-                      <div className={cx("related-host-stack")}>
-                        {item.participants.map((participant) => (
-                          <div
-                            key={`${item.slug}-${participant.name}`}
-                            className={cx(
-                              "related-host-avatar",
-                              participant.isGuest ? "guest" : "",
-                            )}
-                          >
-                            <img src={participant.avatar} alt={participant.name} />
-                          </div>
-                        ))}
-                      </div>
-                      {item.participants.some((participant) => participant.isGuest) ? (
-                        <span className={cx("related-guest-badge")}>
-                          Гость:{" "}
-                          {item.participants.find((participant) => participant.isGuest)?.name}
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-                  <p className={cx("related-description")}>{item.description}</p>
-                </div>
-              </a>
+              <EpisodePreviewCard key={item.slug} episode={item} href={`/episodes/${item.slug}`} />
             ))}
           </div>
         </section>
+          </>
+        )}
       </main>
 
       <SiteFooter text="TOLK 2026" cx={cx} />
