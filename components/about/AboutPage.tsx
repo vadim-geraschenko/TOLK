@@ -17,7 +17,7 @@ const cx = bindStyles(styles);
 const aboutNavItems = [
   { label: "Главная", href: "/" },
   { label: "О нас", href: "#", isActive: true },
-  { label: "Выпуски", href: "#" },
+  { label: "Выпуски", href: "/episodes" },
   { label: "Очные чтения", href: "#" },
   { label: "Мерч", href: "#" },
   { label: "Telegram", href: "#", isSocial: true },
@@ -66,7 +66,7 @@ export function AboutPage() {
   return (
     <div className={cx("root", "page-shell")} data-about-root>
       <AboutBackgroundMedia />
-      <SiteHeader navItems={aboutNavItems} cx={cx} />
+      <SiteHeader navItems={aboutNavItems} />
       <main>
         <AboutHeroSection />
         <AboutStoryLeadSection />
