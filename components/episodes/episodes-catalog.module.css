@@ -160,6 +160,10 @@
   gap: 16px;
 }
 
+.feed-card {
+  max-width: none;
+}
+
 .feed-more {
   grid-column: 1 / -1;
   display: flex;

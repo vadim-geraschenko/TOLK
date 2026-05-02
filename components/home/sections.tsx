@@ -11,6 +11,7 @@ import { Button } from "../site/Button";
 import { Eyebrow } from "../site/Eyebrow";
 import { PanelShell } from "../site/PanelShell";
 import { SectionHeader } from "../site/SectionHeader";
+import { EpisodeFeedCard } from "../episodes/EpisodeFeedCard";
 import styles from "./home.module.css";
 
 const cx = bindStyles(styles);
@@ -83,28 +84,6 @@ function ParticipantCard({ participant }: { participant: HomeParticipant }) {
         <p>{participant.perspective}</p>
       </div>
     </div>
-  );
-}
-
-function EpisodeCard({ episode }: { episode: HomeEpisode }) {
-  return (
-    <a className={cx("episode-card")} href={`/episodes/${episode.id}`}>
-      <div className={cx("episode-cover")}>
-        <img
-          src={episode.image}
-          alt={episode.imageAlt}
-          width={episode.imageWidth}
-          height={episode.imageHeight}
-        />
-        <span className={cx("episode-duration")}>{episode.duration}</span>
-      </div>
-      <div className={cx("episode-body")}>
-        <span className={cx("meta")}>{episode.meta}</span>
-        <h3>{episode.title}</h3>
-        <EpisodeParticipants episode={episode} />
-        <p>{episode.description}</p>
-      </div>
-    </a>
   );
 }
 
@@ -242,7 +221,24 @@ export function HomeEpisodesSection() {
 
         <div className={cx("episodes-track")}>
           {homeEpisodes.map((episode) => (
-            <EpisodeCard key={episode.id} episode={episode} />
+            <EpisodeFeedCard
+              key={episode.id}
+              episode={{
+                slug: episode.id,
+                kind: episode.kind,
+                title: episode.title,
+                dateLabel: episode.meta,
+                duration: episode.duration,
+                cover: episode.image,
+                coverAlt: episode.imageAlt,
+                description: episode.description,
+                participants: episode.participants.map((participant) => ({
+                  name: participant.name,
+                  avatar: participant.avatar,
+                  isGuest: participant.guest,
+                })),
+              }}
+            />
           ))}
         </div>
       </div>
