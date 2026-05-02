@@ -18,8 +18,10 @@ const cx = bindStyles(styles);
 function EpisodeParticipants({
   episode,
 }: {
-  episode: Pick<HomeEpisode, "participants" | "guestLabel">;
+  episode: Pick<HomeEpisode, "kind" | "participants" | "guestLabel">;
 }) {
+  if (episode.kind === "video") return null;
+
   return (
     <div className={cx("episode-participants")}>
       <span className={cx("episode-participants-label")}>Участники</span>
@@ -235,7 +237,7 @@ export function HomeEpisodesSection() {
               title="Подкасты, записи чтений и спецвыпуски"
             />
           }
-          action={<Button cx={cx} href="#" label="Все выпуски" />}
+          action={<Button cx={cx} href="/episodes" label="Все выпуски" />}
         />
 
         <div className={cx("episodes-track")}>

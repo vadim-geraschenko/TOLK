@@ -17,6 +17,7 @@ export type Episode = {
   duration: string;
   youtubeId: string;
   description: string;
+  sourceEpisodeSlug?: string;
   participants: EpisodeParticipant[];
   timestamps: EpisodeTimestamp[];
   supportLinks: EpisodeSupportLink[];
@@ -122,6 +123,10 @@ function inferEpisodeKind(durationIso: string): EpisodeKind {
   return "episode";
 }
 
+function hasGuestParticipant(participants?: EpisodeParticipant[]): boolean {
+  return Boolean(participants?.some((participant) => participant.isGuest));
+}
+
 function getRelativeDateLabel(isoDate: string): string {
   const published = new Date(isoDate);
   if (Number.isNaN(published.getTime())) return "Недавно";
@@ -141,15 +146,20 @@ function normalizeEpisodes(): Episode[] {
       const override = episodeOverridesByYoutubeId[record.youtubeId];
       const title = override?.slug ? record.title : record.title.trim();
       const generatedSlug = slugify(title);
+      const inferredKind = inferEpisodeKind(record.durationIso);
+      const effectiveKind =
+        override?.kind ??
+        (hasGuestParticipant(override?.participants) ? "special" : inferredKind);
       return {
         slug: (override?.slug ?? generatedSlug) || record.youtubeId.toLowerCase(),
-        kind: override?.kind ?? inferEpisodeKind(record.durationIso),
+        kind: effectiveKind,
         title: record.title,
         dateLabel: getRelativeDateLabel(record.publishedAt),
         publishedAt: record.publishedAt.slice(0, 10),
         duration: toClockDuration(record.durationIso),
         youtubeId: record.youtubeId,
         description: override?.description ?? DESCRIPTION_PLACEHOLDER,
+        sourceEpisodeSlug: override?.sourceEpisodeSlug,
         participants: override?.participants ?? DEFAULT_PARTICIPANTS,
         timestamps: [],
         supportLinks: override?.supportLinks ?? defaultSupportLinks,
@@ -181,4 +191,41 @@ export function getEpisodeNeighbors(slug: string, count = 4): Episode[] {
   );
   if (index < 0) return candidates.slice(0, count);
   return candidates.slice(0, count);
+}
+
+export function getSourceEpisodeForShort(shortEpisode: Episode): Episode | undefined {
+  if (shortEpisode.kind !== "shorts") return undefined;
+
+  if (shortEpisode.sourceEpisodeSlug) {
+    return episodes.find(
+      (episode) => episode.slug === shortEpisode.sourceEpisodeSlug && episode.kind !== "shorts",
+    );
+  }
+
+  const shortIndex = episodes.findIndex((episode) => episode.slug === shortEpisode.slug);
+  if (shortIndex < 0) return undefined;
+
+  for (let i = shortIndex + 1; i < episodes.length; i += 1) {
+    const candidate = episodes[i];
+    if (candidate.kind !== "shorts") return candidate;
+  }
+  for (let i = shortIndex - 1; i >= 0; i -= 1) {
+    const candidate = episodes[i];
+    if (candidate.kind !== "shorts") return candidate;
+  }
+  return undefined;
+}
+
+export function getMoreShortsFromSameSource(shortEpisode: Episode, count = 6): Episode[] {
+  const source = getSourceEpisodeForShort(shortEpisode);
+  if (!source) return [];
+
+  return episodes
+    .filter((episode) => {
+      if (episode.kind !== "shorts") return false;
+      if (episode.slug === shortEpisode.slug) return false;
+      const currentSource = getSourceEpisodeForShort(episode);
+      return currentSource?.slug === source.slug;
+    })
+    .slice(0, count);
 }

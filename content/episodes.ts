@@ -6,4 +6,6 @@ export {
   episodeKindLabels,
   getEpisodeBySlug,
   getEpisodeNeighbors,
+  getSourceEpisodeForShort,
+  getMoreShortsFromSameSource,
 } from "./episodes.data";
