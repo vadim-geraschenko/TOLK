@@ -15,7 +15,7 @@ export function HomePage() {
   const navItems = [
     { label: "Главная", href: "#", isActive: true },
     { label: "О нас", href: "/about" },
-    { label: "Выпуски", href: "#" },
+    { label: "Выпуски", href: "/episodes" },
     { label: "Очные чтения", href: "#" },
     { label: "Мерч", href: "#" },
     { label: "Telegram", href: "#", isSocial: true },
@@ -25,7 +25,7 @@ export function HomePage() {
 
   return (
     <div className={cx("root", "page-shell")}>
-      <SiteHeader navItems={navItems} cx={cx} />
+      <SiteHeader navItems={navItems} />
 
       <main>
         <HomeHeroSection />
