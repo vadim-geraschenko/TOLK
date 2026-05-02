@@ -20,6 +20,7 @@ export type HomeEpisodeParticipant = {
 
 export type HomeEpisode = {
   id: string;
+  kind: "episode" | "special" | "stream-record" | "video";
   title: string;
   meta: string;
   duration: string;
@@ -85,12 +86,19 @@ export const homeSocials: HomeSocial[] = [
 ];
 
 export const homeEpisodes: HomeEpisode[] = episodes
-  .filter((episode) => episode.kind !== "shorts")
+  .filter(
+    (
+      episode,
+    ): episode is typeof episode & {
+      kind: "episode" | "special" | "stream-record" | "video";
+    } => episode.kind !== "shorts",
+  )
   .slice(0, HOME_EPISODES_LIMIT)
   .map((episode) => {
     const guest = episode.participants.find((participant) => participant.isGuest);
     return {
       id: episode.slug,
+      kind: episode.kind,
       title: episode.title,
       meta: episode.dateLabel,
       duration: episode.duration,

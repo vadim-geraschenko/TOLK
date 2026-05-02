@@ -28,6 +28,7 @@ export type EpisodeOverride = {
   slug?: string;
   kind?: EpisodeKind;
   description?: string;
+  sourceEpisodeSlug?: string;
   cover?: string;
   coverAlt?: string;
   participants?: EpisodeParticipant[];
@@ -91,7 +92,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
   },
   lRx_FEXKac0: {
     slug: "thomas",
-    kind: "video",
+    kind: "special",
     description:
       "Спецвыпуск: обсуждаем один из самых известных раннехристианских апокрифов и сравниваем его с каноническими текстами.",
     cover: "/home/assets/episode-thomas.jpg",
@@ -126,5 +127,95 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
       { label: "Ревекка и Исаак", at: "49:02", seconds: 2942 },
     ],
     supportLinks: defaultSupportLinks,
+  },
+  l9xkYRd1LTg: {
+    kind: "stream-record",
+    participants: [
+      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
+      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
+    ],
+  },
+  FtOMsIyNOug: {
+    kind: "special",
+    participants: [
+      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
+      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
+      {
+        name: "Серафим",
+        avatar: "/home/assets/host-serafim.png",
+        role: "Гость",
+        isGuest: true,
+        guestNote: "Серафим Сашлиев",
+      },
+    ],
+  },
+  "1D7eI7xANsk": {
+    kind: "special",
+  },
+  "Ytd_yy-Rr4E": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "oDaNfYsB_yI": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "4jHYlye1uDE": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "pj6erjC-KB0": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  w5IxEebpEMA: {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "14OIzOxW9J8": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "HFCTS7EKpUk": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "8gYyAKMV0qE": {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  X5EAGE7xF8w: {
+    sourceEpisodeSlug: "vse-vetvi-hristianstva-za-14-minut",
+  },
+  "NzWJrbgzb6I": {
+    sourceEpisodeSlug: "chitaem-bibliyu-s-samogo-nachala-sotvorenie-mira",
+  },
+  "9Cf9ZvUf1T8": {
+    sourceEpisodeSlug: "silneyshie-argumenty-v-polzu-suschestvovaniya-boga",
+  },
+  "YtsridQj4KQ": {
+    sourceEpisodeSlug: "silneyshie-argumenty-v-polzu-suschestvovaniya-boga",
+  },
+  "mFP6tLu8xwU": {
+    sourceEpisodeSlug: "silneyshie-argumenty-v-polzu-suschestvovaniya-boga",
+  },
+  "t_q0M_hp48Y": {
+    sourceEpisodeSlug: "isaac",
+  },
+  "WzUE2SvyM2s": {
+    sourceEpisodeSlug: "isaac",
+  },
+  "37t4zvHNASQ": {
+    sourceEpisodeSlug: "isaac",
+  },
+  "ABgcg--GRr4": {
+    sourceEpisodeSlug: "isaac",
+  },
+  "sgD7VMe6jVk": {
+    sourceEpisodeSlug: "isaac",
+  },
+  "sJsKh0r-GBI": {
+    sourceEpisodeSlug: "isaac",
+  },
+  "CPB4HmArpXw": {
+    sourceEpisodeSlug: "chitaem-bibliyu-bog-reshaet-ubit-chelovechestvo",
+  },
+  "jHQ0bWLB9eQ": {
+    sourceEpisodeSlug: "filosof-v-shoke-ot-panchina-reaktsiya-na-moral-bez-boga-tolk",
+  },
+  "VnmS0mxze08": {
+    sourceEpisodeSlug: "filosof-v-shoke-ot-panchina-reaktsiya-na-moral-bez-boga-tolk",
   },
 };
