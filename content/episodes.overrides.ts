@@ -182,6 +182,9 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
   "NzWJrbgzb6I": {
     sourceEpisodeSlug: "chitaem-bibliyu-s-samogo-nachala-sotvorenie-mira",
   },
+  z16zCvTG0wQ: {
+    sourceEpisodeSlug: "chitaem-bibliyu-s-samogo-nachala-sotvorenie-mira",
+  },
   "9Cf9ZvUf1T8": {
     sourceEpisodeSlug: "silneyshie-argumenty-v-polzu-suschestvovaniya-boga",
   },
@@ -213,6 +216,9 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     sourceEpisodeSlug: "chitaem-bibliyu-bog-reshaet-ubit-chelovechestvo",
   },
   "jHQ0bWLB9eQ": {
+    sourceEpisodeSlug: "filosof-v-shoke-ot-panchina-reaktsiya-na-moral-bez-boga-tolk",
+  },
+  SQMM41q0jrk: {
     sourceEpisodeSlug: "filosof-v-shoke-ot-panchina-reaktsiya-na-moral-bez-boga-tolk",
   },
   "VnmS0mxze08": {

@@ -22,7 +22,8 @@ export function EpisodePreviewCard({
   cx = localCx,
 }: EpisodePreviewCardProps) {
   const guest = episode.participants.find((participant) => participant.isGuest);
-  const shouldShowParticipants = showParticipants && episode.kind !== "video";
+  const shouldShowParticipants =
+    showParticipants && episode.kind !== "video" && episode.kind !== "shorts";
 
   return (
     <a className={cx("related-card", className)} href={href}>

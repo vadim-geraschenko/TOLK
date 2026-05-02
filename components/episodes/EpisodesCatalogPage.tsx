@@ -4,6 +4,7 @@ import type { EpisodeKind } from "../../content/episodes.overrides";
 import { bindStyles } from "../../lib/bind-styles";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
+import { EpisodeFeedCard } from "./EpisodeFeedCard";
 import styles from "./episodes-catalog.module.css";
 
 const cx = bindStyles(styles);
@@ -90,28 +91,12 @@ export function EpisodesCatalogPage({ tab, page = 1 }: { tab?: string; page?: nu
 
         <section className={cx("container", "feed")} id="episodes-feed" aria-live="polite">
           {visible.map((episode) => (
-            <a key={episode.slug} className={cx("card")} href={`/episodes/${episode.slug}`}>
-              <div className={cx("cover")}>
-                <img src={episode.cover} alt={episode.coverAlt} width={1280} height={720} />
-                <span className={cx("duration")}>{episode.duration}</span>
-              </div>
-              <div className={cx("body")}>
-                <p className={cx("meta")}>
-                  {episode.dateLabel} · {episodeKindLabels[episode.kind]}
-                </p>
-                <h2>{episode.title}</h2>
-                <p className={cx("description")}>{episode.description}</p>
-                {episode.kind !== "video" ? (
-                  <div className={cx("participants")}>
-                    {episode.participants.slice(0, 3).map((participant) => (
-                      <div key={`${episode.slug}-${participant.name}`} className={cx("avatar")}>
-                        <img src={participant.avatar} alt={participant.name} />
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            </a>
+            <EpisodeFeedCard
+              key={episode.slug}
+              className={cx("feed-card")}
+              episode={episode}
+              metaSuffix={episodeKindLabels[episode.kind]}
+            />
           ))}
 
           {hasMore ? (
