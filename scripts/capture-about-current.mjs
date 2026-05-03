@@ -44,11 +44,11 @@ const DESKTOP_SCROLL_STATES = [
   {
     name: "reading-method",
     kind: "selector",
-    selector: ".story-step:not(.story-step-pair) .story-card",
+    selector: '[data-story-kind="single"] [data-about-story-card]',
   },
   { name: "pair-3-mid", kind: "pairProgress", pairIndex: 2, pairYProgress: 0.58 },
-  { name: "voices", kind: "selector", selector: ".voice-intro-card" },
-  { name: "audience", kind: "selector", selector: ".text-panel" },
+  { name: "voices", kind: "selector", selector: "[data-about-voices-intro]" },
+  { name: "audience", kind: "selector", selector: "[data-about-audience-panel]" },
 ];
 
 function parseArgs(argv) {
@@ -73,8 +73,8 @@ function parseArgs(argv) {
 async function ensureAboutDataReady(page) {
   await page.waitForFunction(() => {
     return (
-      document.querySelectorAll("[data-pair]").length >= 3 &&
-      document.querySelectorAll(".voice-card").length >= 3 &&
+      document.querySelectorAll("[data-about-pair]").length >= 3 &&
+      document.querySelectorAll("[data-about-voice-card]").length >= 3 &&
       document.querySelector("[data-about-frame]")
     );
   });
@@ -311,7 +311,7 @@ async function captureMobileCurrent(browser, targetUrl) {
   await captureBodyFull(page, fullTargetPath);
   savedPaths.push(path.relative(REPO_ROOT, fullTargetPath));
 
-  await scrollToSelector(page, ".voice-intro-card", 40);
+  await scrollToSelector(page, "[data-about-voices-intro]", 40);
   await waitForMotionSettle(page);
   const voicesTargetPath = path.join(
     CURRENT_DIR,

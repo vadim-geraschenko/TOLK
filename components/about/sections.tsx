@@ -77,7 +77,10 @@ function StoryParagraphs({ paragraphs }: { paragraphs: string[] }) {
 
 function StoryCard({ card }: { card: AboutStoryCard }) {
   return (
-    <div className={cx("story-card", card.centered ? "centered" : "", card.tone ?? "tone-soft")}>
+    <div
+      className={cx("story-card", card.centered ? "centered" : "", card.tone ?? "tone-soft")}
+      data-about-story-card
+    >
       <CardKicker cx={cx} hasLines={card.kickerHasLines} label={card.kicker} />
       <h2>{card.title}</h2>
       <StoryParagraphs paragraphs={card.paragraphs} />
@@ -109,6 +112,7 @@ function StoryStep({
       )}
       data-progress={step.progress}
       data-story-step
+      data-story-kind={step.kind}
       data-about-reveal-target
     >
       {step.kind === "pair" ? (
@@ -154,6 +158,7 @@ function VoiceIntroCard() {
     <div
       className={cx("story-card", "centered", "voice-intro-card", "tone-soft")}
       data-about-reveal-target
+      data-about-voices-intro
     >
       <div className={cx("section-head")}>
         <CardKicker cx={cx} hasLines label="Три точки зрения" />
@@ -178,7 +183,7 @@ function VoiceCard({
   description: string;
 }) {
   return (
-    <article className={cx("voice-card", "tone-soft")} data-about-reveal-target>
+    <article className={cx("voice-card", "tone-soft")} data-about-reveal-target data-about-voice-card>
       <div className={cx("voice-avatar")}>
         <img src={avatar} alt={name} />
       </div>
@@ -212,6 +217,7 @@ export function AboutAudienceSection() {
         <article
           className={cx("text-panel", "tone-warm", "is-centered")}
           data-about-reveal-target
+          data-about-audience-panel
         >
           <div className={cx("section-head")}>
             <CardKicker cx={cx} hasLines label="Для Кого TOLK" />
