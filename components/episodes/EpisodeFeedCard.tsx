@@ -39,7 +39,7 @@ export function EpisodeFeedCard({
   const shouldShowParticipants = episode.kind !== "video" && episode.kind !== "shorts";
 
   return (
-    <a className={cx("card", className)} href={href}>
+    <a className={cx("card", className)} href={href} data-home-episode-card>
       <div className={cx("cover")}>
         <img src={episode.cover} alt={episode.coverAlt} width={1280} height={720} />
         <span className={cx("duration")}>{episode.duration}</span>
