@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { episodes, episodeKindLabels, type Episode } from "../../content/episodes";
 import type { EpisodeKind } from "../../content/episodes.overrides";
 import { bindStyles } from "../../lib/bind-styles";
@@ -46,9 +49,14 @@ function toCatalogHref(tab: "all" | EpisodeKind, page: number): string {
   return `/episodes?${params.toString()}#episodes-feed`;
 }
 
-export function EpisodesCatalogPage({ tab, page = 1 }: { tab?: string; page?: number }) {
-  const activeTab = getTabKey(tab);
-  const safePage = Number.isFinite(page) && page > 0 ? Math.floor(page) : 1;
+export function EpisodesCatalogPage() {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab") ?? undefined;
+  const pageParam = searchParams.get("page");
+  const parsedPage = pageParam ? Number.parseInt(pageParam, 10) : 1;
+
+  const activeTab = getTabKey(tabParam);
+  const safePage = Number.isFinite(parsedPage) && parsedPage > 0 ? Math.floor(parsedPage) : 1;
   const filtered = filterEpisodes(episodes, activeTab);
   const visibleCount = safePage * EPISODES_PAGE_SIZE;
   const visible = filtered.slice(0, visibleCount);

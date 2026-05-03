@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { primaryNavigation } from "@/content/navigation";
+import { primaryNavigation } from "../../content/navigation";
 import styles from "./siteHeader.module.css";
 
 export function SiteHeader({ currentPath }: { currentPath: "/" | "/about" }) {
