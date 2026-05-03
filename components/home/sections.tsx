@@ -24,7 +24,7 @@ function EpisodeParticipants({
   if (episode.kind === "video") return null;
 
   return (
-    <div className={cx("episode-participants")}>
+    <div className={cx("episode-participants")} data-home-episode-participants>
       <span className={cx("episode-participants-label")}>Участники</span>
       <div className={cx("episode-participants-line")}>
         <div className={cx("episode-host-stack")}>
@@ -47,7 +47,7 @@ function EpisodeParticipants({
 
 function HeroEpisode({ episode }: { episode: HomeEpisode }) {
   return (
-    <article className={cx("hero-episode")}>
+    <article className={cx("hero-episode")} data-home-hero-episode>
       <div className={cx("hero-episode-cover")}>
         <img
           src={episode.image}
@@ -124,7 +124,7 @@ export function HomeHeroSection() {
                     догм.
                   </p>
                 </div>
-                <div className={cx("hero-actions")}>
+                <div className={cx("hero-actions")} data-home-hero-actions>
                   <Button cx={cx} href="#episodes" label="Смотреть выпуски" />
                   <Button cx={cx} href="/about" label="О проекте" />
                 </div>
@@ -179,9 +179,11 @@ export function HomeParticipantsSection() {
           <Eyebrow cx={cx}>Главные ведущие</Eyebrow>
           <h3>Три взгляда на один текст</h3>
         </div>
-        <div className={cx("participants-list")}>
+        <div className={cx("participants-list")} data-home-participants-list>
           {homeParticipants.map((participant) => (
-            <ParticipantCard key={participant.name} participant={participant} />
+            <div key={participant.name} data-home-participant-card>
+              <ParticipantCard participant={participant} />
+            </div>
           ))}
         </div>
       </div>
@@ -219,7 +221,7 @@ export function HomeEpisodesSection() {
           action={<Button cx={cx} href="/episodes" label="Все выпуски" />}
         />
 
-        <div className={cx("episodes-track")}>
+        <div className={cx("episodes-track")} data-home-episodes-track>
           {homeEpisodes.map((episode) => (
             <EpisodeFeedCard
               key={episode.id}
@@ -281,9 +283,11 @@ function ContactPanelBody() {
       <Eyebrow cx={cx}>Контакты</Eyebrow>
       <h2>Наши соцсети</h2>
 
-      <div className={cx("social-buttons")}>
+      <div className={cx("social-buttons")} data-home-social-buttons>
         {homeSocials.map((social) => (
-          <SocialButton key={social.name} social={social} />
+          <div key={social.name} data-home-social-button>
+            <SocialButton social={social} />
+          </div>
         ))}
       </div>
     </>

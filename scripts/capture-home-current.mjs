@@ -31,27 +31,27 @@ const STATES = [
   { name: "default" },
   {
     name: "hero-button-hover",
-    selector: ".hero-actions .button:first-child",
+    selector: "[data-home-hero-actions] .button:first-child",
     pseudo: ["hover"],
   },
   {
     name: "hero-button-active",
-    selector: ".hero-actions .button:first-child",
+    selector: "[data-home-hero-actions] .button:first-child",
     pseudo: ["active"],
   },
   {
     name: "episode-card-hover",
-    selector: ".episodes-track .episode-card:first-child",
+    selector: "[data-home-episodes-track] [data-home-episode-card]:first-child",
     pseudo: ["hover"],
   },
   {
     name: "participant-hover",
-    selector: ".participants-list .participant:nth-child(2)",
+    selector: "[data-home-participants-list] [data-home-participant-card]:nth-child(2) .participant",
     pseudo: ["hover"],
   },
   {
     name: "social-button-hover",
-    selector: ".social-buttons .social-button:first-child",
+    selector: "[data-home-social-buttons] [data-home-social-button]:first-child .social-button",
     pseudo: ["hover"],
   },
 ];
@@ -78,11 +78,12 @@ function parseArgs(argv) {
 async function ensureHomeDataReady(page) {
   await page.waitForFunction(() => {
     return (
-      document.querySelectorAll(".episodes-track .episode-card").length >= 1 &&
-      document.querySelectorAll(".participants-list .participant").length >= 1 &&
-      document.querySelectorAll(".social-buttons .social-button").length >= 1 &&
-      document.querySelector(".hero-side .hero-episode") &&
-      document.querySelector(".hero-actions .button")
+      document.querySelectorAll("[data-home-episodes-track] [data-home-episode-card]").length >= 1 &&
+      document.querySelectorAll("[data-home-participants-list] [data-home-participant-card]").length >= 1 &&
+      document.querySelectorAll("[data-home-social-buttons] [data-home-social-button] .social-button")
+        .length >= 1 &&
+      document.querySelector("[data-home-hero-episode]") &&
+      document.querySelector("[data-home-hero-actions] .button")
     );
   });
 }
