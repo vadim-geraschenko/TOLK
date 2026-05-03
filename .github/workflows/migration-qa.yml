@@ -31,15 +31,15 @@ jobs:
 
       - name: Start app
         run: |
-          nohup npx next start -H 0.0.0.0 -p 3000 > /tmp/next-start.log 2>&1 &
+          nohup npx serve -s out -l 3000 > /tmp/static-serve.log 2>&1 &
           for i in {1..30}; do
             if curl -sSf http://127.0.0.1:3000 > /dev/null; then
               exit 0
             fi
             sleep 1
           done
-          echo "Next.js server failed to start" >&2
-          tail -n 100 /tmp/next-start.log >&2 || true
+          echo "Static server failed to start" >&2
+          tail -n 100 /tmp/static-serve.log >&2 || true
           exit 1
 
       - name: Capture current snapshots
