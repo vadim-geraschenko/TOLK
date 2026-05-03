@@ -1,10 +1,46 @@
+# dependencies
 node_modules/
+
+# builds
+dist/
+build/
 .next/
 out/
-dist/
-coverage/
+
+# caches
+.cache/
+.parcel-cache/
+.vite/
+.turbo/
+__pycache__/
+*.pyc
+
+# env
+.env
+.env.*
+!.env.example
+
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# test coverage
+coverage/
+.playwright-mcp/
+
+# OS / editors
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# misc
+*.local
+.wl
+project_contents.txt
+docs/design/for-codex/*.png
+docs/design/pages/*/snapshots/diffs/*.png

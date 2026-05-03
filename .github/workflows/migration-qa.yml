@@ -1,0 +1,51 @@
+name: Migration QA
+
+on:
+  pull_request:
+  push:
+    branches: [ main, Operational/Tooling ]
+
+jobs:
+  visual-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      - name: Start app
+        run: |
+          nohup npx next start -H 0.0.0.0 -p 3000 > /tmp/next-start.log 2>&1 &
+          for i in {1..30}; do
+            if curl -sSf http://127.0.0.1:3000 > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Next.js server failed to start" >&2
+          tail -n 100 /tmp/next-start.log >&2 || true
+          exit 1
+
+      - name: Capture current snapshots
+        run: |
+          npm run current:home
+          npm run current:about
+
+      - name: Compare visual snapshots
+        run: npm run compare:visual

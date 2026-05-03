@@ -1,62 +1,33 @@
 # TOLK Design Docs
 
-## Что считать источником истины
-- `system/visual-direction.md` — общий визуальный характер проекта.
-- `system/design-tokens.md` — палитра, контуры, состояния, motion и системные правила.
-- `system/image-policy.md` — правила для изображений, aspect ratio, `object-fit` и naming.
-- `pages/home/spec.md` — прикладная спецификация главной страницы.
-- `pages/about/spec.md` — прикладная спецификация страницы `about`.
-- `pages/about/content.md` — актуальный смысловой каркас страницы `about`.
-- `pages/about/background-video-by-images-sequence-animation.md` — правила фоновой сцены `about`.
-- `pages/home/home-mvp.html` — текущее визуальное состояние главной страницы.
-- `pages/about/about.html` — текущее визуальное и техническое состояние страницы `about`.
+## Read First
+- `source-of-truth.md`
+- `../developer/README.md` (developer runbooks and data workflows)
 
-Сопроводительные технические файлы:
-- `pages/home/production-migration-note.md` — памятка по безопасному переносу MVP в production-стек.
+Baseline note:
+- Active baseline: Next.js implementation + snapshot baselines.
+- HTML MVP files are retained as reserve references.
 
-Если между старыми экспериментами и текущими файлами есть расхождение, источником истины считаются файлы выше.
+## Core Contracts
+- `memory.md`
+- `parity-rules.md`
+- `visual-regression.md`
+- `viewports.md`
 
-## Структура папок
-- `system/` — переиспользуемые визуальные директивы проекта.
-- `pages/` — прикладные спецификации и макеты конкретных страниц.
-- `references/` — входные и референсные материалы.
-- `assets/` — общие визуальные ассеты проекта.
-- `for-codex/` — вспомогательные рабочие материалы для текущих задач и сверок; это не источник истины для дизайна.
+## System Layer
+- `system/visual-direction.md`
+- `system/design-tokens.md`
+- `system/typography.md`
+- `system/image-policy.md`
 
-## Implementation Notes
-- В `home-mvp.html` контентные списки `episodes`, `participants` и `socials` должны собираться из структуры данных, а не жить как вручную дублированный HTML.
-- CSS страницы должен оставаться разделённым на `tokens`, `base`, `components`, `responsive`.
-- Текущая система кнопок едина для проекта: базовый класс — `.button`, а `.mini-button` только переопределяет размер.
-- Если между `.md` и реализацией расходятся детали фоновой сцены `about`, приоритет у `pages/about/about.html` и `pages/about/background-video-by-images-sequence-animation.md`.
+## Page Layer
+- `pages/home/source/spec.md`
+- `pages/home/source/home-mvp.html`
+- `pages/about/source/spec.md`
+- `pages/about/source/content.md`
+- `pages/about/source/background-video-by-images-sequence-animation.md`
+- `pages/about/source/about.html`
 
-## Текущий визуальный курс
-- Основная система страницы: графитовый фон и серебристо-светлые акценты.
-- Интерфейс должен быть чистым, сухим и редакционным.
-- Золотистые разводы визуально грязные и создают ощущение шарлатанства, поэтому их следует избегать.
-- “Премиальность” не должна выражаться через золото, мистический glow или псевдо-роскошную декоративность.
-- Символические мотивы допустимы только в редуцированном виде: тонкие линии, halo, орнамент малой амплитуды.
-
-## Главная страница: ключевые правила
-- Ввод в проект уже встроен в `hero`; отдельный большой блок `О нас` под ним не нужен.
-- `Очные чтения` на главной живут как отдельная карточка рядом с `hero` на широких экранах и уходят ниже `hero` на более узких.
-- `Выпуски` остаются главным контентным маршрутом после первого экрана.
-- Нижний ряд на десктопе состоит из двух блоков: `Мерч` и `Контакты и поддержка`.
-- Текущая пропорция нижнего ряда: примерно `65 / 35`.
-- `Мерч` не должен быть целиком hover-интерактивным; интерактивной должна читаться только кнопка `Приобрести`.
-- Нижняя кнопка `Boosty` должна визуально доходить до нижней линии merch-блока.
-- Блок `Контакты и поддержка` не должен стартовать выше блока `Мерч` по линии eyebrow.
-
-## Разделители секций
-- Между крупными секциями используются горизонтальные разделители.
-- Это не декоративные эмблемы, а навигационные элементы ритма страницы.
-- Центральный знак должен оставаться лёгким и вторичным.
-
-## Реализация и интерпретация
-- В `home-mvp.html` использовать семантические имена CSS-переменных: `accent-silver`, `text-primary`, `surface-panel` и т.д.
-- Breakpoint-токены должны быть заведены в `:root` и зеркалиться теми же значениями в media queries.
-- Внутри page-spec и implementation-файлов не держать параллельно старые и новые имена для одной и той же сущности.
-
-## Что не нужно документировать повторно
-- Не вести исторический журнал визуальных проб внутри основных spec-файлов.
-- Не дублировать одни и те же правила одновременно в `system/` и в page-spec без необходимости.
-- Не описывать explorations как актуальное состояние продукта.
+## Non-authoritative
+- `for-codex/*` is working reference material (screenshots, debug captures), not a source of truth.
+- `.local/*` is local workflow/tooling context, not design truth.

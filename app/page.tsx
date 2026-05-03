@@ -1,5 +1,11 @@
-import { HomePage } from "@/components/home/HomePage";
+import type { Metadata } from "next";
 
-export default function Page() {
+import { HomePage } from "../components/home/HomePage";
+
+export const metadata: Metadata = {
+  title: "TOLK — Home MVP",
+};
+
+export default function HomeRoute() {
   return <HomePage />;
 }

@@ -1,0 +1,267 @@
+import type { CSSProperties } from "react";
+import { bindStyles } from "../../lib/bind-styles";
+import {
+  aboutStorySteps,
+  aboutVoices,
+  type AboutStoryCard,
+  type AboutStoryStep,
+} from "../../content/about";
+import { Button } from "../site/Button";
+import { CardKicker } from "../site/CardKicker";
+import styles from "./about.module.css";
+
+const cx = bindStyles(styles);
+
+export function AboutHeroSection() {
+  return (
+    <section className={cx("hero")}>
+      <div className={cx("container")}>
+        <div className={cx("hero-shell", "tone-neutral")} data-about-reveal-target>
+          <div className={cx("hero-grid")}>
+            <div className={cx("hero-copy")}>
+              <CardKicker cx={cx} hasLines label="О Проекте" />
+              <h1>Поиск истины в честной беседе</h1>
+              <p>
+                TOLK — это искренний разговор о самом живом и нетривиальном тексте в
+                истории человечества. Это не площадка для проповедей — мы не
+                декларируем истину, а ищем её. Нами движут природное любопытство,
+                неутолимая жажда истины, любовь к размышлениям и поиску смыслов. Мы
+                занимаемся обывательским чтением и делимся своими интерпретациями,
+                не боясь увидеть ветхий текст под новым углом.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className={cx("mobile-divider")} aria-hidden="true" />
+      </div>
+    </section>
+  );
+}
+
+export function AboutStoryLeadSection() {
+  return (
+    <section className={cx("section", "story-lead")}>
+      <div className={cx("container")}>
+        <article
+          className={cx("story-card", "centered", "tone-neutral")}
+          data-about-reveal-target
+        >
+          <CardKicker cx={cx} hasLines label="Почему Библия" />
+          <h2>Почему мы снова и снова возвращаемся к этой книге</h2>
+          <p>
+            Библия — это текстуальная точка сингулярности. Чем глубже вглядываешься
+            в книгу, тем больше смыслов в ней видишь. Мы исследуем её, как
+            неисчерпаемый источник людской мудрости, новых идей и изящных
+            концептов.
+          </p>
+          <p>
+            Это книга, из которой во многом выросли наша культура, моральный язык,
+            образ человека и само представление о добре, вине, спасении, надежде,
+            любви и жертве.
+          </p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
+function StoryParagraphs({ paragraphs }: { paragraphs: string[] }) {
+  return (
+    <>
+      {paragraphs.map((paragraph, index) => (
+        <p key={index} dangerouslySetInnerHTML={{ __html: paragraph }} />
+      ))}
+    </>
+  );
+}
+
+function StoryCard({ card }: { card: AboutStoryCard }) {
+  return (
+    <div className={cx("story-card", card.centered ? "centered" : "", card.tone ?? "tone-soft")}>
+      <CardKicker cx={cx} hasLines={card.kickerHasLines} label={card.kicker} />
+      <h2>{card.title}</h2>
+      <StoryParagraphs paragraphs={card.paragraphs} />
+    </div>
+  );
+}
+
+function StoryStep({
+  step,
+  pairIndex,
+}: {
+  step: AboutStoryStep;
+  pairIndex?: number;
+}) {
+  const pairVarsStyle =
+    step.kind === "pair"
+      ? ({
+          "--about-pair-progress-var": `var(--about-pair-${pairIndex ?? 0}-progress, 0)`,
+          "--about-pair-y-var": `var(--about-pair-${pairIndex ?? 0}-y, 0)`,
+        } as CSSProperties)
+      : undefined;
+
+  return (
+    <article
+      className={cx(
+        "story-step",
+        step.kind === "pair" ? "story-step-pair" : "",
+        step.kind === "pair" ? step.className ?? "" : "",
+      )}
+      data-progress={step.progress}
+      data-story-step
+      data-about-reveal-target
+    >
+      {step.kind === "pair" ? (
+        <div
+          className={cx("story-pair")}
+          data-pair
+          data-about-pair
+          data-pair-index={pairIndex}
+          style={pairVarsStyle}
+        >
+          <StoryCard card={step.cards[0]} />
+          <StoryCard card={step.cards[1]} />
+        </div>
+      ) : (
+        <StoryCard card={step.card} />
+      )}
+      {step.hasMobileDivider ? (
+        <div className={cx("mobile-divider")} aria-hidden="true" />
+      ) : null}
+    </article>
+  );
+}
+
+export function AboutStorySection() {
+  let pairCounter = 0;
+
+  return (
+    <section className={cx("section", "story")} id="story">
+      <div className={cx("container")}>
+        <div className={cx("story-cards")} id="story-cards">
+          {aboutStorySteps.map((step, index) => {
+            const pairIndex = step.kind === "pair" ? pairCounter++ : undefined;
+            return <StoryStep key={index} step={step} pairIndex={pairIndex} />;
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function VoiceIntroCard() {
+  return (
+    <div
+      className={cx("story-card", "centered", "voice-intro-card", "tone-soft")}
+      data-about-reveal-target
+    >
+      <div className={cx("section-head")}>
+        <CardKicker cx={cx} hasLines label="Три точки зрения" />
+        <h2>Один текст, несколько взглядов</h2>
+      </div>
+      <p>
+        Основной состав TOLK — ортодокс, внеконфессиональный христианин и атеист.
+        Наши местами полярные, а местами схожие взгляды позволяют рассмотреть
+        Библию с неожиданных углов и считывать разные интерпретации одного текста.
+      </p>
+    </div>
+  );
+}
+
+function VoiceCard({
+  name,
+  avatar,
+  description,
+}: {
+  name: string;
+  avatar: string;
+  description: string;
+}) {
+  return (
+    <article className={cx("voice-card", "tone-soft")} data-about-reveal-target>
+      <div className={cx("voice-avatar")}>
+        <img src={avatar} alt={name} />
+      </div>
+      <h3>{name}</h3>
+      <p>{description}</p>
+    </article>
+  );
+}
+
+export function AboutVoicesSection() {
+  return (
+    <section className={cx("section")}>
+      <div className={cx("container")}>
+        <VoiceIntroCard />
+
+        <div className={cx("voices-grid")}>
+          {aboutVoices.map((voice) => (
+            <VoiceCard key={voice.name} {...voice} />
+          ))}
+          <div className={cx("mobile-divider")} aria-hidden="true" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function AboutAudienceSection() {
+  return (
+    <section className={cx("section")}>
+      <div className={cx("container")}>
+        <article
+          className={cx("text-panel", "tone-warm", "is-centered")}
+          data-about-reveal-target
+        >
+          <div className={cx("section-head")}>
+            <CardKicker cx={cx} hasLines label="Для Кого TOLK" />
+            <h2>Для тех, кто ищет</h2>
+          </div>
+          <p>
+            TOLK — это проект для каждого, кто готов к честному диалогу, ценит
+            юмор в обсуждении серьезных тем и хочет наполняться мудростью через
+            интеллектуальный энтертейнмент.
+          </p>
+          <p>
+            Проект поможет тем, кто интересуется христианством и религией, но не
+            знает, как полноценно погрузиться в изучение текстов.
+          </p>
+          <p>
+            Если вам больше по душе обывательское прочтение нежели сухие лекции,
+            то вам понравится наша беседа у костра истины.
+          </p>
+          <p>
+            Те, кто стоит перед предельными вопросами бытия, может найти в нашем
+            диалоге ориентиры на пути к важным для себя ответам.
+          </p>
+        </article>
+        <div className={cx("mobile-divider")} aria-hidden="true" />
+      </div>
+    </section>
+  );
+}
+
+export function AboutClosingSection() {
+  return (
+    <section className={cx("section")}>
+      <div className={cx("container")}>
+        <article
+          className={cx("story-card", "centered", "tone-soft")}
+          data-about-reveal-target
+        >
+          <div className={cx("section-head")}>
+            <CardKicker cx={cx} hasLines label="Продолжение" />
+            <h2>Если вам это близко</h2>
+          </div>
+          <p>
+            На главной странице вы найдёте записи стримов, новые выпуски, анонсы
+            очных чтений, ссылки на наши соцсети и витрину мерча от TOLK.
+          </p>
+          <div className={cx("cta-actions")}>
+            <Button cx={cx} href="/" label="Перейти на главную" />
+          </div>
+        </article>
+      </div>
+    </section>
+  );
+}
