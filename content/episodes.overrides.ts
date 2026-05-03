@@ -57,7 +57,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
         avatar: "/home/assets/host-kirill.png",
         role: "Гость",
         isGuest: true,
-        guestNote: "Библеист, исследователь раннехристианской литературы",
+        guestNote: "Эрудит, образовательный блогер",
       },
     ],
     timestamps: [
@@ -84,7 +84,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
         avatar: "/home/assets/host-artem.jpg",
         role: "Гость",
         isGuest: true,
-        guestNote: "Историк и исследователь культуры Древнего Востока",
+        guestNote: "Атлет Храма Силы, автор Библиариума",
       },
     ],
     timestamps: [],
@@ -145,7 +145,8 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
         avatar: "/home/assets/host-serafim.png",
         role: "Гость",
         isGuest: true,
-        guestNote: "Серафим Сашлиев",
+        guestNote:
+          "Православный журналист, блогер и автор проекта «Серафим» / «12 сцена»",
       },
     ],
   },
