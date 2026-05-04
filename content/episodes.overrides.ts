@@ -1,3 +1,5 @@
+import { defaultHostsDisplayOrder, guest, host, people } from "./people";
+
 export type EpisodeKind =
   | "episode"
   | "special"
@@ -50,15 +52,9 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     cover: "/home/assets/episode-ecclesiastes.jpg",
     coverAlt: "Превью выпуска про Екклесиаста",
     participants: [
-      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
-      {
-        name: "Кирилл",
-        avatar: "/home/assets/host-kirill.png",
-        role: "Гость",
-        isGuest: true,
-        guestNote: "Эрудит, образовательный блогер",
-      },
+      host(people.taras),
+      host(people.murat),
+      guest(people.kirill, "Эрудит, образовательный блогер"),
     ],
     timestamps: [
       { label: "Вступление", at: "00:00", seconds: 0 },
@@ -76,16 +72,8 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     cover: "/home/assets/episode-samson.jpg",
     coverAlt: "Превью выпуска про Самсона",
     participants: [
-      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
-      { name: "Валентин", avatar: "/home/assets/host-valentin.jpg", role: "Ведущий" },
-      {
-        name: "Артем",
-        avatar: "/home/assets/host-artem.jpg",
-        role: "Гость",
-        isGuest: true,
-        guestNote: "Атлет Храма Силы, автор Библиариума",
-      },
+      ...defaultHostsDisplayOrder,
+      guest(people.artem, "Атлет Храма Силы, автор Библиариума"),
     ],
     timestamps: [],
     supportLinks: defaultSupportLinks,
@@ -97,11 +85,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
       "Спецвыпуск: обсуждаем один из самых известных раннехристианских апокрифов и сравниваем его с каноническими текстами.",
     cover: "/home/assets/episode-thomas.jpg",
     coverAlt: "Превью выпуска про Евангелие от Фомы",
-    participants: [
-      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
-      { name: "Валентин", avatar: "/home/assets/host-valentin.jpg", role: "Ведущий" },
-    ],
+    participants: defaultHostsDisplayOrder,
     timestamps: [
       { label: "Что такое апокриф", at: "00:00", seconds: 0 },
       { label: "История текста", at: "18:10", seconds: 1090 },
@@ -116,11 +100,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
       "Читаем и обсуждаем Бытие 23–25: смерть Сарры, женитьбу Исаака и последствия решений патриархов.",
     cover: "/home/assets/episode-isaac.jpg",
     coverAlt: "Превью выпуска про женитьбу Исаака",
-    participants: [
-      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
-      { name: "Валентин", avatar: "/home/assets/host-valentin.jpg", role: "Ведущий" },
-    ],
+    participants: defaultHostsDisplayOrder,
     timestamps: [
       { label: "Смерть Сарры", at: "00:00", seconds: 0 },
       { label: "Поиск невесты", at: "17:45", seconds: 1065 },
@@ -131,23 +111,19 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
   l9xkYRd1LTg: {
     kind: "stream-record",
     participants: [
-      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
+      host(people.taras),
+      host(people.murat),
     ],
   },
   FtOMsIyNOug: {
     kind: "special",
     participants: [
-      { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-      { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
-      {
-        name: "Серафим",
-        avatar: "/home/assets/host-serafim.png",
-        role: "Гость",
-        isGuest: true,
-        guestNote:
-          "Православный журналист, блогер и автор проекта «Серафим» / «12 сцена»",
-      },
+      host(people.taras),
+      host(people.murat),
+      guest(
+        people.serafim,
+        "Православный журналист, блогер и автор проекта «Серафим» / «12 сцена»",
+      ),
     ],
   },
   "1D7eI7xANsk": {

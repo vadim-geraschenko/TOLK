@@ -7,6 +7,7 @@ import {
   type EpisodeSupportLink,
   type EpisodeTimestamp,
 } from "./episodes.overrides";
+import { defaultHosts } from "./people";
 
 export type Episode = {
   slug: string;
@@ -33,12 +34,6 @@ type EpisodeBaseRecord = {
   durationIso: string;
   thumbnailUrl: string;
 };
-
-const DEFAULT_PARTICIPANTS: EpisodeParticipant[] = [
-  { name: "Валентин", avatar: "/home/assets/host-valentin.jpg", role: "Ведущий" },
-  { name: "Тарас", avatar: "/home/assets/host-taras.jpg", role: "Ведущий" },
-  { name: "Мурат", avatar: "/home/assets/host-murat.jpg", role: "Ведущий" },
-];
 
 const DESCRIPTION_PLACEHOLDER = "Описание скоро будет.";
 
@@ -160,7 +155,7 @@ function normalizeEpisodes(): Episode[] {
         youtubeId: record.youtubeId,
         description: override?.description ?? DESCRIPTION_PLACEHOLDER,
         sourceEpisodeSlug: override?.sourceEpisodeSlug,
-        participants: override?.participants ?? DEFAULT_PARTICIPANTS,
+        participants: override?.participants ?? defaultHosts,
         timestamps: [],
         supportLinks: override?.supportLinks ?? defaultSupportLinks,
         cover: override?.cover ?? record.thumbnailUrl,
@@ -185,12 +180,9 @@ export function getEpisodeBySlug(slug: string): Episode | undefined {
 }
 
 export function getEpisodeNeighbors(slug: string, count = 4): Episode[] {
-  const index = episodes.findIndex((episode) => episode.slug === slug);
-  const candidates = episodes.filter(
+  return episodes.filter(
     (episode) => episode.slug !== slug && episode.kind !== "shorts",
-  );
-  if (index < 0) return candidates.slice(0, count);
-  return candidates.slice(0, count);
+  ).slice(0, count);
 }
 
 export function getSourceEpisodeForShort(shortEpisode: Episode): Episode | undefined {

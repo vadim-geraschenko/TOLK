@@ -1,3 +1,5 @@
+import { people } from "./people";
+
 export type AboutVoice = {
   name: string;
   avatar: string;
@@ -30,20 +32,20 @@ export type AboutStoryStep =
 
 export const aboutVoices: AboutVoice[] = [
   {
-    name: "Тарас",
-    avatar: "/home/assets/host-taras.jpg",
+    name: people.taras.name,
+    avatar: people.taras.avatar,
     description:
       "Тарас придерживается атеистических воззрений. Он смотрит на религию со скептицизмом и критическим сомнением. Тарас, с его широкой философской базой, часто ставит острые вопросы в наших беседах. Занимательно, но создание TOLK было именно его иницативой.",
   },
   {
-    name: "Мурат",
-    avatar: "/home/assets/host-murat.jpg",
+    name: people.murat.name,
+    avatar: people.murat.avatar,
     description:
       "Мурат — ортодоксальный христианин, чтящий традиции и устои православия. Ранее он вёл просветительские беседы и изучал теологию. Благодаря богатому жизненному опыту и знакомству с экзегезой, Мурат объясняет сложные и \"тёмные\" моменты с позиции верующего.",
   },
   {
-    name: "Валентин",
-    avatar: "/home/assets/host-valentin.jpg",
+    name: people.valentin.name,
+    avatar: people.valentin.avatar,
     description:
       "Валентин — внеконфессиональный христианин, который занимается глубоко личным поиском Бога. Он ищет в Библии бессмертные смыслы, трактуя её, как описание фундаментальных законов реальности и человеческого опыта через метафорические нарративы.",
   },

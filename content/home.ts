@@ -1,3 +1,6 @@
+import { episodes } from "./episodes";
+import { people } from "./people";
+
 export type HomeParticipant = {
   name: string;
   avatar: string;
@@ -44,18 +47,18 @@ function toHomeEpisodeDescription(text: string): string {
 
 export const homeParticipants: HomeParticipant[] = [
   {
-    name: "Тарас",
-    avatar: "/home/assets/host-taras.jpg",
+    name: people.taras.name,
+    avatar: people.taras.avatar,
     perspective: "Скептический и атеистический взгляд.",
   },
   {
-    name: "Мурат",
-    avatar: "/home/assets/host-murat.jpg",
+    name: people.murat.name,
+    avatar: people.murat.avatar,
     perspective: "Ортодоксальная перспектива традиции.",
   },
   {
-    name: "Валентин",
-    avatar: "/home/assets/host-valentin.jpg",
+    name: people.valentin.name,
+    avatar: people.valentin.avatar,
     perspective: "Личный и внеконфессиональный поиск.",
   },
 ];
@@ -116,4 +119,3 @@ export const homeEpisodes: HomeEpisode[] = episodes
       guestLabel: guest ? `Гость: ${guest.name}` : undefined,
     };
   });
-import { episodes } from "./episodes";
