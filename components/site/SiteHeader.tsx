@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -74,7 +73,7 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
       mobileMedia.removeEventListener("change", handleScroll);
       reducedMotionMedia.removeEventListener("change", handleScroll);
     };
-  }, []);
+  }, [setIsHiddenOnMobile]);
 
   return (
     <header
