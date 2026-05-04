@@ -6,6 +6,7 @@ import {
   episodeKindLabels,
   getEpisodeBySlug,
 } from "../../../content/episodes";
+import { withBasePath } from "../../../lib/base-path";
 
 type EpisodeRouteProps = {
   params: Promise<{ slug: string }>;
@@ -30,7 +31,7 @@ export async function generateMetadata({
     openGraph: {
       title: episode.title,
       description: episode.description,
-      images: [episode.cover],
+      images: [withBasePath(episode.cover)],
       type: "video.other",
     },
   };

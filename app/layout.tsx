@@ -6,6 +6,7 @@ import { withBasePath } from "../lib/base-path";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://vadim-geraschenko.github.io"),
   title: "TOLK",
   description: "Библия для всех: разговоры о вечном и личном",
 };
