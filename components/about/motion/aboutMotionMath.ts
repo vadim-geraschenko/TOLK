@@ -19,6 +19,7 @@ import {
   ABOUT_SCENE_SPLIT_OUTPUT,
   ABOUT_TOTAL_FRAMES,
 } from "./aboutMotionConstants";
+import { withBasePath } from "../../../lib/base-path";
 
 export const clamp = (value: number, min: number, max: number) =>
   Math.min(Math.max(value, min), max);
@@ -99,7 +100,9 @@ export const getFrameNumberFromIndex = (index: number) =>
   String(index + ABOUT_FRAME_START_INDEX).padStart(3, "0");
 
 export const getFrameSrcByIndex = (index: number, variant: "desktop" | "mobile") =>
-  `/about/assets/angel-sequence/${variant}/frame-${getFrameNumberFromIndex(index)}.webp`;
+  withBasePath(
+    `/about/assets/angel-sequence/${variant}/frame-${getFrameNumberFromIndex(index)}.webp`,
+  );
 
 export const getFrameSrcByProgress = (
   progress: number,

@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "./about.module.css";
+import { withBasePath } from "../../lib/base-path";
 
 export function AboutBackgroundScene({
   frameRef,
@@ -26,10 +27,10 @@ export function AboutBackgroundScene({
         alt=""
       />
       <div className={styles.backgroundCloudWrap} ref={leftCloudRef}>
-        <img className={styles.backgroundCloud} src="/assets/about/clouds.png" alt="" />
+        <img className={styles.backgroundCloud} src={withBasePath("/assets/about/clouds.png")} alt="" />
       </div>
       <div className={`${styles.backgroundCloudWrap} ${styles.cloudRight}`} ref={rightCloudRef}>
-        <img className={styles.backgroundCloud} src="/assets/about/clouds.png" alt="" />
+        <img className={styles.backgroundCloud} src={withBasePath("/assets/about/clouds.png")} alt="" />
       </div>
       <div className={styles.backgroundGrain} />
     </div>

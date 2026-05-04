@@ -35,8 +35,10 @@ import {
   ABOUT_STATIC_SCENE_QUERY,
   ABOUT_TOTAL_FRAMES,
 } from "./aboutMotionConstants";
+import { BASE_PATH, withBasePath } from "../../../lib/base-path";
 
 type SerializedConfig = {
+  basePath: string;
   routePathname: string;
   totalFrames: number;
   frameStartIndex: number;
@@ -85,7 +87,8 @@ type SerializedConfig = {
 };
 
 const buildConfig = (): SerializedConfig => ({
-  routePathname: ABOUT_ROUTE_PATHNAME,
+  basePath: BASE_PATH,
+  routePathname: withBasePath(ABOUT_ROUTE_PATHNAME),
   totalFrames: ABOUT_TOTAL_FRAMES,
   frameStartIndex: ABOUT_FRAME_START_INDEX,
   maxFrames: ABOUT_PREINIT_MAX_FRAMES,
@@ -183,7 +186,7 @@ export const buildAboutPreinitScript = () => {
   };
   var getFrameSrc = function (progress, variant) {
     var frameNumber = String(getFrameIndex(progress) + cfg.frameStartIndex).padStart(3, "0");
-    return "/about/assets/angel-sequence/" + variant + "/frame-" + frameNumber + ".webp";
+    return cfg.basePath + "/about/assets/angel-sequence/" + variant + "/frame-" + frameNumber + ".webp";
   };
   var getPairProgress = function (pairYProgress) {
     return clamp(

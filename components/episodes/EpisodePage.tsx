@@ -1,4 +1,5 @@
 import { bindStyles } from "../../lib/bind-styles";
+import { withBasePath } from "../../lib/base-path";
 import {
   episodeKindLabels,
   getMoreShortsFromSameSource,
@@ -72,9 +73,9 @@ export function EpisodePage({ episode }: { episode: Episode }) {
           <>
             <section className={cx("hero", "container")}>
               <div className={cx("breadcrumbs")}>
-                <a href="/">Главная</a>
+                <a href={withBasePath("/")}>Главная</a>
                 <span>›</span>
-                <a href="/episodes">Выпуски</a>
+                <a href={withBasePath("/episodes")}>Выпуски</a>
                 <span>›</span>
                 <span>Shorts</span>
               </div>
@@ -109,7 +110,7 @@ export function EpisodePage({ episode }: { episode: Episode }) {
                       <p className={cx("timestamps-empty")}>Исходный выпуск скоро будет добавлен.</p>
                     )}
                     {sourceEpisode ? (
-                      <a className={cx("button", "support-link")} href={`/episodes/${sourceEpisode.slug}`}>
+                      <a className={cx("button", "support-link")} href={withBasePath(`/episodes/${sourceEpisode.slug}`)}>
                         <span className={cx("button-label")}>Смотреть полный разговор</span>
                         <span className={cx("stars")}>
                           <span className={cx("star", "star-lg", "star-1")} />
@@ -144,9 +145,9 @@ export function EpisodePage({ episode }: { episode: Episode }) {
           <>
         <section className={cx("hero", "container")}>
           <div className={cx("breadcrumbs")}>
-            <a href="/">Главная</a>
+            <a href={withBasePath("/")}>Главная</a>
             <span>›</span>
-            <a href="/episodes">Выпуски</a>
+            <a href={withBasePath("/episodes")}>Выпуски</a>
             <span>›</span>
             <span>{episodeKindLabels[episode.kind]}</span>
           </div>
@@ -175,7 +176,7 @@ export function EpisodePage({ episode }: { episode: Episode }) {
                         <div className={cx("host-stack")}>
                           {hosts.map((host) => (
                             <div key={host.name} className={cx("host-avatar")} title={host.name}>
-                              <img src={host.avatar} alt={host.name} />
+                              <img src={withBasePath(host.avatar)} alt={host.name} />
                             </div>
                           ))}
                         </div>
@@ -196,7 +197,7 @@ export function EpisodePage({ episode }: { episode: Episode }) {
 
                     {guest ? (
                       <article className={cx("guest-row")}>
-                        <img src={guest.avatar} alt={guest.name} />
+                        <img src={withBasePath(guest.avatar)} alt={guest.name} />
                         <div>
                           <strong>Гость: {guest.name}</strong>
                           {guest.guestNote ? (

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { AboutPreinitScript } from "../components/about/motion/AboutPreinitScript";
+import { withBasePath } from "../lib/base-path";
 
 import "./globals.css";
 
@@ -20,7 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Source+Sans+3:wght@500;600;700&display=swap"
         />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href={withBasePath("/favicon.svg")} type="image/svg+xml" />
       </head>
       <body>{children}</body>
     </html>

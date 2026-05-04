@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { BASE_PATH, withBasePath } from "../../lib/base-path";
 import styles from "./SiteHeader.module.css";
 
 type NavItem = {
@@ -20,12 +21,16 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
   const [isHiddenOnMobile, setIsHiddenOnMobile] = useState(false);
   const prevYRef = useRef(0);
   const pathname = usePathname();
+  const currentPathname =
+    BASE_PATH && pathname.startsWith(BASE_PATH)
+      ? pathname.slice(BASE_PATH.length) || "/"
+      : pathname;
 
   const isCurrentLink = (item: NavItem): boolean => {
     if (item.isActive) return true;
     if (!item.href.startsWith("/")) return false;
-    if (item.href === "/") return pathname === "/";
-    return pathname === item.href || pathname.startsWith(`${item.href}/`);
+    if (item.href === "/") return currentPathname === "/";
+    return currentPathname === item.href || currentPathname.startsWith(`${item.href}/`);
   };
 
   useEffect(() => {
@@ -81,7 +86,7 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
         .join(" ")}
     >
       <div className={styles.container}>
-        <a className={styles.brand} href="/" aria-label="TOLK — перейти на главную">
+        <a className={styles.brand} href={withBasePath("/")} aria-label="TOLK — перейти на главную">
           <div className={styles.brandMark}>T</div>
           <div className={styles.brandCopy}>
             <strong>TOLK</strong>
@@ -102,7 +107,7 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
             return (
               <a
                 key={`${item.label}-${item.href}`}
-                href={item.href}
+                href={withBasePath(item.href)}
                 className={className}
                 aria-current={isCurrent ? "page" : undefined}
               >

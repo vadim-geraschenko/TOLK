@@ -1,3 +1,5 @@
+import { withBasePath } from "../../../lib/base-path";
+
 export const ABOUT_PREINIT_STYLE_ID = "__about-preinit-vars";
 export const ABOUT_REVEAL_STYLE_ID = "__about-reveal";
 
@@ -15,9 +17,9 @@ export const ABOUT_SELECTOR_REVEAL_TARGET = "[data-about-reveal-target]";
 export const ABOUT_TOTAL_FRAMES = 60;
 export const ABOUT_FRAME_START_INDEX = 1;
 export const ABOUT_STATIC_FRAME_DESKTOP =
-  "/about/assets/angel-sequence/desktop/frame-028.webp";
+  withBasePath("/about/assets/angel-sequence/desktop/frame-028.webp");
 export const ABOUT_STATIC_FRAME_MOBILE =
-  "/about/assets/angel-sequence/mobile/frame-028.webp";
+  withBasePath("/about/assets/angel-sequence/mobile/frame-028.webp");
 
 export const ABOUT_REVEAL_END_PROGRESS = 0.3;
 export const ABOUT_PAIR_SPREAD_START = 0.1;

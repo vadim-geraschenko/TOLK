@@ -1,5 +1,6 @@
 import type { EpisodeKind } from "../../content/episodes.overrides";
 import { bindStyles } from "../../lib/bind-styles";
+import { withBasePath } from "../../lib/base-path";
 import styles from "./EpisodeFeedCard.module.css";
 
 const cx = bindStyles(styles);
@@ -39,9 +40,9 @@ export function EpisodeFeedCard({
   const shouldShowParticipants = episode.kind !== "video" && episode.kind !== "shorts";
 
   return (
-    <a className={cx("card", className)} href={href} data-home-episode-card>
+    <a className={cx("card", className)} href={withBasePath(href)} data-home-episode-card>
       <div className={cx("cover")}>
-        <img src={episode.cover} alt={episode.coverAlt} width={1280} height={720} />
+        <img src={withBasePath(episode.cover)} alt={episode.coverAlt} width={1280} height={720} />
         <span className={cx("duration")}>{episode.duration}</span>
       </div>
       <div className={cx("body")}>
@@ -60,7 +61,7 @@ export function EpisodeFeedCard({
                     key={`${episode.slug}-${participant.name}`}
                     className={cx("hostAvatar", participant.isGuest ? "guest" : "")}
                   >
-                    <img src={participant.avatar} alt={participant.name} />
+                    <img src={withBasePath(participant.avatar)} alt={participant.name} />
                   </div>
                 ))}
               </div>

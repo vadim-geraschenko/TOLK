@@ -1,5 +1,6 @@
 import type { Episode } from "../../content/episodes";
 import { bindStyles, type StyleBinder } from "../../lib/bind-styles";
+import { withBasePath } from "../../lib/base-path";
 import styles from "./episode.module.css";
 
 const localCx = bindStyles(styles);
@@ -26,9 +27,9 @@ export function EpisodePreviewCard({
     showParticipants && episode.kind !== "video" && episode.kind !== "shorts";
 
   return (
-    <a className={cx("related-card", className)} href={href}>
+    <a className={cx("related-card", className)} href={withBasePath(href)}>
       <div className={cx("related-cover")}>
-        <img src={episode.cover} alt={episode.coverAlt} width={1280} height={720} />
+        <img src={withBasePath(episode.cover)} alt={episode.coverAlt} width={1280} height={720} />
         <span className={cx("episode-duration")}>{episode.duration}</span>
       </div>
       <div className={cx("related-body")}>
@@ -44,7 +45,7 @@ export function EpisodePreviewCard({
                     key={`${episode.slug}-${participant.name}`}
                     className={cx("related-host-avatar", participant.isGuest ? "guest" : "")}
                   >
-                    <img src={participant.avatar} alt={participant.name} />
+                    <img src={withBasePath(participant.avatar)} alt={participant.name} />
                   </div>
                 ))}
               </div>

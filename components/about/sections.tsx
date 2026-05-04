@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { bindStyles } from "../../lib/bind-styles";
+import { withBasePath } from "../../lib/base-path";
 import {
   aboutStorySteps,
   aboutVoices,
@@ -185,7 +186,7 @@ function VoiceCard({
   return (
     <article className={cx("voice-card", "tone-soft")} data-about-reveal-target data-about-voice-card>
       <div className={cx("voice-avatar")}>
-        <img src={avatar} alt={name} />
+        <img src={withBasePath(avatar)} alt={name} />
       </div>
       <h3>{name}</h3>
       <p>{description}</p>

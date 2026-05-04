@@ -1,4 +1,5 @@
 import { bindStyles } from "../../lib/bind-styles";
+import { withBasePath } from "../../lib/base-path";
 import {
   homeEpisodes,
   homeParticipants,
@@ -33,7 +34,7 @@ function EpisodeParticipants({
               key={`${participant.name}-${participant.avatar}`}
               className={cx("episode-host-avatar", participant.guest ? "guest" : "")}
             >
-              <img src={participant.avatar} alt={participant.name} />
+              <img src={withBasePath(participant.avatar)} alt={participant.name} />
             </div>
           ))}
         </div>
@@ -50,7 +51,7 @@ function HeroEpisode({ episode }: { episode: HomeEpisode }) {
     <article className={cx("hero-episode")} data-home-hero-episode>
       <div className={cx("hero-episode-cover")}>
         <img
-          src={episode.image}
+          src={withBasePath(episode.image)}
           alt={episode.imageAlt}
           width={episode.imageWidth}
           height={episode.imageHeight}
@@ -77,7 +78,7 @@ function ParticipantCard({ participant }: { participant: HomeParticipant }) {
   return (
     <div className={cx("participant")}>
       <div className={cx("avatar")}>
-        <img src={participant.avatar} alt={participant.name} />
+        <img src={withBasePath(participant.avatar)} alt={participant.name} />
       </div>
       <div>
         <strong>{participant.name}</strong>
@@ -91,7 +92,7 @@ function SocialButton({ social }: { social: HomeSocial }) {
   return (
     <a className={cx("social-button")} href={social.href}>
       <div className={cx("social-icon")} aria-hidden="true">
-        <img src={social.icon} alt="" className={cx(social.iconClass)} />
+        <img src={withBasePath(social.icon)} alt="" className={cx(social.iconClass)} />
       </div>
       <div className={cx("social-copy")}>
         <strong>{social.name}</strong>
@@ -254,7 +255,7 @@ function MerchCard() {
       <div className={cx("merch-layout")}>
         <div className={cx("merch-card-media")}>
           <img
-            src="/assets/merch.png"
+            src={withBasePath("/assets/merch.png")}
             alt="Футболки TOLK от одного из ведущих проекта"
             width="1200"
             height="1600"

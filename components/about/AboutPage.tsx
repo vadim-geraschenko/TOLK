@@ -10,6 +10,7 @@ import {
 } from "./sections";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
+import { withBasePath } from "../../lib/base-path";
 import styles from "./about.module.css";
 
 const cx = bindStyles(styles);
@@ -42,7 +43,7 @@ function AboutBackgroundMedia() {
       >
         <img
           className={cx("background-cloud")}
-          src="/about/assets/clouds.png"
+          src={withBasePath("/about/assets/clouds.png")}
           alt=""
         />
       </div>
@@ -53,7 +54,7 @@ function AboutBackgroundMedia() {
       >
         <img
           className={cx("background-cloud")}
-          src="/about/assets/clouds.png"
+          src={withBasePath("/about/assets/clouds.png")}
           alt=""
         />
       </div>

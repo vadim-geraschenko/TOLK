@@ -1,4 +1,5 @@
 import type { StyledComponentProps } from "./types";
+import { withBasePath } from "../../lib/base-path";
 
 type ButtonProps = {
   href: string;
@@ -10,7 +11,7 @@ export function Button({ href, label, className = "", cx }: ButtonProps) {
   const classes = cx("button", className);
 
   return (
-    <a className={classes} href={href}>
+    <a className={classes} href={withBasePath(href)}>
       <span className={cx("button-label")}>{label}</span>
       <span className={cx("stars")}>
         <span className={cx("star", "star-lg", "star-1")} />
