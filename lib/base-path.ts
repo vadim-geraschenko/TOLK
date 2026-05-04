@@ -1,6 +1,4 @@
-export const BASE_PATH =
-  process.env.NEXT_PUBLIC_BASE_PATH ||
-  (process.env.GITHUB_PAGES === "true" ? "/TOLK" : "");
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 export function withBasePath(path: string): string {
   if (

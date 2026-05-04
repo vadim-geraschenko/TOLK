@@ -35,7 +35,7 @@ jobs:
 
       - name: Start app
         run: |
-          nohup npx --yes serve out -l 3000 > /tmp/static-serve.log 2>&1 &
+          nohup npm run start > /tmp/static-serve.log 2>&1 &
           for i in {1..60}; do
             if curl -sSf "${CAPTURE_BASE_URL}${CAPTURE_HOME_PATH}" > /dev/null && curl -sSf "${CAPTURE_BASE_URL}${CAPTURE_ABOUT_PATH}" > /dev/null; then
               exit 0

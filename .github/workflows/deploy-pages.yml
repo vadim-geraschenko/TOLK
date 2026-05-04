@@ -36,7 +36,6 @@ jobs:
       - name: Build static export
         env:
           GITHUB_PAGES: "true"
-          NEXT_PUBLIC_BASE_PATH: "/TOLK"
         run: npm run build
 
       - name: Upload Pages artifact
