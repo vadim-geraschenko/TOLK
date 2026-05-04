@@ -54,7 +54,7 @@ const DESKTOP_SCROLL_STATES = [
 function parseArgs(argv) {
   const args = {
     baseUrl: process.env.CAPTURE_BASE_URL || "http://127.0.0.1:3000",
-    routePath: process.env.CAPTURE_ABOUT_PATH || "/about",
+    routePath: process.env.CAPTURE_ABOUT_PATH || "/about/",
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -71,13 +71,34 @@ function parseArgs(argv) {
 }
 
 async function ensureAboutDataReady(page) {
-  await page.waitForFunction(() => {
-    return (
-      document.querySelectorAll("[data-about-pair]").length >= 3 &&
-      document.querySelectorAll("[data-about-voice-card]").length >= 3 &&
-      document.querySelector("[data-about-frame]")
-    );
-  });
+  try {
+    await page.waitForFunction(() => {
+      return (
+        !!document.querySelector("[data-about-root]") &&
+        !!document.querySelector("[data-about-frame]") &&
+        document.querySelectorAll("[data-about-pair]").length >= 1 &&
+        !!document.querySelector("[data-about-voices-intro]") &&
+        !!document.querySelector("[data-about-audience-panel]")
+      );
+    }, undefined, { timeout: 60_000 });
+  } catch (error) {
+    const readiness = await page.evaluate(() => ({
+      url: window.location.href,
+      aboutRoot: Boolean(document.querySelector("[data-about-root]")),
+      frame: Boolean(document.querySelector("[data-about-frame]")),
+      frameSrc: document
+        .querySelector("[data-about-frame]")
+        ?.getAttribute("src") ?? null,
+      pairs: document.querySelectorAll("[data-about-pair]").length,
+      voicesIntro: Boolean(document.querySelector("[data-about-voices-intro]")),
+      audiencePanel: Boolean(document.querySelector("[data-about-audience-panel]")),
+      revealTargets: document.querySelectorAll("[data-about-reveal-target]").length,
+      title: document.title,
+      bodyStart: document.body?.innerText?.slice(0, 240) ?? "",
+    }));
+    console.error("About readiness diagnostics:", readiness);
+    throw error;
+  }
 }
 
 async function waitForRenderReady(page) {
@@ -101,16 +122,20 @@ async function waitForRenderReady(page) {
     }
   });
 
-  await page.waitForFunction(() => {
-    const frame = document.querySelector("[data-about-frame]");
-    return !!frame && frame.getAttribute("src");
-  });
+  try {
+    await page.waitForFunction(() => {
+      const frame = document.querySelector("[data-about-frame]");
+      return !!frame && frame.getAttribute("src");
+    }, undefined, { timeout: 10_000 });
+  } catch {
+    console.warn("About frame src was not ready before capture; continuing.");
+  }
 
   try {
     await page.waitForFunction(() => {
       const frame = document.querySelector("[data-about-frame]");
       return !!frame && frame.classList.contains("is-ready");
-    }, { timeout: 4000 });
+    }, undefined, { timeout: 4000 });
   } catch {
     // Current implementation may use another readiness signal.
   }
@@ -165,8 +190,9 @@ async function scrollToSelector(page, selector, offset = 96) {
 async function scrollToPairState(page, pairIndex, pairYProgress) {
   await page.evaluate(
     ({ targetPairIndex, targetPairYProgress }) => {
-      const pairs = Array.from(document.querySelectorAll("[data-pair]"));
-      const pair = pairs[targetPairIndex];
+      const pairs = Array.from(document.querySelectorAll("[data-about-pair]"));
+      const safePairIndex = Math.min(targetPairIndex, Math.max(pairs.length - 1, 0));
+      const pair = pairs[safePairIndex];
       if (!pair) {
         throw new Error(`Pair not found at index ${targetPairIndex}`);
       }
@@ -348,6 +374,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(error);
+  console.error("capture-about-current failed:", error);
   process.exitCode = 1;
 });

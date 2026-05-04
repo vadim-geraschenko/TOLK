@@ -9,6 +9,10 @@ jobs:
   visual-parity:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      CAPTURE_BASE_URL: http://127.0.0.1:3000
+      CAPTURE_HOME_PATH: /
+      CAPTURE_ABOUT_PATH: /about/
 
     steps:
       - name: Checkout
@@ -31,15 +35,18 @@ jobs:
 
       - name: Start app
         run: |
-          nohup npx serve -s out -l 3000 > /tmp/static-serve.log 2>&1 &
-          for i in {1..30}; do
-            if curl -sSf http://127.0.0.1:3000 > /dev/null; then
+          nohup npx --yes serve out -l 3000 > /tmp/static-serve.log 2>&1 &
+          for i in {1..60}; do
+            if curl -sSf "${CAPTURE_BASE_URL}${CAPTURE_HOME_PATH}" > /dev/null && curl -sSf "${CAPTURE_BASE_URL}${CAPTURE_ABOUT_PATH}" > /dev/null; then
               exit 0
             fi
             sleep 1
           done
           echo "Static server failed to start" >&2
+          echo "Checked: ${CAPTURE_BASE_URL}${CAPTURE_HOME_PATH}" >&2
+          echo "Checked: ${CAPTURE_BASE_URL}${CAPTURE_ABOUT_PATH}" >&2
           tail -n 100 /tmp/static-serve.log >&2 || true
+          find out -maxdepth 3 -type f | sort | head -n 80 >&2 || true
           exit 1
 
       - name: Capture current snapshots
