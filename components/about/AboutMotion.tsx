@@ -3,6 +3,8 @@
 import { useLayoutEffect } from "react";
 import {
   ABOUT_BACKGROUND_PRELOAD_CONCURRENCY,
+  ABOUT_BOOT_EAGER_RADIUS,
+  ABOUT_BOOT_MAX_WAIT_MS,
   ABOUT_LERP_FACTOR,
   ABOUT_MOTION_RENDER_EPSILON,
   ABOUT_PRELOAD_BUFFER,
@@ -94,6 +96,7 @@ export function AboutMotion() {
     let backgroundPreloadOrder: number[] = [];
     let backgroundPreloadDelayId = 0;
     let backgroundPreloadIdleId = 0;
+    let bootOverlayHideId = 0;
 
     const useStaticScene = () => staticSceneQuery.matches || reducedMotionQuery.matches;
     const getCurrentFrameVariant = (): "desktop" | "mobile" => {
@@ -159,6 +162,16 @@ export function AboutMotion() {
       }
     };
 
+    const preloadBootFrameWindow = (centerIndex: number) => {
+      const start = Math.max(centerIndex - ABOUT_BOOT_EAGER_RADIUS, 0);
+      const end = Math.min(centerIndex + ABOUT_BOOT_EAGER_RADIUS, ABOUT_TOTAL_FRAMES - 1);
+      const loads: Promise<boolean>[] = [];
+      for (let index = start; index <= end; index += 1) {
+        loads.push(loadFrameAtIndex(index, "high"));
+      }
+      return Promise.all(loads);
+    };
+
     const setFrame = (index: number) => {
       if (index === currentFrameIndex) return;
       currentFrameIndex = index;
@@ -219,40 +232,9 @@ export function AboutMotion() {
       }
     };
 
-    const runBackgroundPreloadWhenIdle = (token: number) => {
+    const runBackgroundPreload = (token: number) => {
       if (token !== backgroundPreloadToken || useStaticScene()) return;
-
-      const start = () => {
-        backgroundPreloadDelayId = 0;
-        if (token !== backgroundPreloadToken || useStaticScene()) return;
-
-        if ("requestIdleCallback" in window) {
-          backgroundPreloadIdleId = window.requestIdleCallback(
-            () => {
-              backgroundPreloadIdleId = 0;
-              pumpBackgroundPreload(token);
-            },
-            { timeout: 1600 },
-          );
-          return;
-        }
-
-        pumpBackgroundPreload(token);
-      };
-
-      if (document.readyState === "complete") {
-        backgroundPreloadDelayId = window.setTimeout(start, 700);
-        return;
-      }
-
-      window.addEventListener(
-        "load",
-        () => {
-          if (token !== backgroundPreloadToken || useStaticScene()) return;
-          backgroundPreloadDelayId = window.setTimeout(start, 700);
-        },
-        { once: true },
-      );
+      pumpBackgroundPreload(token);
     };
 
     const scheduleBackgroundPreload = (centerIndex: number) => {
@@ -261,7 +243,80 @@ export function AboutMotion() {
       backgroundPreloadCursor = 0;
       backgroundPreloadInFlight = 0;
       backgroundPreloadOrder = buildPreloadOrder(centerIndex);
-      runBackgroundPreloadWhenIdle(backgroundPreloadToken);
+      runBackgroundPreload(backgroundPreloadToken);
+    };
+
+    const waitForImageReady = (image: HTMLImageElement | null) => {
+      if (!image) return Promise.resolve(false);
+      if (image.complete && image.naturalWidth > 0) {
+        return image.decode?.().then(
+          () => true,
+          () => true,
+        ) ?? Promise.resolve(true);
+      }
+
+      return new Promise<boolean>((resolve) => {
+        const done = () => {
+          image.decode?.().then(
+            () => resolve(true),
+            () => resolve(true),
+          ) ?? resolve(true);
+        };
+        image.addEventListener("load", done, { once: true });
+        image.addEventListener("error", () => resolve(false), { once: true });
+      });
+    };
+
+    const waitForFontsReady = () => {
+      if (!("fonts" in document)) return Promise.resolve();
+      return document.fonts.ready.then(
+        () => undefined,
+        () => undefined,
+      );
+    };
+
+    const withBootTimeout = <T,>(promise: Promise<T>) =>
+      Promise.race([
+        promise,
+        new Promise<null>((resolve) => {
+          bootOverlayHideId = window.setTimeout(() => resolve(null), ABOUT_BOOT_MAX_WAIT_MS);
+        }),
+      ]).finally(() => {
+        if (bootOverlayHideId) {
+          window.clearTimeout(bootOverlayHideId);
+          bootOverlayHideId = 0;
+        }
+      });
+
+    const hideBootOverlay = () => {
+      const overlay = document.querySelector<HTMLElement>("[data-about-boot-overlay]");
+      if (!overlay) return;
+      overlay.classList.add("is-hidden");
+      window.setTimeout(() => overlay.remove(), 320);
+    };
+
+    const settleBootLoading = (initialFrameIndex: number) => {
+      const leftCloudImage = leftCloud.querySelector<HTMLImageElement>("img");
+      const rightCloudImage = rightCloud.querySelector<HTMLImageElement>("img");
+      const staticScene = useStaticScene();
+      const criticalFrames = staticScene
+        ? Promise.resolve([])
+        : preloadBootFrameWindow(initialFrameIndex);
+      const initialFrameReady = staticScene
+        ? waitForImageReady(storyFrame)
+        : loadFrameAtIndex(initialFrameIndex, "high").then(() => waitForImageReady(storyFrame));
+
+      void withBootTimeout(
+        Promise.all([
+          waitForFontsReady(),
+          waitForImageReady(leftCloudImage),
+          waitForImageReady(rightCloudImage),
+          initialFrameReady,
+          criticalFrames,
+        ]),
+      ).then(() => {
+        requestAnimationFrame(hideBootOverlay);
+      });
     };
 
     const syncFrameVariant = (forceReset = false) => {
@@ -435,6 +490,7 @@ export function AboutMotion() {
       if (useStaticScene()) {
         setStaticFallbackFrame();
         ensureAboutRevealStyle();
+        settleBootLoading(getFrameIndex(renderedProgress));
         return;
       }
 
@@ -443,6 +499,7 @@ export function AboutMotion() {
       setFrame(initialFrameIndex);
       scheduleBackgroundPreload(initialFrameIndex);
       ensureAboutRevealStyle();
+      settleBootLoading(initialFrameIndex);
     };
 
     const settleInitialCloudPosition = () => {
@@ -513,6 +570,7 @@ export function AboutMotion() {
       if (initialCloudSettleFrame) cancelAnimationFrame(initialCloudSettleFrame);
       if (backgroundPreloadDelayId) window.clearTimeout(backgroundPreloadDelayId);
       if (backgroundPreloadIdleId) window.cancelIdleCallback(backgroundPreloadIdleId);
+      if (bootOverlayHideId) window.clearTimeout(bootOverlayHideId);
 
       staticSceneQuery.removeEventListener("change", onStaticSceneChange);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);

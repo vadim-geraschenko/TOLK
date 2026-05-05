@@ -233,6 +233,37 @@
     mix-blend-mode: soft-light;
     mask-image: radial-gradient(circle at center, black 58%, transparent 100%);
   }
+
+  .boot-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: #000;
+    opacity: 1;
+    pointer-events: none;
+    transition: opacity 280ms ease;
+  }
+
+  .boot-overlay:global(.is-hidden) {
+    opacity: 0;
+  }
+
+  .boot-loader {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-top-color: rgba(255, 255, 255, 0.92);
+    border-radius: 999px;
+    animation: about-loader-spin 780ms linear infinite;
+  }
+
+  @keyframes about-loader-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
   .background-media::after {
     content: "";
     position: absolute;
@@ -1321,6 +1352,14 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .boot-overlay {
+      transition: none;
+    }
+
+    .boot-loader {
+      animation: none;
+    }
+
     .background-cloud-wrap {
       display: none;
     }

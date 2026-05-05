@@ -71,10 +71,19 @@ function AboutBackgroundMedia() {
   );
 }
 
+function AboutBootOverlay() {
+  return (
+    <div className={cx("boot-overlay")} data-about-boot-overlay aria-hidden="true">
+      <div className={cx("boot-loader")} />
+    </div>
+  );
+}
+
 export function AboutPage() {
   return (
     <div className={cx("root", "page-shell")} data-about-root>
       <AboutBackgroundMedia />
+      <AboutBootOverlay />
       <SiteHeader navItems={aboutNavItems} />
       <main>
         <AboutHeroSection />

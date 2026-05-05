@@ -51,6 +51,8 @@ export const ABOUT_REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
 export const ABOUT_PRELOAD_BUFFER = 6;
 export const ABOUT_PRELOAD_EAGER_RADIUS = 10;
-export const ABOUT_BACKGROUND_PRELOAD_CONCURRENCY = 2;
+export const ABOUT_BOOT_EAGER_RADIUS = 14;
+export const ABOUT_BOOT_MAX_WAIT_MS = 3200;
+export const ABOUT_BACKGROUND_PRELOAD_CONCURRENCY = 4;
 
 export const ABOUT_PREINIT_MAX_FRAMES = 150;
