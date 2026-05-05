@@ -43,8 +43,12 @@ function AboutBackgroundMedia() {
       >
         <img
           className={cx("background-cloud")}
-          src={withBasePath("/about/assets/clouds.png")}
+          src={withBasePath("/about/assets/clouds.webp")}
           alt=""
+          width={1920}
+          height={1280}
+          decoding="async"
+          fetchPriority="high"
         />
       </div>
       <div
@@ -54,8 +58,12 @@ function AboutBackgroundMedia() {
       >
         <img
           className={cx("background-cloud")}
-          src={withBasePath("/about/assets/clouds.png")}
+          src={withBasePath("/about/assets/clouds.webp")}
           alt=""
+          width={1920}
+          height={1280}
+          decoding="async"
+          fetchPriority="high"
         />
       </div>
       <div className={cx("background-grain")} />

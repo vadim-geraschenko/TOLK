@@ -5,3 +5,10 @@ body {
   width: 100%;
   min-height: 100%;
 }
+
+:root {
+  --font-display-family:
+    var(--font-cormorant-garamond), "Cormorant Garamond", "Times New Roman", serif;
+  --font-body-family:
+    var(--font-source-sans-3), "Source Sans 3", "Segoe UI", "Helvetica Neue", sans-serif;
+}

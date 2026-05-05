@@ -10,6 +10,7 @@ import {
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
 import { EpisodePreviewCard } from "./EpisodePreviewCard";
+import { YouTubeEmbed } from "./YouTubeEmbed";
 import styles from "./episode.module.css";
 
 const cx = bindStyles(styles);
@@ -87,13 +88,11 @@ export function EpisodePage({ episode }: { episode: Episode }) {
                   </p>
                   <h1>{episode.title}</h1>
                   <div className={cx("short-player-wrap")}>
-                    <iframe
+                    <YouTubeEmbed
                       title={episode.title}
-                      src={buildEmbedSrc(episode.youtubeId)}
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
+                      youtubeId={episode.youtubeId}
+                      poster={episode.cover}
+                      posterAlt={episode.coverAlt}
                     />
                   </div>
                 </article>
@@ -155,13 +154,11 @@ export function EpisodePage({ episode }: { episode: Episode }) {
           <div className={cx("hero-grid")}>
             <article className={cx("panel", "video-panel")}>
               <div className={cx("video-wrap")}>
-                <iframe
+                <YouTubeEmbed
                   title={episode.title}
-                  src={buildEmbedSrc(episode.youtubeId)}
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerPolicy="strict-origin-when-cross-origin"
-                  allowFullScreen
+                  youtubeId={episode.youtubeId}
+                  poster={episode.cover}
+                  posterAlt={episode.coverAlt}
                 />
               </div>
 
@@ -176,7 +173,12 @@ export function EpisodePage({ episode }: { episode: Episode }) {
                         <div className={cx("host-stack")}>
                           {hosts.map((host) => (
                             <div key={host.name} className={cx("host-avatar")} title={host.name}>
-                              <img src={withBasePath(host.avatar)} alt={host.name} />
+                              <img
+                                src={withBasePath(host.avatar)}
+                                alt={host.name}
+                                loading="lazy"
+                                decoding="async"
+                              />
                             </div>
                           ))}
                         </div>
@@ -197,7 +199,12 @@ export function EpisodePage({ episode }: { episode: Episode }) {
 
                     {guest ? (
                       <article className={cx("guest-row")}>
-                        <img src={withBasePath(guest.avatar)} alt={guest.name} />
+                        <img
+                          src={withBasePath(guest.avatar)}
+                          alt={guest.name}
+                          loading="lazy"
+                          decoding="async"
+                        />
                         <div>
                           <strong>Гость: {guest.name}</strong>
                           {guest.guestNote ? (

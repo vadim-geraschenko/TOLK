@@ -6,15 +6,15 @@ type Person = {
 export const people = {
   taras: {
     name: "Тарас",
-    avatar: "/home/assets/host-taras.jpg",
+    avatar: "/home/assets/host-taras.webp",
   },
   murat: {
     name: "Мурат",
-    avatar: "/home/assets/host-murat.jpg",
+    avatar: "/home/assets/host-murat.webp",
   },
   valentin: {
     name: "Валентин",
-    avatar: "/home/assets/host-valentin.jpg",
+    avatar: "/home/assets/host-valentin.webp",
   },
   artem: {
     name: "Артем",
@@ -22,11 +22,11 @@ export const people = {
   },
   kirill: {
     name: "Кирилл",
-    avatar: "/home/assets/host-kirill.png",
+    avatar: "/home/assets/host-kirill.webp",
   },
   serafim: {
     name: "Серафим",
-    avatar: "/home/assets/host-serafim.png",
+    avatar: "/home/assets/host-serafim.webp",
   },
 } as const satisfies Record<string, Person>;
 

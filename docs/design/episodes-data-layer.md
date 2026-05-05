@@ -31,6 +31,10 @@ Each item keeps only stable source fields:
 
 `content/episodes.ts` is a stable facade export used by UI.
 
+If there is no manual cover override, `content/episodes.data.ts` first tries
+`content/episode-thumbnails.generated.json`. Only if a local thumbnail is missing
+does it fall back to YouTube `thumbnailUrl`.
+
 ## Sync command
 
 ```bash
@@ -46,5 +50,6 @@ YOUTUBE_API_KEY=... YOUTUBE_UPLOADS_PLAYLIST_ID=... npm run sync:episodes
 After sync:
 
 1. Review updated `content/episodes.base.json`.
-2. Update `content/episodes.overrides.ts` for new videos (slug/kind/participants/timestamps).
-3. Run `npm run build`.
+2. Run `npm run sync:thumbnails` to generate local WebP previews.
+3. Update `content/episodes.overrides.ts` for new videos (slug/kind/participants/timestamps).
+4. Run `npm run build`.

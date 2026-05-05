@@ -186,7 +186,12 @@ function VoiceCard({
   return (
     <article className={cx("voice-card", "tone-soft")} data-about-reveal-target data-about-voice-card>
       <div className={cx("voice-avatar")}>
-        <img src={withBasePath(avatar)} alt={name} />
+        <img
+          src={withBasePath(avatar)}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <h3>{name}</h3>
       <p>{description}</p>

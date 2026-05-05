@@ -42,7 +42,14 @@ export function EpisodeFeedCard({
   return (
     <a className={cx("card", className)} href={withBasePath(href)} data-home-episode-card>
       <div className={cx("cover")}>
-        <img src={withBasePath(episode.cover)} alt={episode.coverAlt} width={1280} height={720} />
+        <img
+          src={withBasePath(episode.cover)}
+          alt={episode.coverAlt}
+          width={1280}
+          height={720}
+          loading="lazy"
+          decoding="async"
+        />
         <span className={cx("duration")}>{episode.duration}</span>
       </div>
       <div className={cx("body")}>
@@ -61,7 +68,12 @@ export function EpisodeFeedCard({
                     key={`${episode.slug}-${participant.name}`}
                     className={cx("hostAvatar", participant.isGuest ? "guest" : "")}
                   >
-                    <img src={withBasePath(participant.avatar)} alt={participant.name} />
+                    <img
+                      src={withBasePath(participant.avatar)}
+                      alt={participant.name}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 ))}
               </div>

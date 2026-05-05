@@ -4,10 +4,11 @@
 Этот файл фиксирует рабочие правила для изображений в MVP и при переносе в production, чтобы не копить layout shifts, случайные crop-расхождения и хаотичные naming-практики.
 
 ## Категории ассетов
-- `pages/home/assets/episode-*.jpg` — thumbnail-обложки выпусков.
-- `pages/home/assets/host-*.{jpg,png}` — аватары ведущих и гостей.
-- `assets/merch.png` — изображение мерча.
-- `assets/socials-*.svg` — иконки платформ.
+- `public/home/assets/episode-*.webp` — локальные thumbnail-обложки ключевых выпусков.
+- `public/home/assets/host-*.{jpg,webp}` — аватары ведущих и гостей.
+- `public/about/assets/clouds.webp` — декоративные облака страницы About.
+- `public/assets/merch.webp` — изображение мерча.
+- `public/assets/socials-*.svg` — иконки платформ.
 
 ## Правила разметки
 - Для всех `img` задавать `width` и `height`, если это известные статические ассеты.
@@ -28,13 +29,14 @@
 - Merch promo: высокий вертикальный кадр допустим; ratio зависит от конкретного носителя.
 
 ## Naming Rules
-- Выпуски: `episode-<slug>.jpg`
-- Ведущие и гости: `host-<slug>.jpg|png`
+- Выпуски: `episode-<slug>.webp`
+- Ведущие и гости: `host-<slug>.jpg|webp`
 - Социальные иконки: `socials-<platform>.svg`
 - Не использовать абстрактные имена вроде `final2.png`, `new-cover.jpg`, `avatar-last.png`
 
 ## Optimization Rules
-- В MVP допустим один исходный размер, если страница статическая.
+- В MVP допустим один WebP-исходник, если страница статическая и картинка не используется как полноэкранный media asset.
+- Не хранить одни и те же ассеты в нескольких публичных папках: весь `public` попадает в static export.
 - При переносе в production episode thumbnails и merch должны перейти на responsive image pipeline.
 - В production preferred path: `next/image` или эквивалент с `srcset`/sizes.
 - SVG иконки хранить как отдельные ассеты или как inline SVG, но не смешивать оба способа без причины.

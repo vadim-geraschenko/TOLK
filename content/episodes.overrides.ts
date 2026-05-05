@@ -49,7 +49,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     kind: "special",
     description:
       "Спецвыпуск наших чтений. Вместе с Кириллом Кириченко читаем и обсуждаем Екклесиаста — одну из самых мрачных, странных и философски насыщенных книг Библии.",
-    cover: "/home/assets/episode-ecclesiastes.jpg",
+    cover: "/home/assets/episode-ecclesiastes.webp",
     coverAlt: "Превью выпуска про Екклесиаста",
     participants: [
       host(people.taras),
@@ -69,7 +69,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     kind: "special",
     description:
       "Спецвыпуск наших чтений. Вместе с Артемом Широковым читаем Книгу Судей, а именно историю Самсона. Пытаемся понять какого происхождения сила Самсона и в чем праведность этого персонажа Библии.",
-    cover: "/home/assets/episode-samson.jpg",
+    cover: "/home/assets/episode-samson.webp",
     coverAlt: "Превью выпуска про Самсона",
     participants: [
       ...defaultHostsDisplayOrder,
@@ -83,7 +83,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     kind: "special",
     description:
       "Спецвыпуск: обсуждаем один из самых известных раннехристианских апокрифов и сравниваем его с каноническими текстами.",
-    cover: "/home/assets/episode-thomas.jpg",
+    cover: "/home/assets/episode-thomas.webp",
     coverAlt: "Превью выпуска про Евангелие от Фомы",
     participants: defaultHostsDisplayOrder,
     timestamps: [
@@ -98,7 +98,7 @@ export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {
     kind: "episode",
     description:
       "Читаем и обсуждаем Бытие 23–25: смерть Сарры, женитьбу Исаака и последствия решений патриархов.",
-    cover: "/home/assets/episode-isaac.jpg",
+    cover: "/home/assets/episode-isaac.webp",
     coverAlt: "Превью выпуска про женитьбу Исаака",
     participants: defaultHostsDisplayOrder,
     timestamps: [

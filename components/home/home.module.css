@@ -67,9 +67,8 @@
           --social-button-icon-column-desktop: 64px;
           --social-button-icon-column-mobile: 56px;
           --social-button-icon-column-mobile-tight: 52px;
-          --font-display: "Cormorant Garamond", "Times New Roman", serif;
-          --font-body:
-            "Source Sans 3", "Segoe UI", "Helvetica Neue", sans-serif;
+          --font-display: var(--font-display-family);
+          --font-body: var(--font-body-family);
           /*
           Breakpoint tokens are mirrored in media queries below.
           Plain CSS custom properties are not available inside media conditions.

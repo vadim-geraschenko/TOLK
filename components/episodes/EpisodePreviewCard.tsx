@@ -29,7 +29,14 @@ export function EpisodePreviewCard({
   return (
     <a className={cx("related-card", className)} href={withBasePath(href)}>
       <div className={cx("related-cover")}>
-        <img src={withBasePath(episode.cover)} alt={episode.coverAlt} width={1280} height={720} />
+        <img
+          src={withBasePath(episode.cover)}
+          alt={episode.coverAlt}
+          width={1280}
+          height={720}
+          loading="lazy"
+          decoding="async"
+        />
         <span className={cx("episode-duration")}>{episode.duration}</span>
       </div>
       <div className={cx("related-body")}>
@@ -45,7 +52,12 @@ export function EpisodePreviewCard({
                     key={`${episode.slug}-${participant.name}`}
                     className={cx("related-host-avatar", participant.isGuest ? "guest" : "")}
                   >
-                    <img src={withBasePath(participant.avatar)} alt={participant.name} />
+                    <img
+                      src={withBasePath(participant.avatar)}
+                      alt={participant.name}
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 ))}
               </div>

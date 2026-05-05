@@ -34,7 +34,12 @@ function EpisodeParticipants({
               key={`${participant.name}-${participant.avatar}`}
               className={cx("episode-host-avatar", participant.guest ? "guest" : "")}
             >
-              <img src={withBasePath(participant.avatar)} alt={participant.name} />
+              <img
+                src={withBasePath(participant.avatar)}
+                alt={participant.name}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           ))}
         </div>
@@ -55,6 +60,8 @@ function HeroEpisode({ episode }: { episode: HomeEpisode }) {
           alt={episode.imageAlt}
           width={episode.imageWidth}
           height={episode.imageHeight}
+          decoding="async"
+          fetchPriority="high"
         />
         <span className={cx("episode-duration")}>{episode.duration}</span>
       </div>
@@ -78,7 +85,12 @@ function ParticipantCard({ participant }: { participant: HomeParticipant }) {
   return (
     <div className={cx("participant")}>
       <div className={cx("avatar")}>
-        <img src={withBasePath(participant.avatar)} alt={participant.name} />
+        <img
+          src={withBasePath(participant.avatar)}
+          alt={participant.name}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <div>
         <strong>{participant.name}</strong>
@@ -92,7 +104,13 @@ function SocialButton({ social }: { social: HomeSocial }) {
   return (
     <a className={cx("social-button")} href={social.href}>
       <div className={cx("social-icon")} aria-hidden="true">
-        <img src={withBasePath(social.icon)} alt="" className={cx(social.iconClass)} />
+        <img
+          src={withBasePath(social.icon)}
+          alt=""
+          className={cx(social.iconClass)}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <div className={cx("social-copy")}>
         <strong>{social.name}</strong>
@@ -255,10 +273,12 @@ function MerchCard() {
       <div className={cx("merch-layout")}>
         <div className={cx("merch-card-media")}>
           <img
-            src={withBasePath("/assets/merch.png")}
+            src={withBasePath("/assets/merch.webp")}
             alt="Футболки TOLK от одного из ведущих проекта"
             width="1200"
             height="1600"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className={cx("merch-copy")}>

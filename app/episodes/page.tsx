@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { episodes } from "../../content/episodes";
 import { EpisodesCatalogPage } from "../../components/episodes/EpisodesCatalogPage";
 
 export const metadata: Metadata = {
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export default function EpisodesPage() {
   return (
     <Suspense fallback={null}>
-      <EpisodesCatalogPage />
+      <EpisodesCatalogPage episodes={episodes} />
     </Suspense>
   );
 }

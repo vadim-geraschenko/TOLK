@@ -92,6 +92,8 @@ export function AboutMotion() {
     let backgroundPreloadCursor = 0;
     let backgroundPreloadInFlight = 0;
     let backgroundPreloadOrder: number[] = [];
+    let backgroundPreloadDelayId = 0;
+    let backgroundPreloadIdleId = 0;
 
     const useStaticScene = () => staticSceneQuery.matches || reducedMotionQuery.matches;
     const getCurrentFrameVariant = (): "desktop" | "mobile" => {
@@ -217,13 +219,49 @@ export function AboutMotion() {
       }
     };
 
+    const runBackgroundPreloadWhenIdle = (token: number) => {
+      if (token !== backgroundPreloadToken || useStaticScene()) return;
+
+      const start = () => {
+        backgroundPreloadDelayId = 0;
+        if (token !== backgroundPreloadToken || useStaticScene()) return;
+
+        if ("requestIdleCallback" in window) {
+          backgroundPreloadIdleId = window.requestIdleCallback(
+            () => {
+              backgroundPreloadIdleId = 0;
+              pumpBackgroundPreload(token);
+            },
+            { timeout: 1600 },
+          );
+          return;
+        }
+
+        pumpBackgroundPreload(token);
+      };
+
+      if (document.readyState === "complete") {
+        backgroundPreloadDelayId = window.setTimeout(start, 700);
+        return;
+      }
+
+      window.addEventListener(
+        "load",
+        () => {
+          if (token !== backgroundPreloadToken || useStaticScene()) return;
+          backgroundPreloadDelayId = window.setTimeout(start, 700);
+        },
+        { once: true },
+      );
+    };
+
     const scheduleBackgroundPreload = (centerIndex: number) => {
       if (useStaticScene()) return;
       backgroundPreloadToken += 1;
       backgroundPreloadCursor = 0;
       backgroundPreloadInFlight = 0;
       backgroundPreloadOrder = buildPreloadOrder(centerIndex);
-      pumpBackgroundPreload(backgroundPreloadToken);
+      runBackgroundPreloadWhenIdle(backgroundPreloadToken);
     };
 
     const syncFrameVariant = (forceReset = false) => {
@@ -473,6 +511,8 @@ export function AboutMotion() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (targetsFrameId) cancelAnimationFrame(targetsFrameId);
       if (initialCloudSettleFrame) cancelAnimationFrame(initialCloudSettleFrame);
+      if (backgroundPreloadDelayId) window.clearTimeout(backgroundPreloadDelayId);
+      if (backgroundPreloadIdleId) window.cancelIdleCallback(backgroundPreloadIdleId);
 
       staticSceneQuery.removeEventListener("change", onStaticSceneChange);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);

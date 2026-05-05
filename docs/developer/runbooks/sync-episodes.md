@@ -26,18 +26,21 @@ set -a
 source .env.local
 set +a
 npm run sync:episodes
+npm run sync:thumbnails
 ```
 
 Ожидаемый успех:
 
-`Synced <N> videos -> .../content/episodes.base.json`
+- `Synced <N> videos -> .../content/episodes.base.json`
+- `Synced <N> thumbnails -> .../public/episodes/thumbnails`
 
 ## After Sync Checklist
 
 1. Проверить `content/episodes.base.json` (обновились реальные `youtubeId`, даты, длительности).
-2. Для новых `youtubeId` добавить override в `content/episodes.overrides.ts`.
-3. Проверить `slug`/`kind` у ключевых роликов.
-4. Проверить сборку:
+2. Проверить `content/episode-thumbnails.generated.json` и `public/episodes/thumbnails`.
+3. Для новых `youtubeId` добавить override в `content/episodes.overrides.ts`.
+4. Проверить `slug`/`kind` у ключевых роликов.
+5. Проверить сборку:
 
 ```bash
 npm run build
@@ -51,3 +54,5 @@ npm run build
   - не загружены переменные окружения.
 - `YouTube API 403`:
   - ключ некорректен, отключен API или исчерпана квота.
+- `sync:thumbnails` падает на download:
+  - проверить сеть и повторить команду; скрипт пишет локальные WebP-превью для UI.

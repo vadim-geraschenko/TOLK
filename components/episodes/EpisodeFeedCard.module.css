@@ -77,7 +77,7 @@
   margin: 14px 0 0;
   font-size: 30px;
   line-height: 1;
-  font-family: "Cormorant Garamond", "Times New Roman", serif;
+  font-family: var(--font-display-family);
   font-weight: 500;
 }
 

@@ -1,4 +1,5 @@
 import baseEpisodes from "./episodes.base.json";
+import thumbnailManifest from "./episode-thumbnails.generated.json";
 import {
   defaultSupportLinks,
   episodeOverridesByYoutubeId,
@@ -36,6 +37,7 @@ type EpisodeBaseRecord = {
 };
 
 const DESCRIPTION_PLACEHOLDER = "Описание скоро будет.";
+const thumbnailByYoutubeId = thumbnailManifest as Record<string, string>;
 
 function assertString(value: unknown, field: string): string {
   if (typeof value !== "string" || !value.trim()) {
@@ -158,7 +160,7 @@ function normalizeEpisodes(): Episode[] {
         participants: override?.participants ?? defaultHosts,
         timestamps: [],
         supportLinks: override?.supportLinks ?? defaultSupportLinks,
-        cover: override?.cover ?? record.thumbnailUrl,
+        cover: override?.cover ?? thumbnailByYoutubeId[record.youtubeId] ?? record.thumbnailUrl,
         coverAlt: override?.coverAlt ?? `Превью выпуска ${record.title}`,
       } satisfies Episode;
     })

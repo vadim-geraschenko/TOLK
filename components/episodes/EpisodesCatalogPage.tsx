@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { episodes, episodeKindLabels, type Episode } from "../../content/episodes";
+import type { Episode } from "../../content/episodes";
 import type { EpisodeKind } from "../../content/episodes.overrides";
 import { bindStyles } from "../../lib/bind-styles";
 import { SiteFooter } from "../site/SiteFooter";
@@ -12,6 +12,13 @@ import styles from "./episodes-catalog.module.css";
 
 const cx = bindStyles(styles);
 const EPISODES_PAGE_SIZE = 8;
+const EPISODE_KIND_LABELS: Record<EpisodeKind, string> = {
+  episode: "Выпуск",
+  special: "Спецвыпуск",
+  "stream-record": "Запись стрима",
+  video: "Видео",
+  shorts: "Shorts",
+};
 
 const TABS: Array<{ key: "all" | EpisodeKind; label: string }> = [
   { key: "all", label: "Все" },
@@ -21,6 +28,10 @@ const TABS: Array<{ key: "all" | EpisodeKind; label: string }> = [
   { key: "stream-record", label: "Стримы" },
   { key: "shorts", label: "Shorts" },
 ];
+
+type EpisodesCatalogPageProps = {
+  episodes: Episode[];
+};
 
 function getTabKey(tab?: string): "all" | EpisodeKind {
   const keys = new Set(TABS.map((item) => item.key));
@@ -49,7 +60,7 @@ function toCatalogHref(tab: "all" | EpisodeKind, page: number): string {
   return `/episodes?${params.toString()}#episodes-feed`;
 }
 
-export function EpisodesCatalogPage() {
+export function EpisodesCatalogPage({ episodes }: EpisodesCatalogPageProps) {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab") ?? undefined;
   const pageParam = searchParams.get("page");
@@ -103,7 +114,7 @@ export function EpisodesCatalogPage() {
               key={episode.slug}
               className={cx("feed-card")}
               episode={episode}
-              metaSuffix={episodeKindLabels[episode.kind]}
+              metaSuffix={EPISODE_KIND_LABELS[episode.kind]}
             />
           ))}
 
