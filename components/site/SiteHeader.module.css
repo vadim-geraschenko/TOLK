@@ -69,15 +69,14 @@
   justify-content: flex-end;
 }
 
-.navLink {
-  color: #c6cbd2;
+.siteHeader .navLink {
+  color: var(--text-secondary, #c6cbd2);
   font-size: 14px;
   transition: color 180ms ease;
 }
 
-.navLink:hover,
-.isActive {
-  color: #f2f4f7;
+.siteHeader .navLink:hover {
+  color: var(--text-primary, #f2f4f7);
 }
 
 .navLink:focus-visible,
@@ -87,8 +86,12 @@
   border-radius: 10px;
 }
 
-.social {
-  color: #cfd6df;
+.siteHeader .social {
+  color: var(--text-secondary, #c6cbd2);
+}
+
+.siteHeader .navLink.isActive {
+  color: var(--text-primary, #f2f4f7);
 }
 
 @media (max-width: 47.5rem) {
