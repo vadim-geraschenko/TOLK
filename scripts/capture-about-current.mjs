@@ -153,6 +153,12 @@ async function preparePageForCapture(page) {
   });
 }
 
+async function markVisualCapture(page) {
+  await page.addInitScript(() => {
+    window.__TOLK_VISUAL_CAPTURE__ = true;
+  });
+}
+
 async function waitForMotionSettle(page) {
   await page.waitForTimeout(1200);
 }
@@ -257,6 +263,7 @@ async function captureDesktopCurrent(browser, targetUrl) {
   });
   const page = await context.newPage();
 
+  await markVisualCapture(page);
   await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
   await preparePageForCapture(page);
@@ -292,6 +299,7 @@ async function captureStaticDesktopCurrent(browser, targetUrl) {
   });
   const page = await context.newPage();
 
+  await markVisualCapture(page);
   await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
   await preparePageForCapture(page);
@@ -324,6 +332,7 @@ async function captureMobileCurrent(browser, targetUrl) {
   });
   const page = await context.newPage();
 
+  await markVisualCapture(page);
   await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
   await preparePageForCapture(page);

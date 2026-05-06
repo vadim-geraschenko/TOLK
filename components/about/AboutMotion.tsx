@@ -47,6 +47,10 @@ type StoryPairState = {
   appliedY: number;
 };
 
+type AboutMotionWindow = Window & {
+  __TOLK_VISUAL_CAPTURE__?: boolean;
+};
+
 const createFrameSources = (variant: "desktop" | "mobile") =>
   Array.from({ length: ABOUT_TOTAL_FRAMES }, (_, index) =>
     getFrameSrcByIndex(index, variant),
@@ -76,6 +80,9 @@ export function AboutMotion() {
 
     const staticSceneQuery = window.matchMedia(ABOUT_STATIC_SCENE_QUERY);
     const reducedMotionQuery = window.matchMedia(ABOUT_REDUCED_MOTION_QUERY);
+    const isVisualCapture = Boolean(
+      (window as AboutMotionWindow).__TOLK_VISUAL_CAPTURE__,
+    );
     const loadedFrames = new Set<number>();
     const pendingFrameLoads = new Map<number, Promise<boolean>>();
 
@@ -301,7 +308,9 @@ export function AboutMotion() {
       const staticScene = useStaticScene();
       const criticalFrames = staticScene
         ? Promise.resolve([])
-        : preloadBootFrameWindow(initialFrameIndex);
+        : isVisualCapture
+          ? Promise.resolve([])
+          : preloadBootFrameWindow(initialFrameIndex);
       const initialFrameReady = staticScene
         ? waitForImageReady(storyFrame)
         : loadFrameAtIndex(initialFrameIndex, "high").then(() => waitForImageReady(storyFrame));
@@ -497,7 +506,9 @@ export function AboutMotion() {
       syncFrameVariant(true);
       const initialFrameIndex = getFrameIndex(renderedProgress);
       setFrame(initialFrameIndex);
-      scheduleBackgroundPreload(initialFrameIndex);
+      if (!isVisualCapture) {
+        scheduleBackgroundPreload(initialFrameIndex);
+      }
       ensureAboutRevealStyle();
       settleBootLoading(initialFrameIndex);
     };

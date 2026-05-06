@@ -16,6 +16,10 @@ type SiteHeaderProps = {
   navItems: NavItem[];
 };
 
+type VisualCaptureWindow = Window & {
+  __TOLK_VISUAL_CAPTURE__?: boolean;
+};
+
 export function SiteHeader({ navItems }: SiteHeaderProps) {
   const [isHiddenOnMobile, setIsHiddenOnMobile] = useState(false);
   const prevYRef = useRef(0);
@@ -33,6 +37,11 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
   };
 
   useEffect(() => {
+    if ((window as VisualCaptureWindow).__TOLK_VISUAL_CAPTURE__) {
+      setIsHiddenOnMobile(false);
+      return;
+    }
+
     const mobileMedia = window.matchMedia("(max-width: 47.5rem)");
     const reducedMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
     const TOP_ZONE_PX = 72;

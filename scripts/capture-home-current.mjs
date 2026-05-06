@@ -130,6 +130,12 @@ async function preparePageForCapture(page) {
   });
 }
 
+async function markVisualCapture(page) {
+  await page.addInitScript(() => {
+    window.__TOLK_VISUAL_CAPTURE__ = true;
+  });
+}
+
 async function scrollToSelector(page, selector, offset = 96) {
   await page.evaluate(
     ({ targetSelector, targetOffset }) => {
@@ -174,6 +180,7 @@ async function captureState(browser, targetUrl, viewport, state) {
   });
   const page = await context.newPage();
 
+  await markVisualCapture(page);
   await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
   await preparePageForCapture(page);
