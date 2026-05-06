@@ -40,7 +40,7 @@ export type EpisodeOverride = {
 
 export const defaultSupportLinks: EpisodeSupportLink[] = [
   { label: "Поддержать на Boosty", href: "#" },
-  { label: "Мерч TOLK", href: "#" },
+  { label: "Мерч TOLK", href: "/merch" },
 ];
 
 export const episodeOverridesByYoutubeId: Record<string, EpisodeOverride> = {

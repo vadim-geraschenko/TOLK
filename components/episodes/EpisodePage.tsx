@@ -43,7 +43,7 @@ export function EpisodePage({ episode }: { episode: Episode }) {
     { label: "О нас", href: "/about" },
     { label: "Выпуски", href: "/episodes", isActive: true },
     { label: "Очные чтения", href: "#" },
-    { label: "Мерч", href: "#" },
+    { label: "Мерч", href: "/merch" },
     { label: "Telegram", href: "#", isSocial: true },
     { label: "YouTube", href: "#", isSocial: true },
     { label: "Boosty", href: "#", isSocial: true },
