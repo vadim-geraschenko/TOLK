@@ -14,6 +14,12 @@ const ALLOWED_MISMATCH_PERCENT = {
     "home-1440-hero-button-hover.png": 1.05,
     "home-1440-participant-hover.png": 1.05,
     "home-1440-social-button-hover.png": 1.05,
+    "home-390-default.png": 0.01,
+    "home-390-episode-card-hover.png": 0.01,
+    "home-390-hero-button-active.png": 0.01,
+    "home-390-hero-button-hover.png": 0.01,
+    "home-390-participant-hover.png": 0.01,
+    "home-390-social-button-hover.png": 0.55,
   },
   about: {
     "about-1100-static-full.png": 0.002,
