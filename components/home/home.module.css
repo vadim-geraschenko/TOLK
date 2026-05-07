@@ -247,7 +247,7 @@
           display: grid;
           place-items: center;
           color: rgba(230, 235, 241, 0.26);
-          font-size: 18px;
+          font-size: var(--type-brand-mark);
           letter-spacing: 0.3em;
         }
 
@@ -265,7 +265,7 @@
           gap: 10px;
           margin-bottom: 14px;
           color: var(--accent-silver);
-          font-size: 12px;
+          font-size: var(--type-meta);
           font-weight: 600;
           letter-spacing: 0.22em;
           text-transform: uppercase;
@@ -322,12 +322,12 @@
           box-shadow: var(--elevation-inner);
           color: var(--accent-silver-strong);
           font-family: var(--font-display);
-          font-size: 18px;
+          font-size: var(--type-brand-mark);
         }
 
         .brand-copy strong {
           display: block;
-          font-size: 14px;
+          font-size: var(--type-ui);
           letter-spacing: 0.28em;
           text-transform: uppercase;
           font-weight: 700;
@@ -338,7 +338,7 @@
           display: block;
           margin-top: 2px;
           color: var(--text-muted);
-          font-size: 12px;
+          font-size: var(--type-meta);
         }
 
         .nav {
@@ -351,7 +351,7 @@
 
         .nav a {
           color: var(--text-secondary);
-          font-size: 14px;
+          font-size: var(--type-ui);
           transition: color 180ms ease;
         }
 
@@ -440,14 +440,14 @@
         }
 
         .hero-copy h1 {
-          font-size: clamp(34px, 4.2vw, 50px);
+          font-size: var(--type-display-home);
           max-width: var(--hero-title-max-width-desktop);
         }
 
         .hero-copy p {
           margin-top: 0;
           max-width: none;
-          font-size: 16px;
+          font-size: var(--type-body);
         }
 
         .hero-actions {
@@ -466,7 +466,7 @@
 
         .hero-manifest p {
           color: var(--text-primary);
-          font-size: 14px;
+          font-size: var(--type-body);
         }
 
         .button {
@@ -800,27 +800,27 @@
           display: inline-block;
           margin-top: 14px;
           color: var(--accent-silver);
-          font-size: 10px;
+          font-size: var(--type-micro);
           letter-spacing: 0.16em;
           text-transform: uppercase;
         }
 
         .hero-episode-body h3 {
           margin-top: 14px;
-          font-size: 26px;
+          font-size: var(--type-episode-card-title-tablet);
           line-height: 1;
         }
 
         .hero-episode-body p {
           margin-top: 14px;
-          font-size: 13px;
+          font-size: var(--type-caption);
         }
 
         .mini-button {
           min-height: 38px;
           margin-top: 14px;
           padding: 0 14px;
-          font-size: 13px;
+          font-size: var(--type-caption);
         }
 
         .reading-card {
@@ -900,7 +900,7 @@
             rgba(255, 255, 255, 0.03)
           );
           color: var(--accent-silver-strong);
-          font-size: 10px;
+          font-size: var(--type-micro);
           font-weight: 700;
           letter-spacing: 0.18em;
           text-transform: uppercase;
@@ -918,14 +918,14 @@
 
         .reading-card h3 {
           grid-area: title;
-          font-size: 24px;
+          font-size: var(--type-episode-card-title-mobile);
           margin-bottom: 12px;
           max-width: var(--reading-title-max-width);
         }
 
         .reading-card p {
           grid-area: copy;
-          font-size: 13px;
+          font-size: var(--type-caption);
           line-height: 1.68;
           max-width: var(--reading-copy-max-width);
         }
@@ -974,7 +974,7 @@
         .reading-meta-row span {
           display: block;
           color: var(--text-muted);
-          font-size: 12px;
+          font-size: var(--type-meta);
           letter-spacing: 0.16em;
           text-transform: uppercase;
           padding-top: 3px;
@@ -983,7 +983,7 @@
         .reading-meta-row strong {
           display: block;
           color: var(--text-primary);
-          font-size: 14px;
+          font-size: var(--type-ui);
           line-height: 1.45;
         }
 
@@ -1000,7 +1000,7 @@
         .episodes h2,
         .merch h2,
         .contact-panel h2 {
-          font-size: clamp(34px, 4vw, 56px);
+          font-size: var(--type-display-home);
           margin-bottom: 18px;
         }
 
@@ -1017,7 +1017,7 @@
         }
 
         .participants-head h3 {
-          font-size: 26px;
+          font-size: var(--type-episode-card-title-tablet);
           color: var(--text-secondary);
         }
 
@@ -1068,13 +1068,13 @@
 
         .participant strong {
           display: block;
-          font-size: 15px;
+          font-size: var(--type-body-sm);
           color: var(--text-primary);
           margin-bottom: 4px;
         }
 
         .participant p {
-          font-size: 13px;
+          font-size: var(--type-caption);
           color: var(--text-muted);
           line-height: 1.5;
         }
@@ -1156,7 +1156,7 @@
           align-items: center;
           background: rgba(11, 13, 16, 0.82);
           color: #f2f4f7;
-          font-size: 12px;
+          font-size: var(--type-meta);
           font-weight: 700;
           letter-spacing: 0.03em;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
@@ -1175,7 +1175,7 @@
         .episode-participants-label {
           display: inline-block;
           color: var(--text-muted);
-          font-size: 11px;
+          font-size: var(--type-label);
           letter-spacing: 0.12em;
           text-transform: uppercase;
         }
@@ -1233,7 +1233,7 @@
           border: 1px solid rgba(255, 255, 255, 0.12);
           background: rgba(255, 255, 255, 0.04);
           color: var(--accent-silver-strong);
-          font-size: 11px;
+          font-size: var(--type-label);
           letter-spacing: 0.08em;
           text-transform: uppercase;
           white-space: nowrap;
@@ -1241,20 +1241,20 @@
 
         .episode-card .meta {
           color: var(--accent-silver);
-          font-size: 11px;
+          font-size: var(--type-label);
           letter-spacing: 0.16em;
           text-transform: uppercase;
         }
 
         .episode-card h3 {
           margin-top: 14px;
-          font-size: 30px;
+          font-size: var(--type-episode-card-title);
           line-height: 1;
         }
 
         .episode-card p {
           margin-top: 14px;
-          font-size: 14px;
+          font-size: var(--type-ui);
           line-height: 1.65;
           height: var(--episode-description-height-desktop);
           overflow: hidden;
@@ -1295,7 +1295,7 @@
         }
 
         .merch-panel h2 {
-          font-size: clamp(28px, 3vw, 42px);
+          font-size: var(--type-card-title-lg);
           margin-bottom: 12px;
         }
 
@@ -1361,7 +1361,7 @@
         .merch-copy h3 {
           margin: 0;
           font-family: var(--font-display);
-          font-size: clamp(26px, 2.2vw, 30px);
+          font-size: var(--type-episode-card-title);
           font-weight: 600;
           letter-spacing: -0.02em;
           line-height: 1.02;
@@ -1404,7 +1404,7 @@
         }
 
         .contact-panel h2 {
-          font-size: clamp(28px, 3vw, 42px);
+          font-size: var(--type-card-title-lg);
           margin-bottom: 12px;
         }
 
@@ -1492,26 +1492,26 @@
         .social-copy strong {
           display: block;
           margin-bottom: 4px;
-          font-size: 17px;
+          font-size: var(--type-brand-mark);
           color: var(--text-primary);
         }
 
         .social-copy p {
-          font-size: 13px;
+          font-size: var(--type-caption);
           color: var(--text-secondary);
           /* max-width: ch; */
         }
 
         .social-arrow {
           color: var(--text-muted);
-          font-size: 22px;
+          font-size: var(--type-episode-card-title-mobile);
           transform: translateY(-1px);
         }
 
         .footer {
           padding: 32px 0 20px;
           color: var(--text-muted);
-          font-size: 13px;
+          font-size: var(--type-caption);
         }
 
         .footer .container {
@@ -1577,11 +1577,11 @@
 
           .hero-copy h1 {
             max-width: var(--hero-title-max-width-tablet);
-            font-size: clamp(32px, 4.8vw, 44px);
+            font-size: var(--type-display-home);
           }
 
           .hero-copy p {
-            font-size: 15px;
+            font-size: var(--type-body-sm);
           }
 
           .hero-episode {
@@ -1589,7 +1589,7 @@
           }
 
           .hero-episode-body h3 {
-            font-size: 22px;
+            font-size: var(--type-episode-card-title-mobile);
           }
 
           .reading-card-body {
@@ -1602,7 +1602,7 @@
           }
 
           .reading-card h3 {
-            font-size: 22px;
+            font-size: var(--type-episode-card-title-mobile);
           }
 
           .reading-card {
@@ -1628,11 +1628,11 @@
           }
 
           .participant strong {
-            font-size: 14px;
+            font-size: var(--type-ui);
           }
 
           .participant p {
-            font-size: 12px;
+            font-size: var(--type-caption);
             line-height: 1.45;
           }
 
@@ -1650,7 +1650,7 @@
           }
 
           .episode-card h3 {
-            font-size: 26px;
+            font-size: var(--type-episode-card-title-tablet);
           }
 
           .episode-card p {
@@ -1745,7 +1745,7 @@
           }
 
           .brand-copy span {
-            font-size: 11px;
+            font-size: var(--type-label);
           }
 
           .nav {
@@ -1765,7 +1765,7 @@
 
           .nav a {
             white-space: normal;
-            font-size: 13px;
+            font-size: var(--type-caption);
           }
 
           .hero {
@@ -1790,12 +1790,12 @@
           }
 
           .hero-copy h1 {
-            font-size: clamp(32px, 9.6vw, 42px);
+            font-size: var(--type-display-home-tight);
             max-width: none;
           }
 
           .hero-copy p {
-            font-size: 15px;
+            font-size: var(--type-body-sm);
             line-height: 1.68;
           }
 
@@ -1821,7 +1821,7 @@
           }
 
           .reading-card h3 {
-            font-size: 21px;
+            font-size: var(--type-episode-card-title-mobile);
           }
 
           .reading-meta-row {
@@ -1840,7 +1840,7 @@
           }
 
           .participants-head h3 {
-            font-size: 24px;
+            font-size: var(--type-episode-card-title-mobile);
           }
 
           .participants-list {
@@ -1882,12 +1882,12 @@
           }
 
           .episode-card h3 {
-            font-size: 22px;
+            font-size: var(--type-episode-card-title-mobile);
           }
 
           .episode-card p {
             height: var(--episode-description-height-mobile);
-            font-size: 13px;
+            font-size: var(--type-caption);
             -webkit-line-clamp: 7;
           }
 
@@ -1898,7 +1898,7 @@
           }
 
           .episode-guest-badge {
-            font-size: 10px;
+            font-size: var(--type-micro);
           }
 
           .merch-panel .panel-content,
@@ -1944,7 +1944,7 @@
 
           .section-divider::after {
             width: 30px;
-            font-size: 14px;
+            font-size: var(--type-ui);
           }
         }
 
@@ -2007,11 +2007,11 @@
           }
 
           .hero-copy h1 {
-            font-size: clamp(30px, 10.2vw, 38px);
+            font-size: var(--type-display-home-tight);
           }
 
           .hero-manifest p {
-            font-size: 14px;
+            font-size: var(--type-caption);
           }
 
           .hero-episode-cover {
@@ -2019,7 +2019,7 @@
           }
 
           .hero-episode-body h3 {
-            font-size: 20px;
+            font-size: var(--type-episode-card-title-mobile);
           }
 
           .episode-card p {
@@ -2046,11 +2046,11 @@
           }
 
           .social-copy strong {
-            font-size: 15px;
+            font-size: var(--type-body-sm);
           }
 
           .social-copy p {
-            font-size: 12px;
+            font-size: var(--type-caption);
             line-height: 1.45;
           }
         }

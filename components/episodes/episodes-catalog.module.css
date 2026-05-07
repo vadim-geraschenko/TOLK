@@ -71,12 +71,12 @@
     inset 0 0 32px rgba(255, 255, 255, 0.015);
   color: #eef2f6;
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: var(--type-brand-mark);
 }
 
 .brand-copy strong {
   display: block;
-  font-size: 14px;
+  font-size: var(--type-ui);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   font-weight: 700;
@@ -87,7 +87,7 @@
   display: block;
   margin-top: 2px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--type-meta);
 }
 
 .nav {
@@ -100,7 +100,7 @@
 
 .nav a {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--type-ui);
   transition: color 180ms ease;
 }
 
@@ -120,7 +120,7 @@
 .top h1 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(44px, 4vw, 64px);
+  font-size: var(--type-display-lg);
   line-height: 0.95;
 }
 
@@ -142,7 +142,7 @@
   border: 1px solid rgba(243, 241, 234, 0.1);
   background: rgba(255, 255, 255, 0.02);
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--type-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -177,7 +177,7 @@
 .feed-more-status {
   margin: 0;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: var(--type-caption);
 }
 
 .more-button {
@@ -196,6 +196,7 @@
     rgba(255, 255, 255, 0.02)
   );
   color: var(--text-primary);
+  font-size: var(--type-button);
   font-weight: 600;
   letter-spacing: 0.02em;
   box-shadow: 0 0 24px rgba(255, 255, 255, 0.02);
@@ -352,7 +353,7 @@
   border-radius: 999px;
   background: rgba(9, 11, 16, 0.72);
   color: #f0f4fb;
-  font-size: 12px;
+  font-size: var(--type-meta);
   font-weight: 700;
 }
 
@@ -363,7 +364,7 @@
 .meta {
   margin: 0;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--type-label);
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -371,7 +372,7 @@
 .body h2 {
   margin: 8px 0 10px;
   font-family: var(--font-display);
-  font-size: clamp(28px, 2vw, 38px);
+  font-size: var(--type-episode-card-title);
   line-height: 0.98;
 }
 
@@ -457,7 +458,7 @@
   }
 
   .brand-copy span {
-    font-size: 11px;
+    font-size: var(--type-label);
   }
 
   .nav {
@@ -473,7 +474,7 @@
 
   .nav a {
     white-space: normal;
-    font-size: 13px;
+    font-size: var(--type-caption);
   }
 
   .feed {
@@ -492,7 +493,7 @@
     border: 1px solid rgba(243, 241, 234, 0.24);
     background: rgba(13, 16, 24, 0.78);
     color: #f0f4fb;
-    font-size: 18px;
+    font-size: var(--type-brand-mark);
     line-height: 1;
     z-index: 30;
     backdrop-filter: blur(8px);

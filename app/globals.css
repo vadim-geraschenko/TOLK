@@ -11,4 +11,33 @@ body {
     var(--font-cormorant-garamond), "Cormorant Garamond", "Times New Roman", serif;
   --font-body-family:
     var(--font-source-sans-3), "Source Sans 3", "Segoe UI", "Helvetica Neue", sans-serif;
+
+  --type-size-10: 10px;
+  --type-size-11: 11px;
+  --type-size-12: 12px;
+  --type-size-13: 13px;
+  --type-size-14: 14px;
+  --type-size-15: 15px;
+  --type-size-16: 16px;
+  --type-size-18: 18px;
+  --type-size-22: 22px;
+  --type-size-30: 30px;
+
+  --type-display-lg: clamp(44px, 4vw, 64px);
+  --type-display-home: clamp(34px, 4.2vw, 50px);
+  --type-display-home-tight: clamp(30px, 10.2vw, 38px);
+  --type-card-title-lg: clamp(34px, 2.8vw, 46px);
+
+  --type-brand-mark: var(--type-size-18);
+  --type-meta: var(--type-size-12);
+  --type-body: var(--type-size-16);
+  --type-body-sm: var(--type-size-15);
+  --type-caption: var(--type-size-13);
+  --type-label: var(--type-size-11);
+  --type-micro: var(--type-size-10);
+  --type-ui: var(--type-size-14);
+  --type-button: var(--type-ui);
+  --type-episode-card-title: var(--type-size-30);
+  --type-episode-card-title-tablet: var(--type-size-30);
+  --type-episode-card-title-mobile: var(--type-size-22);
 }

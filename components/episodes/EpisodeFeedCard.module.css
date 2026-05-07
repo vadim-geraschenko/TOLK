@@ -56,7 +56,7 @@
   align-items: center;
   background: rgba(11, 13, 16, 0.82);
   color: #f2f4f7;
-  font-size: 12px;
+  font-size: var(--type-meta);
   font-weight: 700;
   letter-spacing: 0.03em;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
@@ -68,14 +68,14 @@
 
 .meta {
   color: #cfd6df;
-  font-size: 11px;
+  font-size: var(--type-label);
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
 .body h3 {
   margin: 14px 0 0;
-  font-size: 30px;
+  font-size: var(--type-episode-card-title);
   line-height: 1;
   font-family: var(--font-display-family);
   font-weight: 500;
@@ -90,7 +90,7 @@
 .participantsLabel {
   display: inline-block;
   color: #8d959f;
-  font-size: 11px;
+  font-size: var(--type-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -148,7 +148,7 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   color: #dbe2eb;
-  font-size: 11px;
+  font-size: var(--type-label);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -156,7 +156,7 @@
 
 .description {
   margin: 14px 0 0;
-  font-size: 14px;
+  font-size: var(--type-ui);
   line-height: 1.65;
   color: #c6cbd2;
   height: 160px;
@@ -173,7 +173,7 @@
   }
 
   .body h3 {
-    font-size: 56px;
+    font-size: var(--type-episode-card-title-mobile);
   }
 
   .description {

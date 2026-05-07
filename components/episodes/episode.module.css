@@ -73,7 +73,7 @@
     inset 0 0 32px rgba(255, 255, 255, 0.015);
   color: #eef2f6;
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: var(--type-brand-mark);
 }
 
 .brand-copy {
@@ -85,7 +85,7 @@
   display: block;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  font-size: 14px;
+  font-size: var(--type-ui);
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -94,7 +94,7 @@
   display: block;
   margin-top: 2px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--type-meta);
 }
 
 .nav {
@@ -107,7 +107,7 @@
 
 .nav a {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--type-ui);
   transition: color 180ms ease;
 }
 
@@ -129,7 +129,7 @@
   align-items: center;
   gap: 10px;
   color: var(--text-muted);
-  font-size: 15px;
+  font-size: var(--type-body-sm);
 }
 
 .hero {
@@ -195,7 +195,7 @@
 .short-player-panel h1 {
   margin: 4px;
   font-family: var(--font-body);
-  font-size: clamp(44px, 2.8vw, 56px);
+  font-size: var(--type-display-lg);
   line-height: 1.05;
   font-weight: 700;
 }
@@ -228,7 +228,7 @@
 
 .short-source-card .related-body h3 {
   margin: 4px 0 6px;
-  font-size: clamp(24px, 1.8vw, 32px);
+  font-size: var(--type-episode-card-title);
 }
 
 .short-source-card .related-participants {
@@ -241,7 +241,7 @@
   line-clamp: unset;
   -webkit-box-orient: unset;
   overflow: visible;
-  font-size: 14px;
+  font-size: var(--type-ui);
 }
 
 .panel {
@@ -340,7 +340,7 @@
 .support h2,
 .related h2 {
   margin: 0 0 10px;
-  font-size: 14px;
+  font-size: var(--type-ui);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--accent-silver);
@@ -405,7 +405,7 @@
 .hosts-copy strong,
 .guest-row strong {
   display: block;
-  font-size: 16px;
+  font-size: var(--type-body);
   line-height: 1.2;
 }
 
@@ -413,7 +413,7 @@
 .guest-row p {
   margin: 2px 0 0;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--type-ui);
   line-height: 1.45;
 }
 
@@ -424,13 +424,13 @@
 .meta {
   margin: 0;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: var(--type-ui);
 }
 
 .content-panel h1 {
   margin: 6px 0 10px;
   font-family: var(--font-display);
-  font-size: clamp(34px, 2.8vw, 46px);
+  font-size: var(--type-card-title-lg);
   line-height: 0.94;
 }
 
@@ -438,7 +438,7 @@
   margin: 0 0 12px;
   color: var(--text-secondary);
   line-height: 1.56;
-  font-size: 15px;
+  font-size: var(--type-body-sm);
 }
 
 .timestamps ul {
@@ -550,14 +550,14 @@
 .related-meta {
   margin: 0;
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: var(--type-label);
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
 .related-body h3 {
   margin: 6px 0 8px;
-  font-size: clamp(24px, 2vw, 36px);
+  font-size: var(--type-episode-card-title);
   font-family: var(--font-display);
   line-height: 0.98;
 }
@@ -570,7 +570,7 @@
   border-radius: 999px;
   background: rgba(9, 11, 16, 0.72);
   color: #f0f4fb;
-  font-size: 14px;
+  font-size: var(--type-ui);
   font-weight: 700;
   line-height: 1;
 }
@@ -583,7 +583,7 @@
   display: block;
   margin-bottom: 3px;
   color: rgba(198, 203, 210, 0.9);
-  font-size: 10px;
+  font-size: var(--type-micro);
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
@@ -630,7 +630,7 @@
   border: 1px solid rgba(243, 241, 234, 0.15);
   background: rgba(255, 255, 255, 0.02);
   color: #d8dde5;
-  font-size: 10px;
+  font-size: var(--type-micro);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -638,7 +638,7 @@
 .related-description {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 15px;
+  font-size: var(--type-body-sm);
   line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -667,6 +667,7 @@
     rgba(255, 255, 255, 0.02)
   );
   color: var(--text-primary);
+  font-size: var(--type-button);
   font-weight: 600;
   letter-spacing: 0.02em;
   box-shadow: 0 0 24px rgba(255, 255, 255, 0.02);
@@ -836,7 +837,7 @@
   }
 
   .brand-copy span {
-    font-size: 11px;
+    font-size: var(--type-label);
   }
 
   .nav {
@@ -852,7 +853,7 @@
 
   .nav a {
     white-space: normal;
-    font-size: 13px;
+    font-size: var(--type-caption);
   }
 
   .hero-grid {
@@ -930,7 +931,7 @@
 
   .participants h2 {
     margin-bottom: 8px;
-    font-size: 12px;
+    font-size: var(--type-meta);
     letter-spacing: 0.16em;
   }
 
@@ -967,14 +968,14 @@
 
   .hosts-copy strong,
   .guest-row strong {
-    font-size: 14px;
+    font-size: var(--type-ui);
     line-height: 1.15;
   }
 
   .hosts-copy p,
   .guest-row p {
     margin-top: 1px;
-    font-size: 12px;
+    font-size: var(--type-caption);
     line-height: 1.35;
   }
 }
