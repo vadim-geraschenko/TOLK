@@ -991,6 +991,16 @@
     display: none;
   }
 
+  .mobile-story-flow,
+  .mobile-voices-flow {
+    display: none;
+  }
+
+  .desktop-story-flow {
+    display: grid;
+    gap: var(--story-row-gap);
+  }
+
   .story-card .card-kicker,
   .origin-card .card-kicker,
   .origin-link-card .card-kicker,
@@ -1150,6 +1160,10 @@
     }
 
     .story-cards {
+      gap: 40px;
+    }
+
+    .desktop-story-flow {
       gap: 40px;
     }
 
@@ -1321,6 +1335,23 @@
 
     .button {
       width: 100%;
+    }
+
+    .desktop-story-flow,
+    .desktop-voices-flow {
+      display: none;
+    }
+
+    .mobile-story-flow,
+    .mobile-voices-flow {
+      display: grid;
+      gap: 40px;
+    }
+
+    .mobile-stack-scene,
+    .mobile-stack-stage {
+      display: grid;
+      gap: 40px;
     }
 
     .story-card,

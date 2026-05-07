@@ -30,6 +30,18 @@ export type AboutStoryStep =
       hasMobileDivider?: boolean;
     };
 
+export const aboutStoryLeadCard: AboutStoryCard = {
+  kicker: "Почему Библия",
+  title: "Почему мы снова и снова возвращаемся к этой книге",
+  tone: "tone-neutral",
+  centered: true,
+  kickerHasLines: true,
+  paragraphs: [
+    "Библия — это текстуальная точка сингулярности. Чем глубже вглядываешься в книгу, тем больше смыслов в ней видишь. Мы исследуем её, как неисчерпаемый источник людской мудрости, новых идей и изящных концептов.",
+    "Это книга, из которой во многом выросли наша культура, моральный язык, образ человека и само представление о добре, вине, спасении, надежде, любви и жертве.",
+  ],
+};
+
 export const aboutVoices: AboutVoice[] = [
   {
     name: people.taras.name,

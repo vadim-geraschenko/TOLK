@@ -1,7 +1,8 @@
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import { bindStyles } from "../../lib/bind-styles";
 import { withBasePath } from "../../lib/base-path";
 import {
+  aboutStoryLeadCard,
   aboutStorySteps,
   aboutVoices,
   type AboutStoryCard,
@@ -9,6 +10,11 @@ import {
 } from "../../content/about";
 import { Button } from "../site/Button";
 import { CardKicker } from "../site/CardKicker";
+import {
+  buildAboutStoryMobileStackGroups,
+  buildAboutVoicesMobileStackGroup,
+  type AboutMobileStackCard,
+} from "./mobileStackModel";
 import styles from "./about.module.css";
 
 const cx = bindStyles(styles);
@@ -47,19 +53,13 @@ export function AboutStoryLeadSection() {
           className={cx("story-card", "centered", "tone-neutral")}
           data-about-reveal-target
         >
-          <CardKicker cx={cx} hasLines label="Почему Библия" />
-          <h2>Почему мы снова и снова возвращаемся к этой книге</h2>
-          <p>
-            Библия — это текстуальная точка сингулярности. Чем глубже вглядываешься
-            в книгу, тем больше смыслов в ней видишь. Мы исследуем её, как
-            неисчерпаемый источник людской мудрости, новых идей и изящных
-            концептов.
-          </p>
-          <p>
-            Это книга, из которой во многом выросли наша культура, моральный язык,
-            образ человека и само представление о добре, вине, спасении, надежде,
-            любви и жертве.
-          </p>
+          <CardKicker
+            cx={cx}
+            hasLines={aboutStoryLeadCard.kickerHasLines}
+            label={aboutStoryLeadCard.kicker}
+          />
+          <h2>{aboutStoryLeadCard.title}</h2>
+          <StoryParagraphs paragraphs={aboutStoryLeadCard.paragraphs} />
         </article>
       </div>
     </section>
@@ -85,6 +85,30 @@ function StoryCard({ card }: { card: AboutStoryCard }) {
       <CardKicker cx={cx} hasLines={card.kickerHasLines} label={card.kicker} />
       <h2>{card.title}</h2>
       <StoryParagraphs paragraphs={card.paragraphs} />
+    </div>
+  );
+}
+
+function MobileStackCard({ item }: { item: AboutMobileStackCard }) {
+  if (item.kind === "voice") {
+    return <VoiceCard {...item.voice} />;
+  }
+
+  return <StoryCard card={item.card} />;
+}
+
+function MobileStackScene({
+  group,
+}: {
+  group: ReturnType<typeof buildAboutStoryMobileStackGroups>[number];
+}) {
+  return (
+    <div className={cx("mobile-stack-scene")} data-mobile-stack-scene={group.id}>
+      <div className={cx("mobile-stack-stage")}>
+        {group.cards.map((item) => (
+          <MobileStackCard key={item.id} item={item} />
+        ))}
+      </div>
     </div>
   );
 }
@@ -139,15 +163,29 @@ function StoryStep({
 
 export function AboutStorySection() {
   let pairCounter = 0;
+  const mobileGroups = buildAboutStoryMobileStackGroups();
 
   return (
     <section className={cx("section", "story")} id="story">
       <div className={cx("container")}>
         <div className={cx("story-cards")} id="story-cards">
-          {aboutStorySteps.map((step, index) => {
-            const pairIndex = step.kind === "pair" ? pairCounter++ : undefined;
-            return <StoryStep key={index} step={step} pairIndex={pairIndex} />;
-          })}
+          <div className={cx("desktop-story-flow")}>
+            {aboutStorySteps.map((step, index) => {
+              const pairIndex = step.kind === "pair" ? pairCounter++ : undefined;
+              return <StoryStep key={index} step={step} pairIndex={pairIndex} />;
+            })}
+          </div>
+
+          <div className={cx("mobile-story-flow")}>
+            {mobileGroups.map((group, index) => (
+              <Fragment key={group.id}>
+                <MobileStackScene group={group} />
+                {index < mobileGroups.length - 1 ? (
+                  <div className={cx("mobile-divider")} aria-hidden="true" />
+                ) : null}
+              </Fragment>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -200,15 +238,25 @@ function VoiceCard({
 }
 
 export function AboutVoicesSection() {
+  const mobileVoicesGroup = buildAboutVoicesMobileStackGroup();
+
   return (
     <section className={cx("section")}>
       <div className={cx("container")}>
-        <VoiceIntroCard />
+        <div className={cx("desktop-voices-flow")}>
+          <VoiceIntroCard />
 
-        <div className={cx("voices-grid")}>
-          {aboutVoices.map((voice) => (
-            <VoiceCard key={voice.name} {...voice} />
-          ))}
+          <div className={cx("voices-grid")}>
+            {aboutVoices.map((voice) => (
+              <VoiceCard key={voice.name} {...voice} />
+            ))}
+            <div className={cx("mobile-divider")} aria-hidden="true" />
+          </div>
+        </div>
+
+        <div className={cx("mobile-voices-flow")}>
+          <VoiceIntroCard />
+          <MobileStackScene group={mobileVoicesGroup} />
           <div className={cx("mobile-divider")} aria-hidden="true" />
         </div>
       </div>
