@@ -1262,7 +1262,15 @@
     .root {
       --mobile-stack-card-step: 84px;
       --mobile-stack-card-peek: 12px;
-      --mobile-stack-safe-top: 202px;
+      --mobile-stack-shown-safe-top: 202px;
+      --mobile-stack-safe-top: max(
+        72px,
+        calc(
+          var(--mobile-stack-shown-safe-top) -
+          var(--site-header-height, 0px) +
+          var(--site-header-visible-offset, 0px)
+        )
+      );
       --mobile-stack-scene-progress: 0;
       --mobile-stack-stage-height: calc(100svh - var(--mobile-stack-safe-top) - 32px);
       --mobile-stack-scene-height-fallback: calc(
@@ -1382,6 +1390,7 @@
       position: sticky;
       top: var(--mobile-stack-safe-top);
       height: var(--mobile-stack-stage-height);
+      transition: top 180ms ease;
     }
 
     .mobile-stack-divider {
@@ -1491,6 +1500,7 @@
       display: grid;
       height: auto;
       gap: 40px;
+      transition: none;
     }
 
     .mobile-stack-divider {

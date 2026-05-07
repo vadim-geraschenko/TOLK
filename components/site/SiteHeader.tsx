@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { BASE_PATH, withBasePath } from "../../lib/base-path";
 import styles from "./SiteHeader.module.css";
@@ -22,6 +22,7 @@ type VisualCaptureWindow = Window & {
 
 export function SiteHeader({ navItems }: SiteHeaderProps) {
   const [isHiddenOnMobile, setIsHiddenOnMobile] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
   const prevYRef = useRef(0);
   const pathname = usePathname();
   const currentPathname =
@@ -84,8 +85,46 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
     };
   }, [setIsHiddenOnMobile]);
 
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const writeHeaderOffset = () => {
+      const headerHeight = header.getBoundingClientRect().height;
+      const visibleOffset = isHiddenOnMobile ? 0 : headerHeight;
+
+      document.documentElement.style.setProperty(
+        "--site-header-height",
+        `${headerHeight.toFixed(3)}px`,
+      );
+      document.documentElement.style.setProperty(
+        "--site-header-visible-offset",
+        `${visibleOffset.toFixed(3)}px`,
+      );
+      window.dispatchEvent(new Event("tolk:site-header-offset-change"));
+    };
+
+    writeHeaderOffset();
+
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(writeHeaderOffset)
+        : null;
+
+    resizeObserver?.observe(header);
+    window.addEventListener("resize", writeHeaderOffset, { passive: true });
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", writeHeaderOffset);
+      document.documentElement.style.removeProperty("--site-header-height");
+      document.documentElement.style.removeProperty("--site-header-visible-offset");
+    };
+  }, [isHiddenOnMobile]);
+
   return (
     <header
+      ref={headerRef}
       className={[
         styles.siteHeader,
         isHiddenOnMobile ? styles.hiddenOnMobile : "",
