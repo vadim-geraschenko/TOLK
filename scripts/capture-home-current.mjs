@@ -128,6 +128,11 @@ async function preparePageForCapture(page) {
       }
     `,
   });
+
+  await page.evaluate(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  });
+  await page.waitForTimeout(120);
 }
 
 async function markVisualCapture(page) {
@@ -207,6 +212,22 @@ async function captureState(browser, targetUrl, viewport, state) {
   return targetPath;
 }
 
+async function warmViewport(browser, targetUrl, viewport) {
+  const context = await browser.newContext({
+    colorScheme: "dark",
+    reducedMotion: "no-preference",
+    ...viewport.contextOptions,
+  });
+  const page = await context.newPage();
+
+  await markVisualCapture(page);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
+  await waitForRenderReady(page);
+  await preparePageForCapture(page);
+  await page.waitForTimeout(250);
+  await context.close();
+}
+
 async function main() {
   const { baseUrl, routePath } = parseArgs(process.argv.slice(2));
   const targetUrl = new URL(routePath, baseUrl).toString();
@@ -219,6 +240,8 @@ async function main() {
     const savedPaths = [];
 
     for (const viewport of VIEWPORTS) {
+      await warmViewport(browser, targetUrl, viewport);
+
       for (const state of STATES) {
         const savedPath = await captureState(browser, targetUrl, viewport, state);
         savedPaths.push(path.relative(REPO_ROOT, savedPath));

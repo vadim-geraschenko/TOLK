@@ -189,6 +189,11 @@ async function preparePageForBaselineCapture(page) {
       }
     `,
   });
+
+  await page.evaluate(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  });
+  await page.waitForTimeout(120);
 }
 
 async function forcePseudoState(page, selector, pseudoClasses) {
@@ -247,6 +252,23 @@ async function captureState(browser, baseUrl, viewport, state) {
   return targetPath;
 }
 
+async function warmViewport(browser, baseUrl, viewport) {
+  const context = await browser.newContext({
+    colorScheme: "dark",
+    reducedMotion: "no-preference",
+    ...viewport.contextOptions,
+  });
+  const page = await context.newPage();
+
+  await page.goto(`${baseUrl}${HOME_SOURCE_PATH}`, {
+    waitUntil: "domcontentloaded",
+  });
+  await waitForRenderReady(page);
+  await preparePageForBaselineCapture(page);
+  await page.waitForTimeout(250);
+  await context.close();
+}
+
 async function main() {
   await fs.mkdir(BASELINES_DIR, { recursive: true });
 
@@ -258,6 +280,8 @@ async function main() {
     const savedPaths = [];
 
     for (const viewport of VIEWPORTS) {
+      await warmViewport(browser, baseUrl, viewport);
+
       for (const state of STATES) {
         const savedPath = await captureState(browser, baseUrl, viewport, state);
         savedPaths.push(path.relative(REPO_ROOT, savedPath));
