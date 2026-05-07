@@ -17,6 +17,10 @@ export type AboutMobileStackCard =
       kind: "voice";
       id: string;
       voice: AboutVoice;
+    }
+  | {
+      kind: "voice-intro";
+      id: string;
     };
 
 export type AboutMobileStackGroup = {
@@ -46,7 +50,7 @@ export function buildAboutStoryMobileStackGroups(
       });
     });
 
-    if (step.hasMobileDivider) {
+    if (step.kind === "pair" && step.hasMobileDivider) {
       groups.push({
         id: `story-group-${groups.length}`,
         cards: currentCards,
@@ -70,10 +74,13 @@ export function buildAboutVoicesMobileStackGroup(
 ): AboutMobileStackGroup {
   return {
     id: "voices",
-    cards: voices.map((voice) => ({
-      kind: "voice",
-      id: `voice-${voice.name}`,
-      voice,
-    })),
+    cards: [
+      { kind: "voice-intro", id: "voice-intro" },
+      ...voices.map((voice) => ({
+        kind: "voice" as const,
+        id: `voice-${voice.name}`,
+        voice,
+      })),
+    ],
   };
 }

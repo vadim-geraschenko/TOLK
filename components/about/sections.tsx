@@ -1,4 +1,4 @@
-import { Fragment, type CSSProperties } from "react";
+import { type CSSProperties } from "react";
 import { bindStyles } from "../../lib/bind-styles";
 import { withBasePath } from "../../lib/base-path";
 import {
@@ -13,6 +13,7 @@ import { CardKicker } from "../site/CardKicker";
 import {
   buildAboutStoryMobileStackGroups,
   buildAboutVoicesMobileStackGroup,
+  type AboutMobileStackGroup,
   type AboutMobileStackCard,
 } from "./mobileStackModel";
 import styles from "./about.module.css";
@@ -103,6 +104,10 @@ function StoryCard({ card }: { card: AboutStoryCard }) {
 }
 
 function MobileStackCard({ item }: { item: AboutMobileStackCard }) {
+  if (item.kind === "voice-intro") {
+    return <VoiceIntroCard />;
+  }
+
   if (item.kind === "voice") {
     return <VoiceCard {...item.voice} />;
   }
@@ -112,8 +117,10 @@ function MobileStackCard({ item }: { item: AboutMobileStackCard }) {
 
 function MobileStackScene({
   group,
+  hasDivider = false,
 }: {
-  group: ReturnType<typeof buildAboutStoryMobileStackGroups>[number];
+  group: AboutMobileStackGroup;
+  hasDivider?: boolean;
 }) {
   return (
     <div
@@ -122,6 +129,9 @@ function MobileStackScene({
       style={mobileStackSceneStyle(group.cards.length)}
     >
       <div className={cx("mobile-stack-stage")}>
+        {hasDivider ? (
+          <div className={cx("mobile-stack-divider")} aria-hidden="true" />
+        ) : null}
         {group.cards.map((item, index) => (
           <div
             className={cx("mobile-stack-item")}
@@ -202,12 +212,11 @@ export function AboutStorySection() {
 
           <div className={cx("mobile-story-flow")}>
             {mobileGroups.map((group, index) => (
-              <Fragment key={group.id}>
-                <MobileStackScene group={group} />
-                {index < mobileGroups.length - 1 ? (
-                  <div className={cx("mobile-divider")} aria-hidden="true" />
-                ) : null}
-              </Fragment>
+              <MobileStackScene
+                group={group}
+                hasDivider
+                key={group.id}
+              />
             ))}
           </div>
         </div>
@@ -279,8 +288,7 @@ export function AboutVoicesSection() {
         </div>
 
         <div className={cx("mobile-voices-flow")}>
-          <VoiceIntroCard />
-          <MobileStackScene group={mobileVoicesGroup} />
+          <MobileStackScene group={mobileVoicesGroup} hasDivider />
           <div className={cx("mobile-divider")} aria-hidden="true" />
         </div>
       </div>

@@ -63,6 +63,7 @@ type MobileStackSceneState = {
   items: HTMLElement[];
   top: number;
   height: number;
+  stageHeight: number;
   travel: number;
   appliedProgress: number;
 };
@@ -381,6 +382,7 @@ export function AboutMotion() {
         ),
         top: 0,
         height: 1,
+        stageHeight: 1,
         travel: 1,
         appliedProgress: Number.NaN,
       }));
@@ -397,20 +399,24 @@ export function AboutMotion() {
         state.items.forEach((item, index) => {
           const card = item.firstElementChild as HTMLElement | null;
           const cardHeight = card?.getBoundingClientRect().height ?? 0;
+          item.dataset.stackHeight = cardHeight.toFixed(3);
           item.dataset.stackStartY = cumulativeY.toFixed(3);
           item.dataset.stackEndY = (index * ABOUT_MOBILE_STACK_CARD_PEEK).toFixed(3);
           cumulativeY += cardHeight + ABOUT_MOBILE_STACK_CARD_GAP;
         });
 
-        const stageHeight = Math.max(
+        state.stageHeight = Math.max(
           window.innerHeight -
             ABOUT_MOBILE_STACK_SAFE_TOP -
             ABOUT_MOBILE_STACK_BOTTOM_GAP,
           360,
         );
-        state.height = Math.max(stageHeight + cumulativeY + 80, stageHeight);
+        state.height = Math.max(
+          state.stageHeight + cumulativeY + 80,
+          state.stageHeight,
+        );
         state.scene.style.setProperty("--mobile-stack-scene-height", `${state.height}px`);
-        state.travel = Math.max(state.height - window.innerHeight, 1);
+        state.travel = Math.max(state.height - state.stageHeight, 1);
       });
     };
 
@@ -420,7 +426,9 @@ export function AboutMotion() {
 
       const scrollTop = window.scrollY || window.pageYOffset;
       mobileStackScenes.forEach((state) => {
-        const progress = clamp((scrollTop - state.top) / state.travel, 0, 1);
+        const stickyStart = state.top - ABOUT_MOBILE_STACK_SAFE_TOP;
+        const progress = clamp((scrollTop - stickyStart) / state.travel, 0, 1);
+        const segmentCount = Math.max(state.items.length - 1, 1);
         if (
           Number.isNaN(state.appliedProgress) ||
           Math.abs(progress - state.appliedProgress) >= ABOUT_MOTION_RENDER_EPSILON
@@ -431,11 +439,29 @@ export function AboutMotion() {
           );
           state.appliedProgress = progress;
         }
-        state.items.forEach((item) => {
+        const itemY = state.items.map((item, index) => {
           const startY = Number.parseFloat(item.dataset.stackStartY ?? "0");
           const endY = Number.parseFloat(item.dataset.stackEndY ?? "0");
-          const y = startY + (endY - startY) * progress;
+          const itemProgress =
+            index === 0 ? 1 : clamp(progress * segmentCount - (index - 1), 0, 1);
+          return startY + (endY - startY) * itemProgress;
+        });
+
+        state.items.forEach((item, index) => {
+          const y = itemY[index] ?? 0;
+          const nextY = itemY[index + 1];
+          const cardHeight = Number.parseFloat(item.dataset.stackHeight ?? "0");
+
           item.style.transform = `translate3d(0, ${y.toFixed(3)}px, 0)`;
+          if (nextY !== undefined && cardHeight > 0 && nextY - y < cardHeight) {
+            const visibleHeight = Math.max(
+              nextY - y,
+              ABOUT_MOBILE_STACK_CARD_PEEK,
+            );
+            item.style.clipPath = `inset(0 0 ${Math.max(cardHeight - visibleHeight, 0).toFixed(3)}px 0)`;
+          } else {
+            item.style.clipPath = "";
+          }
         });
       });
     };
