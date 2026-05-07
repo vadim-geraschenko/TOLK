@@ -41,6 +41,13 @@ Current capture:
 - `npm run current:home`
 - `npm run current:about`
 
+Before pushing visual, layout, header, navigation, shared token, or snapshot
+changes, run the full local parity check:
+- `npm run compare:visual`
+
+Do not rely on a page-specific compare when a shared component or stored
+baseline/current snapshot may affect both pages.
+
 Current capture scripts are intended for the migrated implementation and default to:
 - `http://127.0.0.1:3000/` for `home`
 - `http://127.0.0.1:3000/about` for `about`
