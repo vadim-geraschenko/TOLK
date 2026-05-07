@@ -1377,6 +1377,10 @@
       gap: 40px;
     }
 
+    .mobile-voices-flow > .mobile-divider {
+      margin-top: 0;
+    }
+
     .mobile-stack-stage {
       display: block;
     }

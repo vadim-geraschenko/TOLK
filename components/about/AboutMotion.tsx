@@ -6,8 +6,8 @@ import {
   ABOUT_BOOT_EAGER_RADIUS,
   ABOUT_BOOT_MAX_WAIT_MS,
   ABOUT_LERP_FACTOR,
-  ABOUT_MOBILE_STACK_BOTTOM_GAP,
   ABOUT_MOBILE_STACK_CARD_GAP,
+  ABOUT_MOBILE_STACK_EXIT_GAP,
   ABOUT_MOBILE_STACK_CARD_PEEK,
   ABOUT_MOBILE_STACK_QUERY,
   ABOUT_MOBILE_STACK_SAFE_TOP,
@@ -420,6 +420,7 @@ export function AboutMotion() {
         const rect = state.scene.getBoundingClientRect();
         state.top = rect.top + scrollTop;
         let cumulativeY = 0;
+        let finalStackHeight = 0;
 
         state.items.forEach((item, index) => {
           const card = item.firstElementChild as HTMLElement | null;
@@ -427,14 +428,17 @@ export function AboutMotion() {
           item.dataset.stackHeight = cardHeight.toFixed(3);
           item.dataset.stackStartY = cumulativeY.toFixed(3);
           item.dataset.stackEndY = (index * ABOUT_MOBILE_STACK_CARD_PEEK).toFixed(3);
+          finalStackHeight = index * ABOUT_MOBILE_STACK_CARD_PEEK + cardHeight;
           cumulativeY += cardHeight + ABOUT_MOBILE_STACK_CARD_GAP;
         });
 
         state.stageHeight = Math.max(
-          window.innerHeight -
-            mobileStackSafeTop -
-            ABOUT_MOBILE_STACK_BOTTOM_GAP,
+          finalStackHeight + ABOUT_MOBILE_STACK_EXIT_GAP,
           360,
+        );
+        state.scene.style.setProperty(
+          "--mobile-stack-stage-height",
+          `${state.stageHeight}px`,
         );
         state.height = Math.max(
           state.stageHeight + cumulativeY + 80,
