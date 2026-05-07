@@ -13,6 +13,8 @@ export const ABOUT_SELECTOR_CLOUD_RIGHT = '[data-about-cloud="right"]';
 export const ABOUT_SELECTOR_PAIR = "[data-about-pair]";
 export const ABOUT_SELECTOR_STORY_STEP = "[data-story-step]";
 export const ABOUT_SELECTOR_REVEAL_TARGET = "[data-about-reveal-target]";
+export const ABOUT_SELECTOR_MOBILE_STACK_SCENE = "[data-mobile-stack-scene]";
+export const ABOUT_SELECTOR_MOBILE_STACK_ITEM = "[data-mobile-stack-item]";
 
 export const ABOUT_TOTAL_FRAMES = 60;
 export const ABOUT_FRAME_START_INDEX = 1;
@@ -48,6 +50,11 @@ export const ABOUT_LERP_FACTOR = 0.12;
 
 export const ABOUT_STATIC_SCENE_QUERY = "(max-width: 1100px)";
 export const ABOUT_REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+export const ABOUT_MOBILE_STACK_QUERY = "(max-width: 760px)";
+export const ABOUT_MOBILE_STACK_SAFE_TOP = 202;
+export const ABOUT_MOBILE_STACK_BOTTOM_GAP = 32;
+export const ABOUT_MOBILE_STACK_CARD_GAP = 40;
+export const ABOUT_MOBILE_STACK_CARD_PEEK = 12;
 
 export const ABOUT_PRELOAD_BUFFER = 6;
 export const ABOUT_PRELOAD_EAGER_RADIUS = 10;

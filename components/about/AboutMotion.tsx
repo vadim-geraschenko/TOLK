@@ -6,10 +6,17 @@ import {
   ABOUT_BOOT_EAGER_RADIUS,
   ABOUT_BOOT_MAX_WAIT_MS,
   ABOUT_LERP_FACTOR,
+  ABOUT_MOBILE_STACK_BOTTOM_GAP,
+  ABOUT_MOBILE_STACK_CARD_GAP,
+  ABOUT_MOBILE_STACK_CARD_PEEK,
+  ABOUT_MOBILE_STACK_QUERY,
+  ABOUT_MOBILE_STACK_SAFE_TOP,
   ABOUT_MOTION_RENDER_EPSILON,
   ABOUT_PRELOAD_BUFFER,
   ABOUT_PRELOAD_EAGER_RADIUS,
   ABOUT_REDUCED_MOTION_QUERY,
+  ABOUT_SELECTOR_MOBILE_STACK_ITEM,
+  ABOUT_SELECTOR_MOBILE_STACK_SCENE,
   ABOUT_SELECTOR_PAIR,
   ABOUT_STATIC_FRAME_DESKTOP,
   ABOUT_STATIC_FRAME_MOBILE,
@@ -51,6 +58,15 @@ type AboutMotionWindow = Window & {
   __TOLK_VISUAL_CAPTURE__?: boolean;
 };
 
+type MobileStackSceneState = {
+  scene: HTMLElement;
+  items: HTMLElement[];
+  top: number;
+  height: number;
+  travel: number;
+  appliedProgress: number;
+};
+
 const createFrameSources = (variant: "desktop" | "mobile") =>
   Array.from({ length: ABOUT_TOTAL_FRAMES }, (_, index) =>
     getFrameSrcByIndex(index, variant),
@@ -80,6 +96,7 @@ export function AboutMotion() {
 
     const staticSceneQuery = window.matchMedia(ABOUT_STATIC_SCENE_QUERY);
     const reducedMotionQuery = window.matchMedia(ABOUT_REDUCED_MOTION_QUERY);
+    const mobileStackQuery = window.matchMedia(ABOUT_MOBILE_STACK_QUERY);
     const isVisualCapture = Boolean(
       (window as AboutMotionWindow).__TOLK_VISUAL_CAPTURE__,
     );
@@ -104,8 +121,12 @@ export function AboutMotion() {
     let backgroundPreloadDelayId = 0;
     let backgroundPreloadIdleId = 0;
     let bootOverlayHideId = 0;
+    let mobileStackFrameId = 0;
+    let mobileStackScenes: MobileStackSceneState[] = [];
 
     const useStaticScene = () => staticSceneQuery.matches || reducedMotionQuery.matches;
+    const useMobileStackScenes = () =>
+      mobileStackQuery.matches && !reducedMotionQuery.matches;
     const getCurrentFrameVariant = (): "desktop" | "mobile" => {
       if (reducedMotionQuery.matches) return "desktop";
       return staticSceneQuery.matches ? "mobile" : "desktop";
@@ -350,6 +371,80 @@ export function AboutMotion() {
       });
     };
 
+    const readMobileStackScenes = () => {
+      mobileStackScenes = Array.from(
+        document.querySelectorAll<HTMLElement>(ABOUT_SELECTOR_MOBILE_STACK_SCENE),
+      ).map((scene) => ({
+        scene,
+        items: Array.from(
+          scene.querySelectorAll<HTMLElement>(ABOUT_SELECTOR_MOBILE_STACK_ITEM),
+        ),
+        top: 0,
+        height: 1,
+        travel: 1,
+        appliedProgress: Number.NaN,
+      }));
+    };
+
+    const refreshMobileStackMetrics = () => {
+      if (!useMobileStackScenes()) return;
+      const scrollTop = window.scrollY || window.pageYOffset;
+      mobileStackScenes.forEach((state) => {
+        const rect = state.scene.getBoundingClientRect();
+        state.top = rect.top + scrollTop;
+        let cumulativeY = 0;
+
+        state.items.forEach((item, index) => {
+          const card = item.firstElementChild as HTMLElement | null;
+          const cardHeight = card?.getBoundingClientRect().height ?? 0;
+          item.dataset.stackStartY = cumulativeY.toFixed(3);
+          item.dataset.stackEndY = (index * ABOUT_MOBILE_STACK_CARD_PEEK).toFixed(3);
+          cumulativeY += cardHeight + ABOUT_MOBILE_STACK_CARD_GAP;
+        });
+
+        const stageHeight = Math.max(
+          window.innerHeight -
+            ABOUT_MOBILE_STACK_SAFE_TOP -
+            ABOUT_MOBILE_STACK_BOTTOM_GAP,
+          360,
+        );
+        state.height = Math.max(stageHeight + cumulativeY + 80, stageHeight);
+        state.scene.style.setProperty("--mobile-stack-scene-height", `${state.height}px`);
+        state.travel = Math.max(state.height - window.innerHeight, 1);
+      });
+    };
+
+    const updateMobileStackScenes = () => {
+      mobileStackFrameId = 0;
+      if (!useMobileStackScenes()) return;
+
+      const scrollTop = window.scrollY || window.pageYOffset;
+      mobileStackScenes.forEach((state) => {
+        const progress = clamp((scrollTop - state.top) / state.travel, 0, 1);
+        if (
+          Number.isNaN(state.appliedProgress) ||
+          Math.abs(progress - state.appliedProgress) >= ABOUT_MOTION_RENDER_EPSILON
+        ) {
+          state.scene.style.setProperty(
+            "--mobile-stack-scene-progress",
+            progress.toFixed(4),
+          );
+          state.appliedProgress = progress;
+        }
+        state.items.forEach((item) => {
+          const startY = Number.parseFloat(item.dataset.stackStartY ?? "0");
+          const endY = Number.parseFloat(item.dataset.stackEndY ?? "0");
+          const y = startY + (endY - startY) * progress;
+          item.style.transform = `translate3d(0, ${y.toFixed(3)}px, 0)`;
+        });
+      });
+    };
+
+    const scheduleMobileStackUpdate = () => {
+      if (!useMobileStackScenes() || mobileStackFrameId) return;
+      mobileStackFrameId = requestAnimationFrame(updateMobileStackScenes);
+    };
+
     const updateTargets = () => {
       const scrollTop = window.scrollY || window.pageYOffset;
       const maxScroll = Math.max(
@@ -467,6 +562,9 @@ export function AboutMotion() {
       viewportWidth = window.innerWidth;
       viewportHeight = window.innerHeight;
       refreshPairMetrics();
+      readMobileStackScenes();
+      refreshMobileStackMetrics();
+      updateMobileStackScenes();
       updateTargets();
       ensureRenderLoop();
     };
@@ -565,10 +663,17 @@ export function AboutMotion() {
     const onStaticSceneChange = () => startSequence();
     const onReducedMotionChange = () => startSequence();
     const onPageShow = () => settleInitialCloudPosition();
+    const onMobileStackChange = () => {
+      readMobileStackScenes();
+      refreshMobileStackMetrics();
+      updateMobileStackScenes();
+    };
 
     staticSceneQuery.addEventListener("change", onStaticSceneChange);
     reducedMotionQuery.addEventListener("change", onReducedMotionChange);
+    mobileStackQuery.addEventListener("change", onMobileStackChange);
     window.addEventListener("scroll", scheduleTargetsUpdate, { passive: true });
+    window.addEventListener("scroll", scheduleMobileStackUpdate, { passive: true });
     window.addEventListener("resize", handleViewportUpdate, { passive: true });
     window.addEventListener("pageshow", onPageShow);
 
@@ -582,10 +687,13 @@ export function AboutMotion() {
       if (backgroundPreloadDelayId) window.clearTimeout(backgroundPreloadDelayId);
       if (backgroundPreloadIdleId) window.cancelIdleCallback(backgroundPreloadIdleId);
       if (bootOverlayHideId) window.clearTimeout(bootOverlayHideId);
+      if (mobileStackFrameId) cancelAnimationFrame(mobileStackFrameId);
 
       staticSceneQuery.removeEventListener("change", onStaticSceneChange);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
+      mobileStackQuery.removeEventListener("change", onMobileStackChange);
       window.removeEventListener("scroll", scheduleTargetsUpdate);
+      window.removeEventListener("scroll", scheduleMobileStackUpdate);
       window.removeEventListener("resize", handleViewportUpdate);
       window.removeEventListener("pageshow", onPageShow);
     };

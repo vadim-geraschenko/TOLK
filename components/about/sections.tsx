@@ -19,6 +19,19 @@ import styles from "./about.module.css";
 
 const cx = bindStyles(styles);
 
+function mobileStackSceneStyle(cardCount: number): CSSProperties {
+  return {
+    "--mobile-stack-card-count": cardCount,
+  } as CSSProperties;
+}
+
+function mobileStackCardStyle(index: number): CSSProperties {
+  return {
+    "--mobile-stack-card-index": index,
+    "--mobile-stack-card-z": index + 1,
+  } as CSSProperties;
+}
+
 export function AboutHeroSection() {
   return (
     <section className={cx("hero")}>
@@ -103,10 +116,21 @@ function MobileStackScene({
   group: ReturnType<typeof buildAboutStoryMobileStackGroups>[number];
 }) {
   return (
-    <div className={cx("mobile-stack-scene")} data-mobile-stack-scene={group.id}>
+    <div
+      className={cx("mobile-stack-scene")}
+      data-mobile-stack-scene={group.id}
+      style={mobileStackSceneStyle(group.cards.length)}
+    >
       <div className={cx("mobile-stack-stage")}>
-        {group.cards.map((item) => (
-          <MobileStackCard key={item.id} item={item} />
+        {group.cards.map((item, index) => (
+          <div
+            className={cx("mobile-stack-item")}
+            key={item.id}
+            data-mobile-stack-item
+            style={mobileStackCardStyle(index)}
+          >
+            <MobileStackCard item={item} />
+          </div>
         ))}
       </div>
     </div>
