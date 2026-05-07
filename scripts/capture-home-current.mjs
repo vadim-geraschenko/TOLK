@@ -129,9 +129,41 @@ async function preparePageForCapture(page) {
     `,
   });
 
+  await loadFullPageImages(page);
+}
+
+async function loadFullPageImages(page) {
+  await page.evaluate(() => {
+    document.querySelectorAll("img[loading='lazy']").forEach((image) => {
+      image.setAttribute("loading", "eager");
+    });
+  });
+
+  const viewportHeight = page.viewportSize()?.height ?? 800;
+  const scrollHeight = await page.evaluate(() =>
+    Math.max(document.documentElement.scrollHeight, document.body.scrollHeight),
+  );
+  const step = Math.max(Math.floor(viewportHeight * 0.75), 240);
+
+  for (let top = 0; top < scrollHeight; top += step) {
+    await page.evaluate((nextTop) => {
+      window.scrollTo({ top: nextTop, left: 0, behavior: "instant" });
+    }, top);
+    await page.waitForTimeout(50);
+  }
+
   await page.evaluate(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   });
+
+  try {
+    await page.waitForFunction(() =>
+      Array.from(document.images).every((image) => image.complete),
+    );
+  } catch {
+    // Keep the visual check useful even if a remote image fails to settle.
+  }
+
   await page.waitForTimeout(120);
 }
 
@@ -139,22 +171,6 @@ async function markVisualCapture(page) {
   await page.addInitScript(() => {
     window.__TOLK_VISUAL_CAPTURE__ = true;
   });
-}
-
-async function scrollToSelector(page, selector, offset = 96) {
-  await page.evaluate(
-    ({ targetSelector, targetOffset }) => {
-      const node = document.querySelector(targetSelector);
-      if (!node) {
-        throw new Error(`Selector not found: ${targetSelector}`);
-      }
-
-      const rect = node.getBoundingClientRect();
-      const top = Math.max(window.scrollY + rect.top - targetOffset, 0);
-      window.scrollTo({ top, behavior: "instant" });
-    },
-    { targetSelector: selector, targetOffset: offset },
-  );
 }
 
 async function forcePseudoState(page, selector, pseudoClasses) {
@@ -191,8 +207,10 @@ async function captureState(browser, targetUrl, viewport, state) {
   await preparePageForCapture(page);
 
   if (state.selector && state.pseudo?.length) {
-    await scrollToSelector(page, state.selector);
     await forcePseudoState(page, state.selector, state.pseudo);
+    await page.evaluate(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    });
     await page.waitForTimeout(150);
   }
 
