@@ -9,6 +9,7 @@ import {
   ABOUT_MOBILE_STACK_CARD_GAP,
   ABOUT_MOBILE_STACK_EXIT_GAP,
   ABOUT_MOBILE_STACK_CARD_PEEK,
+  ABOUT_MOBILE_STACK_LERP_FACTOR,
   ABOUT_MOBILE_STACK_QUERY,
   ABOUT_MOBILE_STACK_SAFE_TOP,
   ABOUT_MOTION_RENDER_EPSILON,
@@ -66,6 +67,8 @@ type MobileStackSceneState = {
   height: number;
   stageHeight: number;
   travel: number;
+  targetProgress: number;
+  currentProgress: number;
   appliedProgress: number;
 };
 
@@ -76,6 +79,9 @@ const createFrameSources = (variant: "desktop" | "mobile") =>
   Array.from({ length: ABOUT_TOTAL_FRAMES }, (_, index) =>
     getFrameSrcByIndex(index, variant),
   );
+
+const easeMobileStackSegment = (progress: number) =>
+  progress * progress * progress * (progress * (progress * 6 - 15) + 10);
 
 export function AboutMotion() {
   useLayoutEffect(() => {
@@ -408,6 +414,8 @@ export function AboutMotion() {
         height: 1,
         stageHeight: 1,
         travel: 1,
+        targetProgress: 0,
+        currentProgress: Number.NaN,
         appliedProgress: Number.NaN,
       }));
     };
@@ -459,9 +467,28 @@ export function AboutMotion() {
       }
 
       const scrollTop = window.scrollY || window.pageYOffset;
+      let needsAnotherFrame = false;
+
       mobileStackScenes.forEach((state) => {
         const stickyStart = state.top - mobileStackSafeTop;
-        const progress = clamp((scrollTop - stickyStart) / state.travel, 0, 1);
+        state.targetProgress = clamp((scrollTop - stickyStart) / state.travel, 0, 1);
+        if (Number.isNaN(state.currentProgress)) {
+          state.currentProgress = state.targetProgress;
+        } else {
+          state.currentProgress +=
+            (state.targetProgress - state.currentProgress) *
+            ABOUT_MOBILE_STACK_LERP_FACTOR;
+          if (
+            Math.abs(state.targetProgress - state.currentProgress) <
+            ABOUT_MOTION_RENDER_EPSILON
+          ) {
+            state.currentProgress = state.targetProgress;
+          } else {
+            needsAnotherFrame = true;
+          }
+        }
+
+        const progress = state.currentProgress;
         const segmentCount = Math.max(state.items.length - 1, 1);
         if (
           Number.isNaN(state.appliedProgress) ||
@@ -478,7 +505,27 @@ export function AboutMotion() {
           const endY = Number.parseFloat(item.dataset.stackEndY ?? "0");
           const itemProgress =
             index === 0 ? 1 : clamp(progress * segmentCount - (index - 1), 0, 1);
-          return startY + (endY - startY) * itemProgress;
+          let previousStackOffset = 0;
+          state.items.slice(1, index).forEach((previousItem, previousSliceIndex) => {
+            const previousIndex = previousSliceIndex + 1;
+            const previousStartY = Number.parseFloat(
+              previousItem.dataset.stackStartY ?? "0",
+            );
+            const previousEndY = Number.parseFloat(
+              previousItem.dataset.stackEndY ?? "0",
+            );
+            const previousProgress = easeMobileStackSegment(
+              clamp(progress * segmentCount - (previousIndex - 1), 0, 1),
+            );
+            const adjustedPreviousStartY = previousStartY - previousStackOffset;
+            previousStackOffset +=
+              (adjustedPreviousStartY - previousEndY) * previousProgress;
+          });
+          const adjustedStartY = startY - previousStackOffset;
+          return (
+            adjustedStartY +
+            (endY - adjustedStartY) * easeMobileStackSegment(itemProgress)
+          );
         });
 
         state.items.forEach((item, index) => {
@@ -498,6 +545,10 @@ export function AboutMotion() {
           }
         });
       });
+
+      if (needsAnotherFrame) {
+        mobileStackFrameId = requestAnimationFrame(updateMobileStackScenes);
+      }
     };
 
     const scheduleMobileStackUpdate = () => {
