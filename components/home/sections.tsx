@@ -290,7 +290,7 @@ function MerchCard() {
             в дискуссиях.
           </p>
           <div>
-            <Button cx={cx} href="#" label="Приобрести" />
+            <Button cx={cx} href="/merch" label="Приобрести" />
           </div>
         </div>
       </div>

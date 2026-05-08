@@ -20,7 +20,7 @@ const aboutNavItems = [
   { label: "О нас", href: "#", isActive: true },
   { label: "Выпуски", href: "/episodes" },
   { label: "Очные чтения", href: "#" },
-  { label: "Мерч", href: "#" },
+  { label: "Мерч", href: "/merch" },
   { label: "Telegram", href: "#", isSocial: true },
   { label: "YouTube", href: "#", isSocial: true },
   { label: "Boosty", href: "#", isSocial: true },
