@@ -84,7 +84,7 @@ export function AboutPage() {
     <div className={cx("root", "page-shell")} data-about-root>
       <AboutBackgroundMedia />
       <AboutBootOverlay />
-      <SiteHeader navItems={aboutNavItems} />
+      <SiteHeader navItems={aboutNavItems} mobileAutoHide={false} />
       <main>
         <AboutHeroSection />
         <AboutStoryLeadSection />

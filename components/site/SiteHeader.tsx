@@ -14,13 +14,14 @@ type NavItem = {
 
 type SiteHeaderProps = {
   navItems: NavItem[];
+  mobileAutoHide?: boolean;
 };
 
 type VisualCaptureWindow = Window & {
   __TOLK_VISUAL_CAPTURE__?: boolean;
 };
 
-export function SiteHeader({ navItems }: SiteHeaderProps) {
+export function SiteHeader({ navItems, mobileAutoHide = true }: SiteHeaderProps) {
   const [isHiddenOnMobile, setIsHiddenOnMobile] = useState(false);
   const headerRef = useRef<HTMLElement | null>(null);
   const prevYRef = useRef(0);
@@ -38,6 +39,11 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
   };
 
   useEffect(() => {
+    if (!mobileAutoHide) {
+      setIsHiddenOnMobile(false);
+      return;
+    }
+
     if ((window as VisualCaptureWindow).__TOLK_VISUAL_CAPTURE__) {
       setIsHiddenOnMobile(false);
       return;
@@ -83,7 +89,7 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
       mobileMedia.removeEventListener("change", handleScroll);
       reducedMotionMedia.removeEventListener("change", handleScroll);
     };
-  }, [setIsHiddenOnMobile]);
+  }, [mobileAutoHide, setIsHiddenOnMobile]);
 
   useLayoutEffect(() => {
     const header = headerRef.current;

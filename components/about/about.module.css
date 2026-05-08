@@ -1263,6 +1263,7 @@
       --mobile-stack-card-step: 84px;
       --mobile-stack-card-peek: 12px;
       --mobile-stack-shown-safe-top: 202px;
+      --mobile-stack-viewport-height: 100svh;
       --mobile-stack-safe-top: max(
         72px,
         calc(
@@ -1272,12 +1273,20 @@
         )
       );
       --mobile-stack-scene-progress: 0;
-      --mobile-stack-stage-height: calc(100svh - var(--mobile-stack-safe-top) - 32px);
+      --mobile-stack-stage-height: calc(
+        var(--mobile-stack-viewport-height) - var(--mobile-stack-safe-top) - 32px
+      );
       --mobile-stack-scene-height-fallback: calc(
         var(--mobile-stack-stage-height) +
         ((var(--mobile-stack-card-count, 1) - 1) * var(--mobile-stack-card-step))
       );
       --mobile-stack-scene-height: var(--mobile-stack-scene-height-fallback);
+    }
+
+    @supports (height: 100dvh) {
+      .root {
+        --mobile-stack-viewport-height: 100dvh;
+      }
     }
 
     .site-header {
