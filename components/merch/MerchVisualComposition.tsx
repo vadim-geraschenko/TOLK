@@ -31,24 +31,53 @@ export function MerchVisualComposition({
     let pointerX = window.innerWidth / 2;
     let pointerY = window.innerHeight / 2;
 
-    const applyTilt = () => {
+    const applyPush = () => {
       frame = 0;
-      const x = pointerX / window.innerWidth - 0.5;
-      const y = pointerY / window.innerHeight - 0.5;
+      // # хай: радиус влияния курсора; больше значение — больше карточек реагируют одновременно.
+      const radius = Math.min(window.innerWidth * 0.48, 580);
 
-      root.style.setProperty("--tilt-x", `${(-y * 4.4).toFixed(2)}deg`);
-      root.style.setProperty("--tilt-y", `${(x * 5.6).toFixed(2)}deg`);
-      root.style.setProperty("--tilt-z", `${(x * 0.8).toFixed(2)}deg`);
+      root
+        .querySelectorAll<HTMLElement>("[data-push-depth]")
+        .forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          const deltaX = centerX - pointerX;
+          const deltaY = centerY - pointerY;
+          const distance = Math.hypot(deltaX, deltaY);
+          const maxOffset = Number(card.dataset.pushDepth || 1);
+
+          if (distance < 1 || distance > radius) {
+            card.style.setProperty("--push-x", "0px");
+            card.style.setProperty("--push-y", "0px");
+            return;
+          }
+
+          // # хай: степень затухания; 1 мягче и дальнобойнее, 3 резче и локальнее.
+          const falloff = (1 - distance / radius) ** 2;
+          const offset = maxOffset * falloff;
+
+          card.style.setProperty(
+            "--push-x",
+            `${((deltaX / distance) * offset).toFixed(2)}px`,
+          );
+          card.style.setProperty(
+            "--push-y",
+            `${((deltaY / distance) * offset).toFixed(2)}px`,
+          );
+        });
     };
 
     const handlePointerMove = (event: PointerEvent) => {
       pointerX = event.clientX;
       pointerY = event.clientY;
 
-      if (!frame) frame = window.requestAnimationFrame(applyTilt);
+      if (!frame) frame = window.requestAnimationFrame(applyPush);
     };
 
-    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    window.addEventListener("pointermove", handlePointerMove, {
+      passive: true,
+    });
 
     return () => {
       window.removeEventListener("pointermove", handlePointerMove);
@@ -59,7 +88,11 @@ export function MerchVisualComposition({
   return (
     <div className={cx("visual-composition")} ref={compositionRef}>
       {heroImage ? (
-        <figure className={cx("hero-photo", "tilt-photo")}>
+        <figure
+          className={cx("hero-photo", "motion-photo")}
+          data-push-depth="7"
+        >
+          {/* # хай: data-push-depth выше задает максимальный сдвиг главного фото в пикселях. */}
           <img
             src={withBasePath(heroImage.src)}
             alt={heroImage.alt}
@@ -72,7 +105,11 @@ export function MerchVisualComposition({
       ) : null}
 
       {detailImage ? (
-        <figure className={cx("detail-photo", "tilt-photo")}>
+        <figure
+          className={cx("detail-photo", "motion-photo")}
+          data-push-depth="3"
+        >
+          {/* # хай: data-push-depth выше задает максимальный сдвиг фото с вышивкой в пикселях. */}
           <img
             src={withBasePath(detailImage.src)}
             alt={detailImage.alt}
@@ -86,8 +123,14 @@ export function MerchVisualComposition({
       {secondaryImages.map((image, index) => (
         <figure
           key={image.src}
-          className={cx("support-photo", "tilt-photo", `support-photo-${index + 1}`)}
+          className={cx(
+            "support-photo",
+            "motion-photo",
+            `support-photo-${index + 1}`,
+          )}
+          data-push-depth={[4, 3, 5, 3][index] ?? 16}
         >
+          {/* # хай: data-push-depth выше задает максимальный сдвиг; порядок массива соответствует merch_3...merch_6. */}
           <img
             src={withBasePath(image.src)}
             alt={image.alt}

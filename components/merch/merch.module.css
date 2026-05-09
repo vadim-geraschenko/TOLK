@@ -13,10 +13,17 @@
   min-height: 100vh;
   color: var(--text-primary);
   background:
-    radial-gradient(circle at 48% 36%, rgba(190, 197, 204, 0.07), transparent 34%),
+    radial-gradient(
+      circle at 48% 36%,
+      rgba(190, 197, 204, 0.07),
+      transparent 34%
+    ),
     linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
     linear-gradient(180deg, #07090b 0%, #101419 45%, #050608 100%);
-  background-size: auto, 96px 96px, auto;
+  background-size:
+    auto,
+    96px 96px,
+    auto;
   font-family: var(--font-body);
   font-weight: 500;
   letter-spacing: 0;
@@ -29,9 +36,23 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.08), transparent 10%),
-    radial-gradient(circle at 86% 78%, rgba(255, 255, 255, 0.065), transparent 14%),
-    linear-gradient(90deg, rgba(7, 9, 11, 0.86), transparent 22%, transparent 78%, rgba(7, 9, 11, 0.86));
+    radial-gradient(
+      circle at 10% 18%,
+      rgba(255, 255, 255, 0.08),
+      transparent 10%
+    ),
+    radial-gradient(
+      circle at 86% 78%,
+      rgba(255, 255, 255, 0.065),
+      transparent 14%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(7, 9, 11, 0.86),
+      transparent 22%,
+      transparent 78%,
+      rgba(7, 9, 11, 0.86)
+    );
   opacity: 0.8;
 }
 
@@ -52,7 +73,10 @@
 }
 
 .container {
-  width: min(calc(100% - var(--page-gutter-desktop)), var(--layout-content-max));
+  width: min(
+    calc(100% - var(--page-gutter-desktop)),
+    var(--layout-content-max)
+  );
   margin: 0 auto;
 }
 
@@ -98,28 +122,23 @@
 }
 
 .visual-composition {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
-  --tilt-z: 0deg;
   position: relative;
   min-height: min(620px, calc(100vh - 154px));
-  perspective: 1100px;
 }
 
 .visual-composition figure {
+  --push-x: 0px;
+  --push-y: 0px;
   margin: 0;
   border: 1px solid var(--border-panel);
   background: #12161b;
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
   overflow: hidden;
-  transform:
-    rotateX(var(--tilt-x))
-    rotateY(var(--tilt-y))
-    rotateZ(var(--tilt-z));
-  transform-style: preserve-3d;
+  transform: translate3d(var(--push-x), var(--push-y), 0);
   transition:
-    box-shadow 260ms ease,
-    transform 260ms ease;
+    /* # хай: скорость реакции карточек на движение курсора; меньше ms — резче, больше — плавнее. */
+    box-shadow 220ms ease,
+    transform 280ms ease-out;
   will-change: transform;
 }
 
@@ -179,14 +198,15 @@
 }
 
 .support-photo-4 {
-  right: 13%;
-  bottom: 3%;
+  right: 8%;
+  bottom: 7%;
   width: 18%;
   height: 25%;
 }
 
 .detail-photo img,
 .support-photo img {
+  /* # хай: стартовая черно-белость второстепенных фото; grayscale(0.7) оставит немного цвета. */
   filter: grayscale(1) contrast(1.08);
 }
 
@@ -198,11 +218,8 @@
 .detail-photo:hover,
 .support-photo:hover {
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.5);
-  transform:
-    rotateX(var(--tilt-x))
-    rotateY(var(--tilt-y))
-    rotateZ(var(--tilt-z))
-    scale(1.05);
+  /* # хай: scale(1.05) — увеличение рамки на hover; можно поставить 1.03 или 1.08. */
+  transform: translate3d(var(--push-x), var(--push-y), 0) scale(1.05);
 }
 
 .product-panel {
@@ -290,7 +307,11 @@
   overflow: hidden;
   border-radius: 999px;
   border: 1px solid rgba(243, 241, 234, 0.12);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.058), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.058),
+    rgba(255, 255, 255, 0.02)
+  );
   color: var(--text-primary);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -345,23 +366,64 @@
   height: 100%;
 }
 
-.star-sm { width: 5px; height: 5px; }
-.star-lg { width: 8px; height: 8px; }
-.star-1 { top: 10px; left: 18px; }
-.star-2 { top: 6px; left: 52px; }
-.star-3 { top: 11px; right: 20px; }
-.star-4 { bottom: 9px; left: 22px; }
-.star-5 { bottom: 10px; right: 40px; }
-.star-6 { top: 8px; right: 58px; }
-.star-7 { bottom: 8px; left: 58px; }
+.star-sm {
+  width: 5px;
+  height: 5px;
+}
+.star-lg {
+  width: 8px;
+  height: 8px;
+}
+.star-1 {
+  top: 10px;
+  left: 18px;
+}
+.star-2 {
+  top: 6px;
+  left: 52px;
+}
+.star-3 {
+  top: 11px;
+  right: 20px;
+}
+.star-4 {
+  bottom: 9px;
+  left: 22px;
+}
+.star-5 {
+  bottom: 10px;
+  right: 40px;
+}
+.star-6 {
+  top: 8px;
+  right: 58px;
+}
+.star-7 {
+  bottom: 8px;
+  left: 58px;
+}
 
-.button .star-1 { animation: orbit-a 5.2s linear infinite; }
-.button .star-2 { animation: orbit-b 5.8s linear infinite; }
-.button .star-3 { animation: orbit-c 5.4s linear infinite; }
-.button .star-4 { animation: orbit-d 6s linear infinite; }
-.button .star-5 { animation: orbit-e 5.6s linear infinite; }
-.button .star-6 { animation: orbit-f 6.1s linear infinite; }
-.button .star-7 { animation: orbit-g 5.9s linear infinite; }
+.button .star-1 {
+  animation: orbit-a 5.2s linear infinite;
+}
+.button .star-2 {
+  animation: orbit-b 5.8s linear infinite;
+}
+.button .star-3 {
+  animation: orbit-c 5.4s linear infinite;
+}
+.button .star-4 {
+  animation: orbit-d 6s linear infinite;
+}
+.button .star-5 {
+  animation: orbit-e 5.6s linear infinite;
+}
+.button .star-6 {
+  animation: orbit-f 6.1s linear infinite;
+}
+.button .star-7 {
+  animation: orbit-g 5.9s linear infinite;
+}
 
 .button:hover {
   transform: translateY(-2px) scale(1.022);
@@ -382,38 +444,68 @@
 }
 
 @keyframes orbit-a {
-  0% { transform: translate3d(0, 0, 0) rotate(0deg) translateX(8px) rotate(0deg) scale(0.82); }
-  100% { transform: translate3d(0, 0, 0) rotate(360deg) translateX(8px) rotate(-360deg) scale(0.82); }
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) translateX(8px) rotate(0deg)
+      scale(0.82);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(360deg) translateX(8px)
+      rotate(-360deg) scale(0.82);
+  }
 }
 
 @keyframes orbit-b {
-  0% { transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.62); }
-  100% { transform: rotate(360deg) translateX(6px) rotate(-360deg) scale(0.62); }
+  0% {
+    transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.62);
+  }
+  100% {
+    transform: rotate(360deg) translateX(6px) rotate(-360deg) scale(0.62);
+  }
 }
 
 @keyframes orbit-c {
-  0% { transform: rotate(0deg) translateX(8px) rotate(0deg) scale(0.84); }
-  100% { transform: rotate(360deg) translateX(8px) rotate(-360deg) scale(0.84); }
+  0% {
+    transform: rotate(0deg) translateX(8px) rotate(0deg) scale(0.84);
+  }
+  100% {
+    transform: rotate(360deg) translateX(8px) rotate(-360deg) scale(0.84);
+  }
 }
 
 @keyframes orbit-d {
-  0% { transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.58); }
-  100% { transform: rotate(360deg) translateX(6px) rotate(-360deg) scale(0.58); }
+  0% {
+    transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.58);
+  }
+  100% {
+    transform: rotate(360deg) translateX(6px) rotate(-360deg) scale(0.58);
+  }
 }
 
 @keyframes orbit-e {
-  0% { transform: rotate(0deg) translateX(7px) rotate(0deg) scale(0.74); }
-  100% { transform: rotate(360deg) translateX(7px) rotate(-360deg) scale(0.74); }
+  0% {
+    transform: rotate(0deg) translateX(7px) rotate(0deg) scale(0.74);
+  }
+  100% {
+    transform: rotate(360deg) translateX(7px) rotate(-360deg) scale(0.74);
+  }
 }
 
 @keyframes orbit-f {
-  0% { transform: rotate(0deg) translateX(5px) rotate(0deg) scale(0.64); }
-  100% { transform: rotate(360deg) translateX(5px) rotate(-360deg) scale(0.64); }
+  0% {
+    transform: rotate(0deg) translateX(5px) rotate(0deg) scale(0.64);
+  }
+  100% {
+    transform: rotate(360deg) translateX(5px) rotate(-360deg) scale(0.64);
+  }
 }
 
 @keyframes orbit-g {
-  0% { transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.68); }
-  100% { transform: rotate(360deg) translateX(6px) rotate(-360deg) scale(0.68); }
+  0% {
+    transform: rotate(0deg) translateX(6px) rotate(0deg) scale(0.68);
+  }
+  100% {
+    transform: rotate(360deg) translateX(6px) rotate(-360deg) scale(0.68);
+  }
 }
 
 @media (max-width: 1100px) {
@@ -438,7 +530,10 @@
 
 @media (max-width: 760px) {
   .container {
-    width: min(calc(100% - var(--page-gutter-mobile)), var(--layout-content-max));
+    width: min(
+      calc(100% - var(--page-gutter-mobile)),
+      var(--layout-content-max)
+    );
   }
 
   .main {
@@ -454,7 +549,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
     min-height: 0;
-    perspective: none;
   }
 
   .visual-composition figure,
