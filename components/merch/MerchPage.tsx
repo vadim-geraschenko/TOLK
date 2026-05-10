@@ -1,5 +1,6 @@
 import { merchProducts } from "../../content/merch";
 import { bindStyles } from "../../lib/bind-styles";
+import { withBasePath } from "../../lib/base-path";
 import { Button } from "../site/Button";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
@@ -19,6 +20,17 @@ const navItems = [
   { label: "Boosty", href: "#", isSocial: true },
 ];
 
+const patchPath = `
+  M 112 62
+  C 184 46, 310 46, 382 56
+  C 454 66, 490 94, 492 136
+  C 494 188, 438 222, 354 228
+  C 270 236, 178 222, 98 206
+  C 54 198, 38 164, 48 120
+  C 58 90, 76 70, 112 62
+  Z
+`;
+
 export function MerchPage() {
   const featuredProduct = merchProducts[0];
   const heroImage = featuredProduct?.images[0];
@@ -31,7 +43,10 @@ export function MerchPage() {
 
       <main className={cx("main")}>
         {featuredProduct ? (
-          <section className={cx("container", "merch-hero")} aria-labelledby="featured-merch">
+          <section
+            className={cx("container", "merch-hero")}
+            aria-labelledby="featured-merch"
+          >
             <MerchVisualComposition
               heroImage={heroImage}
               detailImage={detailImage}
@@ -47,13 +62,97 @@ export function MerchPage() {
               <div className={cx("product-copy")}>
                 <h2 id="featured-merch">{featuredProduct.title}</h2>
                 <p className={cx("subtitle")}>{featuredProduct.subtitle}</p>
+
+                {detailImage ? (
+                  <figure className={cx("mobile-detail")}>
+                    <svg
+                      className={cx("detail-patch")}
+                      viewBox="0 0 520 260"
+                      aria-hidden="true"
+                    >
+                      <defs>
+                        <clipPath id="patchClip" clipPathUnits="userSpaceOnUse">
+                          <path d={patchPath} />
+                        </clipPath>
+                      </defs>
+
+                      <image
+                        href={withBasePath(detailImage.src)}
+                        x="48"
+                        y="18"
+                        width="440"
+                        height="220"
+                        preserveAspectRatio="xMidYMid slice"
+                        clipPath="url(#patchClip)"
+                      />
+
+                      <path
+                        className={cx("detail-patch-border")}
+                        d={patchPath}
+                      />
+                    </svg>
+                    <svg
+                      className={cx("detail-overlay")}
+                      viewBox="0 0 520 260"
+                      aria-hidden="true"
+                    >
+                      <g className={cx("detail-callout")}>
+                        <text x="-7" y="57">
+                          <tspan x="-13" dy="0">
+                            Белая
+                          </tspan>
+                          <tspan x="-13" dy="24">
+                            вышивка
+                          </tspan>
+                        </text>
+                        <polyline points="50,50 96,50 156,84" />
+                        <circle cx="162" cy="87" r="4" />
+                      </g>
+
+                      <g className={cx("detail-callout")}>
+                        <text x="465" y="50">
+                          <tspan x="465" dy="0">
+                            100%
+                          </tspan>
+                          <tspan x="465" dy="24">
+                            хлопок
+                          </tspan>
+                        </text>
+                        <polyline points="457,45 392,45 334,84" />
+                        <circle cx="328" cy="87" r="4" />
+                      </g>
+
+                      <g className={cx("detail-callout")}>
+                        <text x="-14" y="220">
+                          240 GSM
+                        </text>
+                        <polyline points="70,215 100,215 167,169" />
+                        <circle cx="172" cy="163" r="4" />
+                      </g>
+
+                      <g className={cx("detail-callout")}>
+                        <text x="420" y="220">
+                          <tspan x="455" dy="0">
+                            Оверсайз
+                          </tspan>
+                          <tspan x="455" dy="24">
+                            посадка
+                          </tspan>
+                        </text>
+                        <polyline points="447,238 396,238 332,168" />
+                        <circle cx="328" cy="162" r="4" />
+                      </g>
+                    </svg>
+                  </figure>
+                ) : null}
+
                 <p>
                   Если вы вдруг думали, что мы никогда не сделаем мерч, то вы
                   неправы.
                 </p>
                 <p>
-                  Футболка выполнена из плотного черного хлопка плотностью
-                  240 GSM. На груди — белая вышивка с фразой «Вы не правы».
+                  Футболка выполнена из плотного черного хлопка плотностью 240
+                  GSM. На груди — белая вышивка с фразой «Вы не правы».
                 </p>
                 <p>
                   Размеры уточняются при заказе. Пишите, обсудим и подберем
@@ -62,8 +161,38 @@ export function MerchPage() {
               </div>
 
               <div className={cx("actions")}>
-                <Button cx={cx} href={featuredProduct.ctaHref} label={featuredProduct.ctaLabel} />
+                <Button
+                  cx={cx}
+                  href={featuredProduct.ctaHref}
+                  label={featuredProduct.ctaLabel}
+                />
               </div>
+
+              {secondaryImages.length > 0 ? (
+                <div
+                  className={cx("mobile-gallery")}
+                  aria-label="Дополнительные фото мерча"
+                >
+                  {secondaryImages.map((image, index) => (
+                    <figure
+                      key={image.src}
+                      className={cx(
+                        "mobile-gallery-card",
+                        `mobile-gallery-card-${index + 1}`,
+                      )}
+                    >
+                      <img
+                        src={withBasePath(image.src)}
+                        alt={image.alt}
+                        width={image.width}
+                        height={image.height}
+                        loading="eager"
+                        decoding="async"
+                      />
+                    </figure>
+                  ))}
+                </div>
+              ) : null}
 
               <ul className={cx("details")} aria-label="Характеристики товара">
                 {featuredProduct.details.map((detail) => (
