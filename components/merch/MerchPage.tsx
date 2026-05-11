@@ -133,10 +133,10 @@ export function MerchPage() {
                       <g className={cx("detail-callout")}>
                         <text x="512" y="220" textAnchor="end">
                           <tspan x="512" dy="0">
-                            Оверсайз
+                            Железный
                           </tspan>
                           <tspan x="512" dy="24">
-                            посадка
+                            аргумент
                           </tspan>
                         </text>
                         <polyline points="484,238 396,238 332,177" />
@@ -146,15 +146,15 @@ export function MerchPage() {
                   </figure>
                 ) : null}
 
-                <p>
+                <p className={cx("story-copy", "story-copy-intro")}>
                   Если вы вдруг думали, что мы никогда не сделаем мерч, то вы
                   неправы.
                 </p>
-                <p>
+                <p className={cx("story-copy", "story-copy-material")}>
                   Футболка выполнена из плотного черного хлопка плотностью 240
                   GSM. На груди — белая вышивка с фразой «Вы не правы».
                 </p>
-                <p>
+                <p className={cx("story-copy", "story-copy-sizes")}>
                   Размеры уточняются при заказе. Пишите, обсудим и подберем
                   подходящий.
                 </p>
@@ -184,6 +184,105 @@ export function MerchPage() {
                     </figure>
                   ))}
                 </div>
+              ) : null}
+
+              {secondaryImages.length > 0 ? (
+                <section className={cx("mobile-story")} aria-label="О футболке">
+                  <p className={cx("mobile-story-lead")}>
+                    Если вы вдруг думали, что мы никогда не сделаем мерч, то вы
+                    неправы.
+                  </p>
+
+                  <div className={cx("mobile-story-star")} aria-hidden="true" />
+
+                  <div className={cx("mobile-story-grid")}>
+                    <figure
+                      className={cx(
+                        "mobile-story-media",
+                        "mobile-story-media-wide",
+                      )}
+                    >
+                      <img
+                        src={withBasePath(
+                          secondaryImages[3]?.src ?? secondaryImages[0].src,
+                        )}
+                        alt={secondaryImages[3]?.alt ?? secondaryImages[0].alt}
+                        width={
+                          secondaryImages[3]?.width ?? secondaryImages[0].width
+                        }
+                        height={
+                          secondaryImages[3]?.height ??
+                          secondaryImages[0].height
+                        }
+                        loading="eager"
+                        decoding="async"
+                      />
+                    </figure>
+
+                    <article className={cx("mobile-story-card")}>
+                      <span className={cx("mobile-story-kicker")}>Материал</span>
+                      <strong className={cx("mobile-story-title")}>240 GSM</strong>
+                      <p className={cx("mobile-story-note")}>
+                        Плотный черный хлопок, который держит форму.
+                      </p>
+                    </article>
+
+                    {secondaryImages[0] ? (
+                      <figure className={cx("mobile-story-media")}>
+                        <img
+                          src={withBasePath(secondaryImages[0].src)}
+                          alt={secondaryImages[0].alt}
+                          width={secondaryImages[0].width}
+                          height={secondaryImages[0].height}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </figure>
+                    ) : null}
+
+                    {secondaryImages[1] ? (
+                      <figure className={cx("mobile-story-media")}>
+                        <img
+                          src={withBasePath(secondaryImages[1].src)}
+                          alt={secondaryImages[1].alt}
+                          width={secondaryImages[1].width}
+                          height={secondaryImages[1].height}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </figure>
+                    ) : null}
+
+                    <article className={cx("mobile-story-card")}>
+                      <span className={cx("mobile-story-kicker")}>Деталь</span>
+                      <strong className={cx("mobile-story-title")}>Вышивка</strong>
+                      <p className={cx("mobile-story-note")}>
+                        Белая фраза «Вы не правы» на груди.
+                      </p>
+                    </article>
+
+                    <article className={cx("mobile-story-card")}>
+                      <span className={cx("mobile-story-kicker")}>Посадка</span>
+                      <strong className={cx("mobile-story-title")}>Размер</strong>
+                      <p className={cx("mobile-story-note")}>
+                        Напишите нам, и мы подберем подходящий.
+                      </p>
+                    </article>
+
+                    {secondaryImages[2] ? (
+                      <figure className={cx("mobile-story-media")}>
+                        <img
+                          src={withBasePath(secondaryImages[2].src)}
+                          alt={secondaryImages[2].alt}
+                          width={secondaryImages[2].width}
+                          height={secondaryImages[2].height}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </figure>
+                    ) : null}
+                  </div>
+                </section>
               ) : null}
               <div className={cx("actions")}>
                 <Button
