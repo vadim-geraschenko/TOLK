@@ -143,6 +143,12 @@
   will-change: transform;
 }
 
+@media (max-width: 760px) {
+  .visual-composition figure {
+    transform: none;
+  }
+}
+
 .visual-composition img {
   width: 100%;
   height: 100%;
@@ -228,6 +234,7 @@
   gap: 18px;
   align-content: center;
   padding: 10px 0;
+  justify-content: center;
 }
 
 .product-meta {
@@ -526,6 +533,7 @@
   }
 
   .product-panel {
+    margin: 0 auto;
     width: min(760px, 100%);
     padding: 8px 0 40px;
   }
@@ -772,7 +780,7 @@
     fill: currentColor;
     font-family: var(--font-body);
     font-weight: 500;
-    font-size: clamp(20px, 4.2vw, 24px);
+    font-size: clamp(24px, 4.2vw, 24px);
   }
 
   .detail-callout polyline {
@@ -821,20 +829,6 @@
     margin-top: 2px;
   }
 
-  .mobile-story::before {
-    content: "";
-    position: absolute;
-    inset: 56px -20px auto;
-    height: 360px;
-    pointer-events: none;
-    background:
-      radial-gradient(
-        ellipse at 50% 0%,
-        rgba(255, 255, 255, 0.052),
-        transparent 64%
-      );
-  }
-
   .mobile-story-lead {
     margin: 0 auto;
     max-width: 340px;
@@ -881,8 +875,18 @@
     height: 15px;
     border-radius: 999px;
     background:
-      linear-gradient(90deg, transparent 46%, rgba(242, 244, 247, 0.66) 46% 54%, transparent 54%),
-      linear-gradient(180deg, transparent 46%, rgba(242, 244, 247, 0.66) 46% 54%, transparent 54%);
+      linear-gradient(
+        90deg,
+        transparent 46%,
+        rgba(242, 244, 247, 0.66) 46% 54%,
+        transparent 54%
+      ),
+      linear-gradient(
+        180deg,
+        transparent 46%,
+        rgba(242, 244, 247, 0.66) 46% 54%,
+        transparent 54%
+      );
     filter: drop-shadow(0 0 10px rgba(242, 244, 247, 0.22));
   }
 
@@ -890,6 +894,7 @@
     --mobile-story-item-height: clamp(150px, 42vw, 174px);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 1.25fr 1fr; /* Первая строка в 1.2 раза больше второй */
     gap: 8px;
   }
 
@@ -922,37 +927,56 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.038),
-        transparent 34%,
-        rgba(0, 0, 0, 0.18)
-      );
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.038),
+      transparent 34%,
+      rgba(0, 0, 0, 0.18)
+    );
     mix-blend-mode: screen;
     opacity: 0.54;
   }
 
   .mobile-story-media-wide {
     grid-column: 1 / -1;
+    height: calc((var(--mobile-story-item-height) * 1.25));
   }
 
   .mobile-story-media img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 50% 18%;
+    object-position: 50% 38%;
   }
 
   .mobile-story-media-wide img {
-    object-position: 50% 38%;
+    object-position: 50% 62%;
+    /* transform: scale(0.9); */
   }
 
   .mobile-story-card {
     display: grid;
     align-content: center;
-    gap: 7px;
+    justify-items: start;
+    gap: 8px;
     padding: 16px 15px;
+  }
+
+  .mobile-story-card-top-left {
+    align-content: start;
+  }
+
+  .mobile-story-card-center-right {
+    justify-items: end;
+    text-align: right;
+  }
+
+  .mobile-story-card-center-right .mobile-story-note {
+    margin-left: auto;
+  }
+
+  .mobile-story-card-bottom-left {
+    align-content: end;
   }
 
   .mobile-story-kicker,
@@ -964,7 +988,7 @@
 
   .mobile-story-kicker {
     color: rgba(242, 244, 247, 0.48);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.22em;
     line-height: 1;
@@ -974,16 +998,16 @@
   .mobile-story-title {
     color: var(--text-primary);
     font-family: var(--font-display);
-    font-size: clamp(26px, 7.6vw, 34px);
+    font-size: clamp(23px, 8.55vw, 38px);
     font-weight: 500;
     line-height: 0.98;
   }
 
   .mobile-story-note {
-    max-width: 13em;
+    max-width: 13.6em;
     color: rgba(242, 244, 247, 0.72);
-    font-size: clamp(13px, 3.45vw, 15px);
-    line-height: 1.24;
+    font-size: clamp(12px, 3.75vw, 16px);
+    line-height: 1.22;
     text-wrap: balance;
   }
 

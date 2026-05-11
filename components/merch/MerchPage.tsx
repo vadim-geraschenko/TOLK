@@ -97,7 +97,7 @@ export function MerchPage() {
                       aria-hidden="true"
                     >
                       <g className={cx("detail-callout")}>
-                        <text x="8" y="57">
+                        <text x="8" y="32">
                           <tspan x="8" dy="0">
                             Белая
                           </tspan>
@@ -105,41 +105,41 @@ export function MerchPage() {
                             вышивка
                           </tspan>
                         </text>
-                        <polyline points="82,50 112,50 156,84" />
+                        <polyline points="78,25 112,25 157,82" />
                         <circle cx="162" cy="87" r="4" />
                       </g>
 
                       <g className={cx("detail-callout")}>
-                        <text x="512" y="50" textAnchor="end">
-                          <tspan x="512" dy="0">
+                        <text x="528" y="45" textAnchor="end">
+                          <tspan x="528" dy="0">
                             100%
                           </tspan>
-                          <tspan x="512" dy="24">
+                          <tspan x="528" dy="24">
                             хлопок
                           </tspan>
                         </text>
-                        <polyline points="480,45 392,45 334,84" />
+                        <polyline points="469,38 392,38 334,84" />
                         <circle cx="328" cy="87" r="4" />
                       </g>
 
                       <g className={cx("detail-callout")}>
-                        <text x="8" y="220">
+                        <text x="8" y="230">
                           240 GSM
                         </text>
-                        <polyline points="102,215 122,215 167,169" />
+                        <polyline points="102,225 125,225 168,168" />
                         <circle cx="172" cy="163" r="4" />
                       </g>
 
                       <g className={cx("detail-callout")}>
-                        <text x="512" y="220" textAnchor="end">
-                          <tspan x="512" dy="0">
+                        <text x="530" y="240" textAnchor="end">
+                          <tspan x="530" dy="0">
                             Железный
                           </tspan>
-                          <tspan x="512" dy="24">
+                          <tspan x="530" dy="24">
                             аргумент
                           </tspan>
                         </text>
-                        <polyline points="484,238 396,238 332,177" />
+                        <polyline points="425,260 396,260 332,177" />
                         <circle cx="328" cy="172" r="4" />
                       </g>
                     </svg>
@@ -219,11 +219,20 @@ export function MerchPage() {
                       />
                     </figure>
 
-                    <article className={cx("mobile-story-card")}>
-                      <span className={cx("mobile-story-kicker")}>Материал</span>
-                      <strong className={cx("mobile-story-title")}>240 GSM</strong>
+                    <article
+                      className={cx(
+                        "mobile-story-card",
+                        "mobile-story-card-top-left",
+                      )}
+                    >
+                      <span className={cx("mobile-story-kicker")}>
+                        Материал
+                      </span>
+                      <strong className={cx("mobile-story-title")}>
+                        240 GSM
+                      </strong>
                       <p className={cx("mobile-story-note")}>
-                        Плотный черный хлопок, который держит форму.
+                        Качественный чёрный хлопок высокой плотности
                       </p>
                     </article>
 
@@ -253,19 +262,33 @@ export function MerchPage() {
                       </figure>
                     ) : null}
 
-                    <article className={cx("mobile-story-card")}>
+                    <article
+                      className={cx(
+                        "mobile-story-card",
+                        "mobile-story-card-center-right",
+                      )}
+                    >
                       <span className={cx("mobile-story-kicker")}>Деталь</span>
-                      <strong className={cx("mobile-story-title")}>Вышивка</strong>
+                      <strong className={cx("mobile-story-title")}>
+                        Вышивка
+                      </strong>
                       <p className={cx("mobile-story-note")}>
-                        Белая фраза «Вы не правы» на груди.
+                        Вышивка белой нитью на груди «Вы не правы»
                       </p>
                     </article>
 
-                    <article className={cx("mobile-story-card")}>
+                    <article
+                      className={cx(
+                        "mobile-story-card",
+                        "mobile-story-card-bottom-left",
+                      )}
+                    >
                       <span className={cx("mobile-story-kicker")}>Посадка</span>
-                      <strong className={cx("mobile-story-title")}>Размер</strong>
+                      <strong className={cx("mobile-story-title")}>
+                        Размер
+                      </strong>
                       <p className={cx("mobile-story-note")}>
-                        Напишите нам, и мы подберем подходящий.
+                        Напишите нам, и мы подберем подходящий
                       </p>
                     </article>
 
