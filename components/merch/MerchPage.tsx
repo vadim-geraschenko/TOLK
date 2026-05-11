@@ -97,50 +97,50 @@ export function MerchPage() {
                       aria-hidden="true"
                     >
                       <g className={cx("detail-callout")}>
-                        <text x="-7" y="57">
-                          <tspan x="-13" dy="0">
+                        <text x="8" y="57">
+                          <tspan x="8" dy="0">
                             Белая
                           </tspan>
-                          <tspan x="-13" dy="24">
+                          <tspan x="8" dy="24">
                             вышивка
                           </tspan>
                         </text>
-                        <polyline points="50,50 96,50 156,84" />
+                        <polyline points="82,50 112,50 156,84" />
                         <circle cx="162" cy="87" r="4" />
                       </g>
 
                       <g className={cx("detail-callout")}>
-                        <text x="465" y="50">
-                          <tspan x="465" dy="0">
+                        <text x="512" y="50" textAnchor="end">
+                          <tspan x="512" dy="0">
                             100%
                           </tspan>
-                          <tspan x="465" dy="24">
+                          <tspan x="512" dy="24">
                             хлопок
                           </tspan>
                         </text>
-                        <polyline points="457,45 392,45 334,84" />
+                        <polyline points="480,45 392,45 334,84" />
                         <circle cx="328" cy="87" r="4" />
                       </g>
 
                       <g className={cx("detail-callout")}>
-                        <text x="-14" y="220">
+                        <text x="8" y="220">
                           240 GSM
                         </text>
-                        <polyline points="70,215 100,215 167,169" />
+                        <polyline points="102,215 122,215 167,169" />
                         <circle cx="172" cy="163" r="4" />
                       </g>
 
                       <g className={cx("detail-callout")}>
-                        <text x="420" y="220">
-                          <tspan x="455" dy="0">
+                        <text x="512" y="220" textAnchor="end">
+                          <tspan x="512" dy="0">
                             Оверсайз
                           </tspan>
-                          <tspan x="455" dy="24">
+                          <tspan x="512" dy="24">
                             посадка
                           </tspan>
                         </text>
-                        <polyline points="447,238 396,238 332,168" />
-                        <circle cx="328" cy="162" r="4" />
+                        <polyline points="484,238 396,238 332,177" />
+                        <circle cx="328" cy="172" r="4" />
                       </g>
                     </svg>
                   </figure>
@@ -158,14 +158,6 @@ export function MerchPage() {
                   Размеры уточняются при заказе. Пишите, обсудим и подберем
                   подходящий.
                 </p>
-              </div>
-
-              <div className={cx("actions")}>
-                <Button
-                  cx={cx}
-                  href={featuredProduct.ctaHref}
-                  label={featuredProduct.ctaLabel}
-                />
               </div>
 
               {secondaryImages.length > 0 ? (
@@ -193,12 +185,13 @@ export function MerchPage() {
                   ))}
                 </div>
               ) : null}
-
-              <ul className={cx("details")} aria-label="Характеристики товара">
-                {featuredProduct.details.map((detail) => (
-                  <li key={detail}>{detail}</li>
-                ))}
-              </ul>
+              <div className={cx("actions")}>
+                <Button
+                  cx={cx}
+                  href={featuredProduct.ctaHref}
+                  label={featuredProduct.ctaLabel}
+                />
+              </div>
             </article>
           </section>
         ) : null}
