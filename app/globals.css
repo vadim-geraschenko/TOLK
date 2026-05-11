@@ -1,14 +1,66 @@
+:root {
+  --font-display-family:
+    var(--font-cormorant-garamond), "Cormorant Garamond", "Times New Roman",
+    serif;
+  --font-body-family:
+    var(--font-source-sans-3), "Source Sans 3", "Segoe UI", "Helvetica Neue",
+    sans-serif;
+  --scrollbar-track: #050608;
+  --scrollbar-thumb: #cfd6df;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   min-height: 100%;
+  background: var(--scrollbar-track);
 }
 
-:root {
-  --font-display-family:
-    var(--font-cormorant-garamond), "Cormorant Garamond", "Times New Roman", serif;
-  --font-body-family:
-    var(--font-source-sans-3), "Source Sans 3", "Segoe UI", "Helvetica Neue", sans-serif;
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Firefox */
+@supports (-moz-appearance: none) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  }
+}
+
+/* Chrome / Edge / Safari */
+@supports selector(::-webkit-scrollbar) {
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: var(--scrollbar-track);
+  }
+
+  html::-webkit-scrollbar-track,
+  body::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+
+  html::-webkit-scrollbar-thumb,
+  body::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+    border-radius: 2px; /* Добавление скругления */
+  }
+
+  html::-webkit-scrollbar-button,
+  body::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
+    background: var(--scrollbar-track);
+    border: none;
+  }
+
+  html::-webkit-scrollbar-corner,
+  body::-webkit-scrollbar-corner {
+    background: var(--scrollbar-track);
+  }
 }
