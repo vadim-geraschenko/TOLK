@@ -33,7 +33,6 @@ export function MerchVisualComposition({
 
     const applyPush = () => {
       frame = 0;
-      // # хай: радиус влияния курсора; больше значение — больше карточек реагируют одновременно.
       const radius = Math.min(window.innerWidth * 0.48, 580);
 
       root
@@ -53,7 +52,6 @@ export function MerchVisualComposition({
             return;
           }
 
-          // # хай: степень затухания; 1 мягче и дальнобойнее, 3 резче и локальнее.
           const falloff = (1 - distance / radius) ** 2;
           const offset = maxOffset * falloff;
 
@@ -92,7 +90,6 @@ export function MerchVisualComposition({
           className={cx("hero-photo", "motion-photo")}
           data-push-depth="7"
         >
-          {/* # хай: data-push-depth выше задает максимальный сдвиг главного фото в пикселях. */}
           <img
             src={withBasePath(heroImage.src)}
             alt={heroImage.alt}
@@ -109,7 +106,6 @@ export function MerchVisualComposition({
           className={cx("detail-photo", "motion-photo")}
           data-push-depth="3"
         >
-          {/* # хай: data-push-depth выше задает максимальный сдвиг фото с вышивкой в пикселях. */}
           <img
             src={withBasePath(detailImage.src)}
             alt={detailImage.alt}
@@ -130,7 +126,6 @@ export function MerchVisualComposition({
           )}
           data-push-depth={[4, 3, 5, 3][index] ?? 16}
         >
-          {/* # хай: data-push-depth выше задает максимальный сдвиг; порядок массива соответствует merch_3...merch_6. */}
           <img
             src={withBasePath(image.src)}
             alt={image.alt}

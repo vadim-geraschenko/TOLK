@@ -1,13 +1,16 @@
 .root {
-  --border-panel: rgba(232, 235, 238, 0.16);
-  --border-soft: rgba(255, 255, 255, 0.12);
-  --text-primary: #f2f4f7;
-  --text-secondary: #b9bdc3;
-  --text-muted: #828991;
-  --accent-silver: #cfd6df;
-  --layout-content-max: 1280px;
-  --page-gutter-desktop: 32px;
-  --page-gutter-mobile: 24px;
+  --merch-border-panel: rgba(232, 235, 238, 0.16);
+  --merch-border-soft: rgba(255, 255, 255, 0.12);
+  --merch-text-secondary: color-mix(
+    in srgb,
+    var(--text-secondary) 90%,
+    var(--text-muted)
+  );
+  --merch-text-muted: color-mix(
+    in srgb,
+    var(--text-muted) 92%,
+    var(--bg-canvas)
+  );
   --font-display: var(--font-display-family);
   --font-body: var(--font-body-family);
   min-height: 100vh;
@@ -15,11 +18,16 @@
   background:
     radial-gradient(
       circle at 48% 36%,
-      rgba(190, 197, 204, 0.07),
+      var(--fx-cool-bloom),
       transparent 34%
     ),
     linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(180deg, #07090b 0%, #101419 45%, #050608 100%);
+    linear-gradient(
+      180deg,
+      var(--bg-inset) 0%,
+      #101419 45%,
+      var(--scrollbar-track) 100%
+    );
   background-size:
     auto,
     96px 96px,
@@ -28,7 +36,6 @@
   font-weight: 500;
   letter-spacing: 0.01em;
 }
-/*  */
 
 .root::before {
   content: "";
@@ -39,7 +46,7 @@
   background:
     radial-gradient(
       circle at 10% 18%,
-      rgba(255, 255, 255, 0.08),
+      var(--fx-halo),
       transparent 10%
     ),
     radial-gradient(
@@ -90,7 +97,7 @@
 .kicker {
   margin: 0 0 14px;
   color: var(--accent-silver);
-  font-size: 12px;
+  font-size: var(--type-meta);
   font-weight: 700;
   letter-spacing: 0.34em;
   text-transform: uppercase;
@@ -108,7 +115,7 @@
 .product-copy p {
   margin: 0;
   max-width: 520px;
-  color: var(--text-secondary);
+  color: var(--merch-text-secondary);
   font-size: clamp(16px, 1.12vw, 19px);
   line-height: 1.38;
 }
@@ -131,13 +138,12 @@
   --push-x: 0px;
   --push-y: 0px;
   margin: 0;
-  border: 1px solid var(--border-panel);
-  background: #12161b;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+  border: 1px solid var(--merch-border-panel);
+  background: var(--bg-surface-1);
+  box-shadow: var(--elevation-float);
   overflow: hidden;
   transform: translate3d(var(--push-x), var(--push-y), 0);
   transition:
-    /* # хай: скорость реакции карточек на движение курсора; меньше ms — резче, больше — плавнее. */
     box-shadow 220ms ease,
     transform 280ms ease-out;
   will-change: transform;
@@ -213,7 +219,6 @@
 
 .detail-photo img,
 .support-photo img {
-  /* # хай: стартовая черно-белость второстепенных фото; grayscale(0.7) оставит немного цвета. */
   filter: grayscale(1) contrast(1.08);
 }
 
@@ -225,7 +230,6 @@
 .detail-photo:hover,
 .support-photo:hover {
   box-shadow: 0 34px 90px rgba(0, 0, 0, 0.5);
-  /* # хай: scale(1.05) — увеличение рамки на hover; можно поставить 1.03 или 1.08. */
   transform: translate3d(var(--push-x), var(--push-y), 0) scale(1.05);
 }
 
@@ -242,16 +246,16 @@
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
-  color: var(--text-secondary);
-  font-size: 12px;
+  color: var(--merch-text-secondary);
+  font-size: var(--type-meta);
   letter-spacing: 0.32em;
   text-transform: uppercase;
 }
 
 .product-meta span,
 .product-meta strong {
-  border: 1px solid var(--border-soft);
-  border-radius: 999px;
+  border: 1px solid var(--merch-border-soft);
+  border-radius: var(--radius-pill);
   background: rgba(255, 255, 255, 0.02);
 }
 
@@ -295,7 +299,7 @@
 }
 
 .details li {
-  color: var(--text-muted);
+  color: var(--merch-text-muted);
   font-size: 13px;
   line-height: 1.35;
 }
@@ -604,10 +608,7 @@
     border-radius: 8px 8px 0 0;
     box-shadow: 0 20px 54px rgba(0, 0, 0, 0.38);
 
-    /*
-      Это обрезает само изображение волной.
-      Черная область SVG = видимая часть изображения.
-    */
+    /* Mobile hero image uses a wave mask to overlap the content panel. */
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 430 340' preserveAspectRatio='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H430V274C360 304 295 298 218 286C145 274 75 282 0 300V0Z' fill='black'/%3E%3C/svg%3E");
     -webkit-mask-size: 100% 100%;
     -webkit-mask-repeat: no-repeat;
@@ -626,10 +627,7 @@
     object-position: 50% 12%;
   }
 
-  /*
-    Отдельная тонкая линия по краю обреза.
-    Она лежит НА изображении, а не на панели.
-  */
+  /* Draw the wave edge on top of the masked hero image. */
   .hero-photo::after {
     content: "";
     position: absolute;
@@ -650,9 +648,6 @@
     gap: 22px;
     width: 100%;
 
-    /*
-      Панель заезжает под обрезанную часть картинки.
-    */
     margin-top: -114px;
     padding: 95px 20px 0;
 
@@ -670,10 +665,6 @@
     border-top: 0;
   }
 
-  /*
-    УБИРАЕМ старую волну панели.
-    Она больше не нужна.
-  */
   .product-panel::before,
   .product-panel::after {
     content: none;
@@ -770,7 +761,7 @@
   }
 
   .detail-callout {
-    color: var(--text-secondary);
+    color: var(--merch-text-secondary);
     font-size: 15px;
     line-height: 1;
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
@@ -894,7 +885,7 @@
     --mobile-story-item-height: clamp(150px, 42vw, 174px);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: 1.25fr 1fr; /* Первая строка в 1.2 раза больше второй */
+    grid-template-rows: 1.25fr 1fr;
     gap: 8px;
   }
 
@@ -1053,7 +1044,7 @@
   .details li {
     padding: 12px 0 12px 44px;
     border-bottom: 1px solid rgba(242, 244, 247, 0.08);
-    color: var(--text-secondary);
+    color: var(--merch-text-secondary);
     font-size: 15px;
     background:
       radial-gradient(

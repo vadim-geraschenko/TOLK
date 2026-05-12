@@ -8,6 +8,49 @@
   --scrollbar-track: #050608;
   --scrollbar-thumb: #cfd6df;
 
+  --bg-canvas: #0f1114;
+  --bg-surface-1: #171a1f;
+  --bg-surface-2: #20242a;
+  --bg-surface-3: #252a30;
+  --bg-inset: #0b0d10;
+  --text-primary: #f2f4f7;
+  --text-secondary: #c6cbd2;
+  --text-muted: #8d959f;
+  --text-inverse: #121418;
+  --accent-silver: #cfd6df;
+  --accent-silver-hot: #eef2f6;
+  --accent-silver-soft: #bcc6d2;
+  --accent-steel: #7e8ea0;
+  --fx-halo: rgba(255, 255, 255, 0.08);
+  --fx-fog: rgba(226, 231, 238, 0.04);
+  --fx-cool-bloom: rgba(126, 142, 160, 0.08);
+  --line-subtle: 1px solid rgba(242, 244, 247, 0.08);
+  --line-silver: 1px solid rgba(207, 214, 223, 0.22);
+  --line-silver-soft: 1px solid rgba(226, 231, 238, 0.1);
+  --line-steel: 1px solid rgba(126, 142, 160, 0.22);
+  --elevation-rest: 0 10px 30px rgba(0, 0, 0, 0.22);
+  --elevation-float: 0 18px 42px rgba(0, 0, 0, 0.28);
+  --glow-inner-soft:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 0 32px rgba(255, 255, 255, 0.015);
+  --glow-hover-soft:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 24px rgba(255, 255, 255, 0.03);
+  --glow-halo: 0 0 52px rgba(226, 231, 238, 0.08);
+  --layout-content-max: 1280px;
+  --layout-text-max: 44rem;
+  --layout-media-max: 88rem;
+  --page-gutter-desktop: 32px;
+  --page-gutter-tablet: 28px;
+  --page-gutter-mobile: 24px;
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-frame: 32px;
+  --radius-pill: 999px;
+
   --type-size-10: 10px;
   --type-size-11: 11px;
   --type-size-12: 12px;
