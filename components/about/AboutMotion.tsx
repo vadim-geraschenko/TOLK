@@ -81,7 +81,7 @@ const createFrameSources = (variant: "desktop" | "mobile") =>
   );
 
 const easeMobileStackSegment = (progress: number) =>
-  progress * progress * progress * (progress * (progress * 6 - 15) + 10);
+  progress * progress * (3 - 2 * progress);
 
 export function AboutMotion() {
   useLayoutEffect(() => {
@@ -137,7 +137,8 @@ export function AboutMotion() {
     let mobileStackSafeTop = ABOUT_MOBILE_STACK_SAFE_TOP;
     let mobileStackScenes: MobileStackSceneState[] = [];
 
-    const useStaticScene = () => staticSceneQuery.matches || reducedMotionQuery.matches;
+    const useStaticScene = () =>
+      staticSceneQuery.matches || reducedMotionQuery.matches;
     const useMobileStackScenes = () =>
       mobileStackQuery.matches && !reducedMotionQuery.matches;
     const readMobileStackSafeTop = () => {
@@ -175,14 +176,20 @@ export function AboutMotion() {
       );
     };
 
-    const loadFrameAtIndex = (index: number, priority: "high" | "low" = "low") => {
-      if (index < 0 || index >= ABOUT_TOTAL_FRAMES) return Promise.resolve(false);
+    const loadFrameAtIndex = (
+      index: number,
+      priority: "high" | "low" = "low",
+    ) => {
+      if (index < 0 || index >= ABOUT_TOTAL_FRAMES)
+        return Promise.resolve(false);
       if (loadedFrames.has(index)) return Promise.resolve(true);
 
       const pending = pendingFrameLoads.get(index);
       if (pending) return pending;
 
-      const image = new Image() as HTMLImageElement & { fetchPriority?: string };
+      const image = new Image() as HTMLImageElement & {
+        fetchPriority?: string;
+      };
       image.decoding = "async";
       image.fetchPriority = priority;
       image.loading = "eager";
@@ -214,16 +221,25 @@ export function AboutMotion() {
 
     const preloadBufferWindow = (centerIndex: number) => {
       const start = Math.max(centerIndex - ABOUT_PRELOAD_BUFFER, 0);
-      const end = Math.min(centerIndex + ABOUT_PRELOAD_BUFFER, ABOUT_TOTAL_FRAMES - 1);
+      const end = Math.min(
+        centerIndex + ABOUT_PRELOAD_BUFFER,
+        ABOUT_TOTAL_FRAMES - 1,
+      );
       for (let index = start; index <= end; index += 1) {
         const distance = Math.abs(index - centerIndex);
-        loadFrameAtIndex(index, distance <= ABOUT_PRELOAD_EAGER_RADIUS ? "high" : "low");
+        loadFrameAtIndex(
+          index,
+          distance <= ABOUT_PRELOAD_EAGER_RADIUS ? "high" : "low",
+        );
       }
     };
 
     const preloadBootFrameWindow = (centerIndex: number) => {
       const start = Math.max(centerIndex - ABOUT_BOOT_EAGER_RADIUS, 0);
-      const end = Math.min(centerIndex + ABOUT_BOOT_EAGER_RADIUS, ABOUT_TOTAL_FRAMES - 1);
+      const end = Math.min(
+        centerIndex + ABOUT_BOOT_EAGER_RADIUS,
+        ABOUT_TOTAL_FRAMES - 1,
+      );
       const loads: Promise<boolean>[] = [];
       for (let index = start; index <= end; index += 1) {
         loads.push(loadFrameAtIndex(index, "high"));
@@ -308,10 +324,12 @@ export function AboutMotion() {
     const waitForImageReady = (image: HTMLImageElement | null) => {
       if (!image) return Promise.resolve(false);
       if (image.complete && image.naturalWidth > 0) {
-        return image.decode?.().then(
-          () => true,
-          () => true,
-        ) ?? Promise.resolve(true);
+        return (
+          image.decode?.().then(
+            () => true,
+            () => true,
+          ) ?? Promise.resolve(true)
+        );
       }
 
       return new Promise<boolean>((resolve) => {
@@ -338,7 +356,10 @@ export function AboutMotion() {
       Promise.race([
         promise,
         new Promise<null>((resolve) => {
-          bootOverlayHideId = window.setTimeout(() => resolve(null), ABOUT_BOOT_MAX_WAIT_MS);
+          bootOverlayHideId = window.setTimeout(
+            () => resolve(null),
+            ABOUT_BOOT_MAX_WAIT_MS,
+          );
         }),
       ]).finally(() => {
         if (bootOverlayHideId) {
@@ -348,7 +369,9 @@ export function AboutMotion() {
       });
 
     const hideBootOverlay = () => {
-      const overlay = document.querySelector<HTMLElement>("[data-about-boot-overlay]");
+      const overlay = document.querySelector<HTMLElement>(
+        "[data-about-boot-overlay]",
+      );
       if (!overlay) return;
       overlay.classList.add("is-hidden");
       window.setTimeout(() => overlay.remove(), 320);
@@ -365,7 +388,9 @@ export function AboutMotion() {
           : preloadBootFrameWindow(initialFrameIndex);
       const initialFrameReady = staticScene
         ? waitForImageReady(storyFrame)
-        : loadFrameAtIndex(initialFrameIndex, "high").then(() => waitForImageReady(storyFrame));
+        : loadFrameAtIndex(initialFrameIndex, "high").then(() =>
+            waitForImageReady(storyFrame),
+          );
 
       void withBootTimeout(
         Promise.all([
@@ -404,7 +429,9 @@ export function AboutMotion() {
 
     const readMobileStackScenes = () => {
       mobileStackScenes = Array.from(
-        document.querySelectorAll<HTMLElement>(ABOUT_SELECTOR_MOBILE_STACK_SCENE),
+        document.querySelectorAll<HTMLElement>(
+          ABOUT_SELECTOR_MOBILE_STACK_SCENE,
+        ),
       ).map((scene) => ({
         scene,
         items: Array.from(
@@ -435,7 +462,9 @@ export function AboutMotion() {
           const cardHeight = card?.getBoundingClientRect().height ?? 0;
           item.dataset.stackHeight = cardHeight.toFixed(3);
           item.dataset.stackStartY = cumulativeY.toFixed(3);
-          item.dataset.stackEndY = (index * ABOUT_MOBILE_STACK_CARD_PEEK).toFixed(3);
+          item.dataset.stackEndY = (
+            index * ABOUT_MOBILE_STACK_CARD_PEEK
+          ).toFixed(3);
           finalStackHeight = index * ABOUT_MOBILE_STACK_CARD_PEEK + cardHeight;
           cumulativeY += cardHeight + ABOUT_MOBILE_STACK_CARD_GAP;
         });
@@ -452,7 +481,10 @@ export function AboutMotion() {
           state.stageHeight + cumulativeY + 80,
           state.stageHeight,
         );
-        state.scene.style.setProperty("--mobile-stack-scene-height", `${state.height}px`);
+        state.scene.style.setProperty(
+          "--mobile-stack-scene-height",
+          `${state.height}px`,
+        );
         state.travel = Math.max(state.height - state.stageHeight, 1);
       });
     };
@@ -471,7 +503,11 @@ export function AboutMotion() {
 
       mobileStackScenes.forEach((state) => {
         const stickyStart = state.top - mobileStackSafeTop;
-        state.targetProgress = clamp((scrollTop - stickyStart) / state.travel, 0, 1);
+        state.targetProgress = clamp(
+          (scrollTop - stickyStart) / state.travel,
+          0,
+          1,
+        );
         if (Number.isNaN(state.currentProgress)) {
           state.currentProgress = state.targetProgress;
         } else {
@@ -492,7 +528,8 @@ export function AboutMotion() {
         const segmentCount = Math.max(state.items.length - 1, 1);
         if (
           Number.isNaN(state.appliedProgress) ||
-          Math.abs(progress - state.appliedProgress) >= ABOUT_MOTION_RENDER_EPSILON
+          Math.abs(progress - state.appliedProgress) >=
+            ABOUT_MOTION_RENDER_EPSILON
         ) {
           state.scene.style.setProperty(
             "--mobile-stack-scene-progress",
@@ -504,23 +541,28 @@ export function AboutMotion() {
           const startY = Number.parseFloat(item.dataset.stackStartY ?? "0");
           const endY = Number.parseFloat(item.dataset.stackEndY ?? "0");
           const itemProgress =
-            index === 0 ? 1 : clamp(progress * segmentCount - (index - 1), 0, 1);
+            index === 0
+              ? 1
+              : clamp(progress * segmentCount - (index - 1), 0, 1);
           let previousStackOffset = 0;
-          state.items.slice(1, index).forEach((previousItem, previousSliceIndex) => {
-            const previousIndex = previousSliceIndex + 1;
-            const previousStartY = Number.parseFloat(
-              previousItem.dataset.stackStartY ?? "0",
-            );
-            const previousEndY = Number.parseFloat(
-              previousItem.dataset.stackEndY ?? "0",
-            );
-            const previousProgress = easeMobileStackSegment(
-              clamp(progress * segmentCount - (previousIndex - 1), 0, 1),
-            );
-            const adjustedPreviousStartY = previousStartY - previousStackOffset;
-            previousStackOffset +=
-              (adjustedPreviousStartY - previousEndY) * previousProgress;
-          });
+          state.items
+            .slice(1, index)
+            .forEach((previousItem, previousSliceIndex) => {
+              const previousIndex = previousSliceIndex + 1;
+              const previousStartY = Number.parseFloat(
+                previousItem.dataset.stackStartY ?? "0",
+              );
+              const previousEndY = Number.parseFloat(
+                previousItem.dataset.stackEndY ?? "0",
+              );
+              const previousProgress = easeMobileStackSegment(
+                clamp(progress * segmentCount - (previousIndex - 1), 0, 1),
+              );
+              const adjustedPreviousStartY =
+                previousStartY - previousStackOffset;
+              previousStackOffset +=
+                (adjustedPreviousStartY - previousEndY) * previousProgress;
+            });
           const adjustedStartY = startY - previousStackOffset;
           return (
             adjustedStartY +
@@ -566,26 +608,37 @@ export function AboutMotion() {
 
       storyPairStates.forEach((state) => {
         const stepTopInViewport = state.stepTop - scrollTop;
-        const pairYProgress = clamp(-stepTopInViewport / state.stickyTravel, 0, 1);
+        const pairYProgress = clamp(
+          -stepTopInViewport / state.stickyTravel,
+          0,
+          1,
+        );
         state.targetY = pairYProgress;
         state.targetX = getPairProgress(pairYProgress);
       });
     };
 
     const applyCloudTransforms = (progress: number) => {
-      const cloud = getCloudMotionState(progress, viewportWidth, viewportHeight);
+      const cloud = getCloudMotionState(
+        progress,
+        viewportWidth,
+        viewportHeight,
+      );
       leftCloud.style.transform = `translate3d(${cloud.leftX}px, ${cloud.leftY}px, 0) scale(${cloud.leftScale})`;
       rightCloud.style.transform = `translate3d(${cloud.rightX}px, ${cloud.rightY}px, 0) scale(${cloud.rightScale})`;
     };
 
     const writeMotionVarsSnapshot = (progress: number) => {
-      const cloud = getCloudMotionState(progress, viewportWidth, viewportHeight);
-      const frameSrc =
-        reducedMotionQuery.matches
-          ? ABOUT_STATIC_FRAME_DESKTOP
-          : staticSceneQuery.matches
-            ? ABOUT_STATIC_FRAME_MOBILE
-            : getFrameSrcByProgress(progress, getCurrentFrameVariant());
+      const cloud = getCloudMotionState(
+        progress,
+        viewportWidth,
+        viewportHeight,
+      );
+      const frameSrc = reducedMotionQuery.matches
+        ? ABOUT_STATIC_FRAME_DESKTOP
+        : staticSceneQuery.matches
+          ? ABOUT_STATIC_FRAME_MOBILE
+          : getFrameSrcByProgress(progress, getCurrentFrameVariant());
       writeAboutMotionVarsStyle({
         cloudLeftX: `${cloud.leftX.toFixed(3)}px`,
         cloudLeftY: `${cloud.leftY.toFixed(3)}px`,
@@ -604,9 +657,11 @@ export function AboutMotion() {
 
     const render = () => {
       animationFrameId = 0;
-      renderedProgress += (targetProgress - renderedProgress) * ABOUT_LERP_FACTOR;
+      renderedProgress +=
+        (targetProgress - renderedProgress) * ABOUT_LERP_FACTOR;
       if (
-        Math.abs(targetProgress - renderedProgress) < ABOUT_MOTION_RENDER_EPSILON
+        Math.abs(targetProgress - renderedProgress) <
+        ABOUT_MOTION_RENDER_EPSILON
       ) {
         renderedProgress = targetProgress;
       }
@@ -617,25 +672,37 @@ export function AboutMotion() {
         state.currentX += (state.targetX - state.currentX) * ABOUT_LERP_FACTOR;
         state.currentY += (state.targetY - state.currentY) * ABOUT_LERP_FACTOR;
 
-        if (Math.abs(state.targetX - state.currentX) < ABOUT_MOTION_RENDER_EPSILON) {
+        if (
+          Math.abs(state.targetX - state.currentX) < ABOUT_MOTION_RENDER_EPSILON
+        ) {
           state.currentX = state.targetX;
         }
-        if (Math.abs(state.targetY - state.currentY) < ABOUT_MOTION_RENDER_EPSILON) {
+        if (
+          Math.abs(state.targetY - state.currentY) < ABOUT_MOTION_RENDER_EPSILON
+        ) {
           state.currentY = state.targetY;
         }
 
         if (
           Number.isNaN(state.appliedX) ||
-          Math.abs(state.currentX - state.appliedX) >= ABOUT_MOTION_RENDER_EPSILON
+          Math.abs(state.currentX - state.appliedX) >=
+            ABOUT_MOTION_RENDER_EPSILON
         ) {
-          state.pair.style.setProperty("--pair-progress", state.currentX.toFixed(4));
+          state.pair.style.setProperty(
+            "--pair-progress",
+            state.currentX.toFixed(4),
+          );
           state.appliedX = state.currentX;
         }
         if (
           Number.isNaN(state.appliedY) ||
-          Math.abs(state.currentY - state.appliedY) >= ABOUT_MOTION_RENDER_EPSILON
+          Math.abs(state.currentY - state.appliedY) >=
+            ABOUT_MOTION_RENDER_EPSILON
         ) {
-          state.pair.style.setProperty("--pair-y-progress", state.currentY.toFixed(4));
+          state.pair.style.setProperty(
+            "--pair-y-progress",
+            state.currentY.toFixed(4),
+          );
           state.appliedY = state.currentY;
         }
       });
@@ -643,11 +710,14 @@ export function AboutMotion() {
       applyCloudTransforms(renderedProgress);
 
       const progressSettled =
-        Math.abs(targetProgress - renderedProgress) < ABOUT_MOTION_RENDER_EPSILON;
+        Math.abs(targetProgress - renderedProgress) <
+        ABOUT_MOTION_RENDER_EPSILON;
       const pairsSettled = storyPairStates.every(
         (state) =>
-          Math.abs(state.targetX - state.currentX) < ABOUT_MOTION_RENDER_EPSILON &&
-          Math.abs(state.targetY - state.currentY) < ABOUT_MOTION_RENDER_EPSILON,
+          Math.abs(state.targetX - state.currentX) <
+            ABOUT_MOTION_RENDER_EPSILON &&
+          Math.abs(state.targetY - state.currentY) <
+            ABOUT_MOTION_RENDER_EPSILON,
       );
 
       if (!progressSettled || !pairsSettled) {
@@ -698,8 +768,14 @@ export function AboutMotion() {
         state.currentY = state.targetY;
         state.appliedX = state.currentX;
         state.appliedY = state.currentY;
-        state.pair.style.setProperty("--pair-progress", state.currentX.toFixed(4));
-        state.pair.style.setProperty("--pair-y-progress", state.currentY.toFixed(4));
+        state.pair.style.setProperty(
+          "--pair-progress",
+          state.currentX.toFixed(4),
+        );
+        state.pair.style.setProperty(
+          "--pair-y-progress",
+          state.currentY.toFixed(4),
+        );
       });
 
       applyCloudTransforms(renderedProgress);
@@ -742,8 +818,14 @@ export function AboutMotion() {
           state.currentY = state.targetY;
           state.appliedX = state.currentX;
           state.appliedY = state.currentY;
-          state.pair.style.setProperty("--pair-progress", state.currentX.toFixed(4));
-          state.pair.style.setProperty("--pair-y-progress", state.currentY.toFixed(4));
+          state.pair.style.setProperty(
+            "--pair-progress",
+            state.currentX.toFixed(4),
+          );
+          state.pair.style.setProperty(
+            "--pair-y-progress",
+            state.currentY.toFixed(4),
+          );
         });
 
         applyCloudTransforms(renderedProgress);
@@ -755,7 +837,8 @@ export function AboutMotion() {
         lastScroll = scrollNow;
         frames += 1;
 
-        const loadSettled = !needsCompleteLoad || document.readyState === "complete";
+        const loadSettled =
+          !needsCompleteLoad || document.readyState === "complete";
         const enoughFrames = frames >= 90;
         const stableEnough = stableFrames >= 8;
 
@@ -805,10 +888,15 @@ export function AboutMotion() {
     reducedMotionQuery.addEventListener("change", onReducedMotionChange);
     mobileStackQuery.addEventListener("change", onMobileStackChange);
     window.addEventListener("scroll", scheduleTargetsUpdate, { passive: true });
-    window.addEventListener("scroll", scheduleMobileStackUpdate, { passive: true });
+    window.addEventListener("scroll", scheduleMobileStackUpdate, {
+      passive: true,
+    });
     window.addEventListener("resize", handleViewportUpdate, { passive: true });
     window.addEventListener("pageshow", onPageShow);
-    window.addEventListener(SITE_HEADER_OFFSET_CHANGE_EVENT, onSiteHeaderOffsetChange);
+    window.addEventListener(
+      SITE_HEADER_OFFSET_CHANGE_EVENT,
+      onSiteHeaderOffsetChange,
+    );
 
     startSequence();
     settleInitialCloudPosition();
@@ -816,12 +904,16 @@ export function AboutMotion() {
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (targetsFrameId) cancelAnimationFrame(targetsFrameId);
-      if (initialCloudSettleFrame) cancelAnimationFrame(initialCloudSettleFrame);
-      if (backgroundPreloadDelayId) window.clearTimeout(backgroundPreloadDelayId);
-      if (backgroundPreloadIdleId) window.cancelIdleCallback(backgroundPreloadIdleId);
+      if (initialCloudSettleFrame)
+        cancelAnimationFrame(initialCloudSettleFrame);
+      if (backgroundPreloadDelayId)
+        window.clearTimeout(backgroundPreloadDelayId);
+      if (backgroundPreloadIdleId)
+        window.cancelIdleCallback(backgroundPreloadIdleId);
       if (bootOverlayHideId) window.clearTimeout(bootOverlayHideId);
       if (mobileStackFrameId) cancelAnimationFrame(mobileStackFrameId);
-      if (mobileStackSettleFrameId) cancelAnimationFrame(mobileStackSettleFrameId);
+      if (mobileStackSettleFrameId)
+        cancelAnimationFrame(mobileStackSettleFrameId);
 
       staticSceneQuery.removeEventListener("change", onStaticSceneChange);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
