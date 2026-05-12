@@ -9,7 +9,8 @@ import {
   ABOUT_MOBILE_STACK_CARD_GAP,
   ABOUT_MOBILE_STACK_EXIT_GAP,
   ABOUT_MOBILE_STACK_CARD_PEEK,
-  ABOUT_MOBILE_STACK_LERP_FACTOR,
+  ABOUT_MOBILE_STACK_GESTURE_THRESHOLD,
+  ABOUT_MOBILE_STACK_STEP_DURATION_MS,
   ABOUT_MOBILE_STACK_QUERY,
   ABOUT_MOBILE_STACK_SAFE_TOP,
   ABOUT_MOTION_RENDER_EPSILON,
@@ -70,10 +71,17 @@ type MobileStackSceneState = {
   targetProgress: number;
   currentProgress: number;
   appliedProgress: number;
+  lockedStep: number;
+  targetStep: number;
+  isStepAnimating: boolean;
+  animationStartProgress: number;
+  animationStartTime: number;
+  animationDurationMs: number;
 };
 
 const SITE_HEADER_OFFSET_CHANGE_EVENT = "tolk:site-header-offset-change";
 const SITE_HEADER_STACK_SETTLE_MS = 220;
+const ABOUT_SCROLL_RESTORE_KEY = "tolk:about-scroll-y";
 
 const createFrameSources = (variant: "desktop" | "mobile") =>
   Array.from({ length: ABOUT_TOTAL_FRAMES }, (_, index) =>
@@ -88,6 +96,17 @@ export function AboutMotion() {
     const { frame: storyFrame, leftCloud, rightCloud } = readAboutDomNodes();
 
     if (!storyFrame || !leftCloud || !rightCloud) return;
+
+    const previousScrollRestoration = window.history.scrollRestoration;
+    const navigationEntry = performance.getEntriesByType("navigation")[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+
+    const shouldRestoreScrollOnReload = navigationEntry?.type === "reload";
+
+    if (shouldRestoreScrollOnReload) {
+      window.history.scrollRestoration = "manual";
+    }
 
     const storyPairStates: StoryPairState[] = Array.from(
       document.querySelectorAll<HTMLElement>(ABOUT_SELECTOR_PAIR),
@@ -133,14 +152,46 @@ export function AboutMotion() {
     let backgroundPreloadIdleId = 0;
     let bootOverlayHideId = 0;
     let mobileStackFrameId = 0;
+    let mobileStackScrollFrameId = 0;
     let mobileStackSettleFrameId = 0;
     let mobileStackSafeTop = ABOUT_MOBILE_STACK_SAFE_TOP;
     let mobileStackScenes: MobileStackSceneState[] = [];
+    let mobileStackTouchStartY = 0;
+    let mobileStackTouchStepConsumed = false;
+    let mobileStackWheelStepConsumed = false;
+    let mobileStackWheelReleaseId = 0;
 
     const useStaticScene = () =>
       staticSceneQuery.matches || reducedMotionQuery.matches;
     const useMobileStackScenes = () =>
       mobileStackQuery.matches && !reducedMotionQuery.matches;
+    const getAboutScrollRestoreKey = () =>
+      `${ABOUT_SCROLL_RESTORE_KEY}:${window.location.pathname}`;
+
+    const readSavedAboutScrollTop = () => {
+      try {
+        const rawValue = window.sessionStorage.getItem(
+          getAboutScrollRestoreKey(),
+        );
+        if (!rawValue) return null;
+
+        const parsed = Number.parseFloat(rawValue);
+        return Number.isFinite(parsed) ? parsed : null;
+      } catch {
+        return null;
+      }
+    };
+
+    const saveAboutScrollTop = () => {
+      try {
+        window.sessionStorage.setItem(
+          getAboutScrollRestoreKey(),
+          String(window.scrollY || window.pageYOffset),
+        );
+      } catch {
+        // Ignore storage failures.
+      }
+    };
     const readMobileStackSafeTop = () => {
       const stackStage = document.querySelector<HTMLElement>(
         `${ABOUT_SELECTOR_MOBILE_STACK_SCENE} .mobile-stack-stage`,
@@ -444,6 +495,12 @@ export function AboutMotion() {
         targetProgress: 0,
         currentProgress: Number.NaN,
         appliedProgress: Number.NaN,
+        lockedStep: 0,
+        targetStep: 0,
+        isStepAnimating: false,
+        animationStartProgress: 0,
+        animationStartTime: 0,
+        animationDurationMs: ABOUT_MOBILE_STACK_STEP_DURATION_MS,
       }));
     };
 
@@ -486,7 +543,232 @@ export function AboutMotion() {
           `${state.height}px`,
         );
         state.travel = Math.max(state.height - state.stageHeight, 1);
+        if (!state.isStepAnimating) {
+          const segmentCount = Math.max(state.items.length - 1, 1);
+          const stickyStart = state.top - mobileStackSafeTop;
+          const scrollProgress = clamp(
+            (scrollTop - stickyStart) / state.travel,
+            0,
+            1,
+          );
+          const nextStep = clamp(
+            Math.round(scrollProgress * segmentCount),
+            0,
+            segmentCount,
+          );
+
+          state.targetStep = nextStep;
+          state.lockedStep = nextStep;
+          state.targetProgress = nextStep / segmentCount;
+          state.isStepAnimating = false;
+          state.animationStartProgress = state.targetProgress;
+          state.animationStartTime = performance.now();
+          state.animationDurationMs = ABOUT_MOBILE_STACK_STEP_DURATION_MS;
+
+          if (Number.isNaN(state.currentProgress)) {
+            state.currentProgress = state.targetProgress;
+          }
+        }
       });
+    };
+
+    const getActiveMobileStackScene = () => {
+      if (!useMobileStackScenes()) return null;
+
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const edgeBuffer = 2;
+
+      return (
+        mobileStackScenes.find((state) => {
+          const stickyStart = state.top - mobileStackSafeTop;
+          const stickyEnd = stickyStart + state.travel;
+          return (
+            scrollTop >= stickyStart - edgeBuffer &&
+            scrollTop <= stickyEnd + edgeBuffer
+          );
+        }) ?? null
+      );
+    };
+
+    const scrollMobileStackToStep = (
+      state: MobileStackSceneState,
+      delayMs = 0,
+    ) => {
+      const segmentCount = Math.max(state.items.length - 1, 1);
+      const stickyStart = state.top - mobileStackSafeTop;
+      const fromScroll = window.scrollY || window.pageYOffset;
+      const toScroll =
+        stickyStart + (state.targetStep / segmentCount) * state.travel;
+      const startedAt = performance.now();
+
+      if (mobileStackScrollFrameId) {
+        cancelAnimationFrame(mobileStackScrollFrameId);
+        mobileStackScrollFrameId = 0;
+      }
+
+      const tick = () => {
+        const elapsed = performance.now() - startedAt;
+
+        if (elapsed < delayMs) {
+          mobileStackScrollFrameId = requestAnimationFrame(tick);
+          return;
+        }
+
+        const currentScrollProgress =
+          segmentCount > 0 ? state.currentProgress : state.targetProgress;
+
+        const fromProgress =
+          segmentCount > 0
+            ? state.animationStartProgress
+            : state.targetProgress;
+
+        const progressT = clamp(
+          (currentScrollProgress - fromProgress) /
+            (state.targetProgress - fromProgress || 1),
+          0,
+          1,
+        );
+
+        window.scrollTo({
+          top: fromScroll + (toScroll - fromScroll) * progressT,
+          behavior: "auto",
+        });
+
+        if (progressT < 1) {
+          mobileStackScrollFrameId = requestAnimationFrame(tick);
+          return;
+        }
+
+        mobileStackScrollFrameId = 0;
+      };
+
+      mobileStackScrollFrameId = requestAnimationFrame(tick);
+    };
+
+    const scheduleMobileStackWheelRelease = () => {
+      if (mobileStackWheelReleaseId) {
+        window.clearTimeout(mobileStackWheelReleaseId);
+      }
+
+      mobileStackWheelReleaseId = window.setTimeout(() => {
+        mobileStackWheelStepConsumed = false;
+        mobileStackWheelReleaseId = 0;
+      }, 320);
+    };
+
+    const moveMobileStackStep = (
+      state: MobileStackSceneState,
+      direction: number,
+    ) => {
+      const lockScroll = () => {
+        if (state.isStepAnimating) {
+          window.scrollTo({
+            top: window.scrollY,
+            behavior: "auto",
+          });
+        }
+      };
+      const segmentCount = Math.max(state.items.length - 1, 1);
+      const nextStep = clamp(state.targetStep + direction, 0, segmentCount);
+
+      if (nextStep === state.targetStep) return;
+
+      const startProgress = Number.isNaN(state.currentProgress)
+        ? state.targetStep / segmentCount
+        : state.currentProgress;
+
+      state.targetStep = nextStep;
+      state.targetProgress = nextStep / segmentCount;
+      lockScroll(); // фиксируем текущую позицию прокрутки
+
+      state.animationStartProgress = startProgress;
+      state.animationStartTime = performance.now();
+      state.animationDurationMs = ABOUT_MOBILE_STACK_STEP_DURATION_MS;
+      state.isStepAnimating = true;
+      const isFinalForwardStep = direction > 0 && nextStep === segmentCount;
+      const scrollDelayMs =
+        direction > 0 && !isFinalForwardStep ? state.animationDurationMs : 0;
+
+      scheduleMobileStackUpdate();
+      scrollMobileStackToStep(state, scrollDelayMs);
+    };
+
+    const onMobileStackWheel = (event: WheelEvent) => {
+      const direction = Math.sign(event.deltaY);
+      if (direction === 0) return;
+
+      const state = getActiveMobileStackScene();
+      if (!state) return;
+
+      if (state.isStepAnimating) {
+        event.preventDefault();
+        return;
+      }
+
+      const segmentCount = Math.max(state.items.length - 1, 1);
+      const isLeavingBackward = direction < 0 && state.targetStep <= 0;
+      const isLeavingForward =
+        direction > 0 && state.targetStep >= segmentCount;
+
+      if (isLeavingBackward || isLeavingForward) {
+        mobileStackWheelStepConsumed = false;
+        return;
+      }
+
+      event.preventDefault();
+      scheduleMobileStackWheelRelease();
+
+      if (mobileStackWheelStepConsumed) return;
+
+      mobileStackWheelStepConsumed = true;
+      moveMobileStackStep(state, direction);
+    };
+
+    const onMobileStackTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+
+      mobileStackTouchStartY = touch.clientY;
+      mobileStackTouchStepConsumed = false;
+    };
+
+    const onMobileStackTouchMove = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      if (!touch) return;
+
+      const deltaY = mobileStackTouchStartY - touch.clientY;
+
+      if (Math.abs(deltaY) < ABOUT_MOBILE_STACK_GESTURE_THRESHOLD) return;
+
+      const direction = Math.sign(deltaY);
+      if (direction === 0) return;
+
+      const state = getActiveMobileStackScene();
+      if (!state) return;
+
+      if (state.isStepAnimating) {
+        event.preventDefault();
+        return;
+      }
+
+      const segmentCount = Math.max(state.items.length - 1, 1);
+      const isLeavingBackward = direction < 0 && state.targetStep <= 0;
+      const isLeavingForward =
+        direction > 0 && state.targetStep >= segmentCount;
+
+      if (isLeavingBackward || isLeavingForward) return;
+
+      event.preventDefault();
+
+      if (mobileStackTouchStepConsumed) return;
+
+      mobileStackTouchStepConsumed = true;
+      moveMobileStackStep(state, direction);
+    };
+
+    const onMobileStackTouchEnd = () => {
+      mobileStackTouchStartY = 0;
+      mobileStackTouchStepConsumed = false;
     };
 
     const updateMobileStackScenes = () => {
@@ -498,34 +780,49 @@ export function AboutMotion() {
         refreshMobileStackMetrics();
       }
 
-      const scrollTop = window.scrollY || window.pageYOffset;
       let needsAnotherFrame = false;
 
       mobileStackScenes.forEach((state) => {
-        const stickyStart = state.top - mobileStackSafeTop;
-        state.targetProgress = clamp(
-          (scrollTop - stickyStart) / state.travel,
-          0,
-          1,
-        );
+        const segmentCount = Math.max(state.items.length - 1, 1);
+
+        state.targetStep = clamp(state.targetStep, 0, segmentCount);
+        state.lockedStep = clamp(state.lockedStep, 0, segmentCount);
+        state.targetProgress = state.targetStep / segmentCount;
+
         if (Number.isNaN(state.currentProgress)) {
           state.currentProgress = state.targetProgress;
-        } else {
-          state.currentProgress +=
-            (state.targetProgress - state.currentProgress) *
-            ABOUT_MOBILE_STACK_LERP_FACTOR;
+          state.animationStartProgress = state.targetProgress;
+          state.animationStartTime = performance.now();
+          state.animationDurationMs = ABOUT_MOBILE_STACK_STEP_DURATION_MS;
+          state.lockedStep = state.targetStep;
+          state.isStepAnimating = false;
+        } else if (state.isStepAnimating) {
+          const elapsed = performance.now() - state.animationStartTime;
+          const duration = Math.max(state.animationDurationMs, 1);
+          const t = clamp(elapsed / duration, 0, 1);
+          const eased = t * t * (3 - 2 * t);
+
+          state.currentProgress =
+            state.animationStartProgress +
+            (state.targetProgress - state.animationStartProgress) * eased;
+
           if (
+            t >= 1 ||
             Math.abs(state.targetProgress - state.currentProgress) <
-            ABOUT_MOTION_RENDER_EPSILON
+              ABOUT_MOTION_RENDER_EPSILON
           ) {
             state.currentProgress = state.targetProgress;
+            state.lockedStep = state.targetStep;
+            state.isStepAnimating = false;
           } else {
             needsAnotherFrame = true;
           }
+        } else {
+          state.currentProgress = state.targetProgress;
+          state.lockedStep = state.targetStep;
         }
 
         const progress = state.currentProgress;
-        const segmentCount = Math.max(state.items.length - 1, 1);
         if (
           Number.isNaN(state.appliedProgress) ||
           Math.abs(progress - state.appliedProgress) >=
@@ -573,9 +870,10 @@ export function AboutMotion() {
         state.items.forEach((item, index) => {
           const y = itemY[index] ?? 0;
           const nextY = itemY[index + 1];
+          item.style.transform = `translate3d(0, ${y.toFixed(3)}px, 0)`;
+
           const cardHeight = Number.parseFloat(item.dataset.stackHeight ?? "0");
 
-          item.style.transform = `translate3d(0, ${y.toFixed(3)}px, 0)`;
           if (nextY !== undefined && cardHeight > 0 && nextY - y < cardHeight) {
             const visibleHeight = Math.max(
               nextY - y,
@@ -743,11 +1041,35 @@ export function AboutMotion() {
       viewportWidth = window.innerWidth;
       viewportHeight = window.innerHeight;
       refreshPairMetrics();
-      readMobileStackScenes();
       refreshMobileStackMetrics();
       updateMobileStackScenes();
       updateTargets();
       ensureRenderLoop();
+    };
+
+    const syncMotionToCurrentScroll = () => {
+      refreshPairMetrics();
+      refreshMobileStackMetrics();
+      updateMobileStackScenes();
+      updateTargets();
+      ensureRenderLoop();
+    };
+
+    const restoreAboutScrollTop = () => {
+      const savedScrollTop = readSavedAboutScrollTop();
+      if (savedScrollTop === null) return;
+
+      const maxScroll = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        0,
+      );
+
+      window.scrollTo({
+        top: clamp(savedScrollTop, 0, maxScroll),
+        behavior: "auto",
+      });
+
+      syncMotionToCurrentScroll();
     };
 
     const startSequence = () => {
@@ -760,8 +1082,18 @@ export function AboutMotion() {
         targetsFrameId = 0;
       }
 
+      readMobileStackScenes();
       handleViewportUpdate();
       renderedProgress = targetProgress;
+      requestAnimationFrame(() => {
+        if (shouldRestoreScrollOnReload) {
+          restoreAboutScrollTop();
+          requestAnimationFrame(restoreAboutScrollTop);
+          return;
+        }
+
+        syncMotionToCurrentScroll();
+      });
 
       storyPairStates.forEach((state) => {
         state.currentX = state.targetX;
@@ -891,17 +1223,31 @@ export function AboutMotion() {
     window.addEventListener("scroll", scheduleMobileStackUpdate, {
       passive: true,
     });
+    window.addEventListener("wheel", onMobileStackWheel, { passive: false });
+    window.addEventListener("touchstart", onMobileStackTouchStart, {
+      passive: true,
+    });
+    window.addEventListener("touchmove", onMobileStackTouchMove, {
+      passive: false,
+    });
+    window.addEventListener("touchend", onMobileStackTouchEnd);
+    window.addEventListener("touchcancel", onMobileStackTouchEnd);
     window.addEventListener("resize", handleViewportUpdate, { passive: true });
     window.addEventListener("pageshow", onPageShow);
     window.addEventListener(
       SITE_HEADER_OFFSET_CHANGE_EVENT,
       onSiteHeaderOffsetChange,
     );
+    window.addEventListener("pagehide", saveAboutScrollTop);
+    window.addEventListener("beforeunload", saveAboutScrollTop);
 
     startSequence();
     settleInitialCloudPosition();
 
     return () => {
+      if (shouldRestoreScrollOnReload) {
+        window.history.scrollRestoration = previousScrollRestoration;
+      }
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       if (targetsFrameId) cancelAnimationFrame(targetsFrameId);
       if (initialCloudSettleFrame)
@@ -914,18 +1260,29 @@ export function AboutMotion() {
       if (mobileStackFrameId) cancelAnimationFrame(mobileStackFrameId);
       if (mobileStackSettleFrameId)
         cancelAnimationFrame(mobileStackSettleFrameId);
+      if (mobileStackScrollFrameId)
+        cancelAnimationFrame(mobileStackScrollFrameId);
+      if (mobileStackWheelReleaseId)
+        window.clearTimeout(mobileStackWheelReleaseId);
 
       staticSceneQuery.removeEventListener("change", onStaticSceneChange);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
       mobileStackQuery.removeEventListener("change", onMobileStackChange);
       window.removeEventListener("scroll", scheduleTargetsUpdate);
       window.removeEventListener("scroll", scheduleMobileStackUpdate);
+      window.removeEventListener("wheel", onMobileStackWheel);
+      window.removeEventListener("touchstart", onMobileStackTouchStart);
+      window.removeEventListener("touchmove", onMobileStackTouchMove);
+      window.removeEventListener("touchend", onMobileStackTouchEnd);
+      window.removeEventListener("touchcancel", onMobileStackTouchEnd);
       window.removeEventListener("resize", handleViewportUpdate);
       window.removeEventListener("pageshow", onPageShow);
       window.removeEventListener(
         SITE_HEADER_OFFSET_CHANGE_EVENT,
         onSiteHeaderOffsetChange,
       );
+      window.removeEventListener("pagehide", saveAboutScrollTop);
+      window.removeEventListener("beforeunload", saveAboutScrollTop);
     };
   }, []);
 
