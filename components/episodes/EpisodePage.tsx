@@ -1,7 +1,6 @@
 import { bindStyles } from "../../lib/bind-styles";
 import { withBasePath } from "../../lib/base-path";
 import {
-  episodeKindLabels,
   getMoreShortsFromSameSource,
   getEpisodeNeighbors,
   getSourceEpisodeForShort,
@@ -37,6 +36,14 @@ function buildEmbedSrc(youtubeId: string, start?: number): string {
   return `https://www.youtube.com/embed/${youtubeId}?${params.toString()}`;
 }
 
+const episodeBreadcrumbParents: Record<Episode["kind"], { label: string; href: string }> = {
+  episode: { label: "Выпуски", href: "/episodes?tab=episode" },
+  special: { label: "Спецвыпуски", href: "/episodes?tab=special" },
+  "stream-record": { label: "Стримы", href: "/episodes?tab=stream-record" },
+  video: { label: "Видео", href: "/episodes?tab=video" },
+  shorts: { label: "Shorts", href: "/episodes?tab=shorts" },
+};
+
 export function EpisodePage({ episode }: { episode: Episode }) {
   const navItems = [
     { label: "Главная", href: "/" },
@@ -53,6 +60,7 @@ export function EpisodePage({ episode }: { episode: Episode }) {
   const shortFragments = getMoreShortsFromSameSource(episode, 8);
   const hosts = episode.participants.filter((participant) => !participant.isGuest);
   const guest = episode.participants.find((participant) => participant.isGuest);
+  const breadcrumbParent = episodeBreadcrumbParents[episode.kind];
 
   const videoSchema = {
     "@context": "https://schema.org",
@@ -63,6 +71,29 @@ export function EpisodePage({ episode }: { episode: Episode }) {
     uploadDate: episode.publishedAt,
     duration: toIsoDuration(episode.duration),
     embedUrl: `https://www.youtube.com/embed/${episode.youtubeId}`,
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Главная",
+        item: withBasePath("/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: breadcrumbParent.label,
+        item: withBasePath(breadcrumbParent.href),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: episode.title,
+      },
+    ],
   };
 
   return (
@@ -76,9 +107,9 @@ export function EpisodePage({ episode }: { episode: Episode }) {
               <div className={cx("breadcrumbs")}>
                 <a href={withBasePath("/")}>Главная</a>
                 <span>›</span>
-                <a href={withBasePath("/episodes")}>Выпуски</a>
+                <a href={withBasePath(breadcrumbParent.href)}>{breadcrumbParent.label}</a>
                 <span>›</span>
-                <span>Shorts</span>
+                <span>{episode.title}</span>
               </div>
 
               <div className={cx("short-layout")}>
@@ -146,9 +177,9 @@ export function EpisodePage({ episode }: { episode: Episode }) {
           <div className={cx("breadcrumbs")}>
             <a href={withBasePath("/")}>Главная</a>
             <span>›</span>
-            <a href={withBasePath("/episodes")}>Выпуски</a>
+            <a href={withBasePath(breadcrumbParent.href)}>{breadcrumbParent.label}</a>
             <span>›</span>
-            <span>{episodeKindLabels[episode.kind]}</span>
+            <span>{episode.title}</span>
           </div>
 
           <div className={cx("hero-grid")}>
@@ -284,6 +315,11 @@ export function EpisodePage({ episode }: { episode: Episode }) {
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: JSON.stringify(videoSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
     </div>
   );
