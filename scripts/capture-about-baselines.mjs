@@ -1,16 +1,12 @@
 import { chromium, devices } from "playwright";
-import http from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
 
 const REPO_ROOT = process.cwd();
-const ABOUT_SOURCE_PATH = "/docs/design/pages/about/source/about.html";
 const BASELINES_DIR = path.join(
   REPO_ROOT,
   "docs/design/pages/about/snapshots/baselines",
 );
-const HOST = "127.0.0.1";
-const PORT = 4178;
 
 const VIEWPORTS = {
   desktop: {
@@ -45,96 +41,64 @@ const DESKTOP_SCROLL_STATES = [
   { name: "sequence-early", kind: "scrollFraction", fraction: 0.18 },
   { name: "pair-1-mid", kind: "pairProgress", pairIndex: 0, pairYProgress: 0.55 },
   { name: "pair-2-mid", kind: "pairProgress", pairIndex: 1, pairYProgress: 0.55 },
-  { name: "reading-method", kind: "selector", selector: ".story-step:not(.story-step-pair) .story-card" },
+  {
+    name: "reading-method",
+    kind: "selector",
+    selector: '[data-story-kind="single"] [data-about-story-card]',
+  },
   { name: "pair-3-mid", kind: "pairProgress", pairIndex: 2, pairYProgress: 0.58 },
-  { name: "voices", kind: "selector", selector: ".voice-intro-card" },
-  { name: "audience", kind: "selector", selector: ".text-panel" },
+  { name: "voices", kind: "selector", selector: "[data-about-voices-intro]" },
+  { name: "audience", kind: "selector", selector: "[data-about-audience-panel]" },
 ];
 
-function contentTypeFor(filePath) {
-  const ext = path.extname(filePath).toLowerCase();
-  switch (ext) {
-    case ".html":
-      return "text/html; charset=utf-8";
-    case ".css":
-      return "text/css; charset=utf-8";
-    case ".js":
-      return "application/javascript; charset=utf-8";
-    case ".json":
-      return "application/json; charset=utf-8";
-    case ".svg":
-      return "image/svg+xml";
-    case ".png":
-      return "image/png";
-    case ".jpg":
-    case ".jpeg":
-      return "image/jpeg";
-    case ".webp":
-      return "image/webp";
-    case ".gif":
-      return "image/gif";
-    case ".mp4":
-      return "video/mp4";
-    case ".pdf":
-      return "application/pdf";
-    default:
-      return "application/octet-stream";
-  }
-}
+function parseArgs(argv) {
+  const args = {
+    baseUrl: process.env.CAPTURE_BASE_URL || "http://127.0.0.1:3000",
+    routePath: process.env.CAPTURE_ABOUT_PATH || "/about/",
+  };
 
-function safeResolveFromRepo(urlPathname) {
-  const decodedPath = decodeURIComponent(urlPathname.split("?")[0]);
-  const normalized = decodedPath === "/" ? ABOUT_SOURCE_PATH : decodedPath;
-  const absolutePath = path.resolve(REPO_ROOT, `.${normalized}`);
-  if (!absolutePath.startsWith(REPO_ROOT)) {
-    return null;
-  }
-  return absolutePath;
-}
-
-function startStaticServer() {
-  const server = http.createServer(async (req, res) => {
-    const filePath = safeResolveFromRepo(req.url || "/");
-    if (!filePath) {
-      res.writeHead(403);
-      res.end("Forbidden");
-      return;
+  for (let i = 0; i < argv.length; i += 1) {
+    if (argv[i] === "--base-url" && argv[i + 1]) {
+      args.baseUrl = argv[i + 1];
+      i += 1;
+    } else if (argv[i] === "--path" && argv[i + 1]) {
+      args.routePath = argv[i + 1];
+      i += 1;
     }
+  }
 
-    try {
-      const stat = await fs.stat(filePath);
-      if (stat.isDirectory()) {
-        res.writeHead(403);
-        res.end("Forbidden");
-        return;
-      }
-
-      const file = await fs.readFile(filePath);
-      res.writeHead(200, {
-        "Content-Type": contentTypeFor(filePath),
-        "Cache-Control": "no-store",
-      });
-      res.end(file);
-    } catch {
-      res.writeHead(404);
-      res.end("Not found");
-    }
-  });
-
-  return new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(PORT, HOST, () => resolve(server));
-  });
+  return args;
 }
 
 async function ensureAboutDataReady(page) {
-  await page.waitForFunction(() => {
-    return (
-      document.querySelectorAll("[data-pair]").length >= 3 &&
-      document.querySelectorAll(".voice-card").length >= 3 &&
-      document.getElementById("story-frame")
-    );
-  });
+  try {
+    await page.waitForFunction(() => {
+      return (
+        !!document.querySelector("[data-about-root]") &&
+        !!document.querySelector("[data-about-frame]") &&
+        document.querySelectorAll("[data-about-pair]").length >= 1 &&
+        !!document.querySelector("[data-about-voices-intro]") &&
+        !!document.querySelector("[data-about-audience-panel]")
+      );
+    }, undefined, { timeout: 60_000 });
+  } catch (error) {
+    const readiness = await page.evaluate(() => ({
+      url: window.location.href,
+      aboutRoot: Boolean(document.querySelector("[data-about-root]")),
+      frame: Boolean(document.querySelector("[data-about-frame]")),
+      frameSrc: document
+        .querySelector("[data-about-frame]")
+        ?.getAttribute("src") ?? null,
+      pairs: document.querySelectorAll("[data-about-pair]").length,
+      voicesIntro: Boolean(document.querySelector("[data-about-voices-intro]")),
+      audiencePanel: Boolean(document.querySelector("[data-about-audience-panel]")),
+      revealTargets: document.querySelectorAll("[data-about-reveal-target]").length,
+      title: document.title,
+      bodyStart: document.body?.innerText?.slice(0, 240) ?? "",
+    }));
+    console.error("About readiness diagnostics:", readiness);
+    throw error;
+  }
 }
 
 async function waitForRenderReady(page) {
@@ -143,7 +107,7 @@ async function waitForRenderReady(page) {
   try {
     await page.waitForLoadState("networkidle", { timeout: 5000 });
   } catch {
-    // External font requests or deferred media can keep the page technically busy.
+    // Dynamic apps or deferred visual layers may keep the page busy.
   }
 
   await ensureAboutDataReady(page);
@@ -158,20 +122,28 @@ async function waitForRenderReady(page) {
     }
   });
 
-  await page.waitForFunction(() => {
-    const frame = document.getElementById("story-frame");
-    return !!frame && frame.getAttribute("src");
-  });
+  try {
+    await page.waitForFunction(() => {
+      const frame = document.querySelector("[data-about-frame]");
+      return !!frame && frame.getAttribute("src");
+    }, undefined, { timeout: 10_000 });
+  } catch {
+    console.warn("About frame src was not ready before capture; continuing.");
+  }
 
-  await page.waitForFunction(() => {
-    const frame = document.getElementById("story-frame");
-    return !!frame && frame.classList.contains("is-ready");
-  });
+  try {
+    await page.waitForFunction(() => {
+      const frame = document.querySelector("[data-about-frame]");
+      return !!frame && frame.classList.contains("is-ready");
+    }, undefined, { timeout: 4000 });
+  } catch {
+    // Current implementation may use another readiness signal.
+  }
 
   await page.waitForTimeout(350);
 }
 
-async function preparePageForBaselineCapture(page) {
+async function preparePageForCapture(page) {
   await page.addStyleTag({
     content: `
       html, body {
@@ -181,8 +153,14 @@ async function preparePageForBaselineCapture(page) {
   });
 }
 
+async function markVisualCapture(page) {
+  await page.addInitScript(() => {
+    window.__TOLK_VISUAL_CAPTURE__ = true;
+  });
+}
+
 async function waitForMotionSettle(page) {
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1200);
 }
 
 async function scrollToTop(page) {
@@ -218,13 +196,14 @@ async function scrollToSelector(page, selector, offset = 96) {
 async function scrollToPairState(page, pairIndex, pairYProgress) {
   await page.evaluate(
     ({ targetPairIndex, targetPairYProgress }) => {
-      const pairs = Array.from(document.querySelectorAll("[data-pair]"));
-      const pair = pairs[targetPairIndex];
+      const pairs = Array.from(document.querySelectorAll("[data-about-pair]"));
+      const safePairIndex = Math.min(targetPairIndex, Math.max(pairs.length - 1, 0));
+      const pair = pairs[safePairIndex];
       if (!pair) {
         throw new Error(`Pair not found at index ${targetPairIndex}`);
       }
 
-      const step = pair.closest(".story-step");
+      const step = pair.closest("[data-story-step]");
       if (!step) {
         throw new Error(`Pair step not found at index ${targetPairIndex}`);
       }
@@ -276,7 +255,7 @@ async function captureViewport(page, targetPath) {
   });
 }
 
-async function captureDesktopBaselines(browser, baseUrl) {
+async function captureDesktopBaselines(browser, targetUrl) {
   const context = await browser.newContext({
     colorScheme: "dark",
     reducedMotion: "no-preference",
@@ -284,11 +263,10 @@ async function captureDesktopBaselines(browser, baseUrl) {
   });
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}${ABOUT_SOURCE_PATH}`, {
-    waitUntil: "domcontentloaded",
-  });
+  await markVisualCapture(page);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
-  await preparePageForBaselineCapture(page);
+  await preparePageForCapture(page);
 
   const savedPaths = [];
 
@@ -313,7 +291,7 @@ async function captureDesktopBaselines(browser, baseUrl) {
   return savedPaths;
 }
 
-async function captureStaticDesktopBaseline(browser, baseUrl) {
+async function captureStaticDesktopBaseline(browser, targetUrl) {
   const context = await browser.newContext({
     colorScheme: "dark",
     reducedMotion: "no-preference",
@@ -321,13 +299,13 @@ async function captureStaticDesktopBaseline(browser, baseUrl) {
   });
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}${ABOUT_SOURCE_PATH}`, {
-    waitUntil: "domcontentloaded",
-  });
+  await markVisualCapture(page);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
-  await preparePageForBaselineCapture(page);
+  await preparePageForCapture(page);
 
   const savedPaths = [];
+
   const fullTargetPath = path.join(
     BASELINES_DIR,
     `about-${VIEWPORTS.staticDesktop.name}-static-full.png`,
@@ -346,7 +324,7 @@ async function captureStaticDesktopBaseline(browser, baseUrl) {
   return savedPaths;
 }
 
-async function captureMobileBaseline(browser, baseUrl) {
+async function captureMobileBaseline(browser, targetUrl) {
   const context = await browser.newContext({
     colorScheme: "dark",
     reducedMotion: "no-preference",
@@ -354,11 +332,10 @@ async function captureMobileBaseline(browser, baseUrl) {
   });
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}${ABOUT_SOURCE_PATH}`, {
-    waitUntil: "domcontentloaded",
-  });
+  await markVisualCapture(page);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
-  await preparePageForBaselineCapture(page);
+  await preparePageForCapture(page);
 
   const savedPaths = [];
 
@@ -369,7 +346,7 @@ async function captureMobileBaseline(browser, baseUrl) {
   await captureBodyFull(page, fullTargetPath);
   savedPaths.push(path.relative(REPO_ROOT, fullTargetPath));
 
-  await scrollToSelector(page, ".voice-intro-card", 40);
+  await scrollToSelector(page, "[data-about-voices-intro]", 40);
   await waitForMotionSettle(page);
   const voicesTargetPath = path.join(
     BASELINES_DIR,
@@ -383,34 +360,29 @@ async function captureMobileBaseline(browser, baseUrl) {
 }
 
 async function main() {
+  const { baseUrl, routePath } = parseArgs(process.argv.slice(2));
+  const targetUrl = new URL(routePath, baseUrl).toString();
+
   await fs.mkdir(BASELINES_DIR, { recursive: true });
 
-  const server = await startStaticServer();
   const browser = await chromium.launch({ headless: true });
-  const baseUrl = `http://${HOST}:${PORT}`;
 
   try {
     const savedPaths = [];
-    savedPaths.push(...(await captureDesktopBaselines(browser, baseUrl)));
-    savedPaths.push(...(await captureStaticDesktopBaseline(browser, baseUrl)));
-    savedPaths.push(...(await captureMobileBaseline(browser, baseUrl)));
+    savedPaths.push(...(await captureDesktopBaselines(browser, targetUrl)));
+    savedPaths.push(...(await captureStaticDesktopBaseline(browser, targetUrl)));
+    savedPaths.push(...(await captureMobileBaseline(browser, targetUrl)));
 
-    console.log("Saved about baselines:");
+    console.log(`Captured about baselines from ${targetUrl}:`);
     for (const savedPath of savedPaths) {
       console.log(`- ${savedPath}`);
     }
   } finally {
     await browser.close();
-    await new Promise((resolve, reject) => {
-      server.close((error) => {
-        if (error) reject(error);
-        else resolve();
-      });
-    });
   }
 }
 
 main().catch((error) => {
-  console.error(error);
+  console.error("capture-about-baselines failed:", error);
   process.exitCode = 1;
 });
