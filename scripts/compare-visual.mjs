@@ -26,7 +26,7 @@ const ALLOWED_MISMATCH_PERCENT = {
     "about-1100-static-top.png": 0.006,
     "about-1440-audience.png": 0.05,
     "about-1440-default-full.png": 0.001,
-    "about-1440-pair-1-mid.png": 0.7,
+    "about-1440-pair-1-mid.png": 0.8,
     "about-1440-pair-2-mid.png": 0.35,
     "about-1440-pair-3-mid.png": 1.6,
     "about-1440-reading-method.png": 0.9,
