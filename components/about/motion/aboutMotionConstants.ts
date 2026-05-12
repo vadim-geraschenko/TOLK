@@ -18,10 +18,12 @@ export const ABOUT_SELECTOR_MOBILE_STACK_ITEM = "[data-mobile-stack-item]";
 
 export const ABOUT_TOTAL_FRAMES = 60;
 export const ABOUT_FRAME_START_INDEX = 1;
-export const ABOUT_STATIC_FRAME_DESKTOP =
-  withBasePath("/about/assets/angel-sequence/desktop/frame-028.webp");
-export const ABOUT_STATIC_FRAME_MOBILE =
-  withBasePath("/about/assets/angel-sequence/mobile/frame-028.webp");
+export const ABOUT_STATIC_FRAME_DESKTOP = withBasePath(
+  "/about/assets/angel-sequence/desktop/frame-028.webp",
+);
+export const ABOUT_STATIC_FRAME_MOBILE = withBasePath(
+  "/about/assets/angel-sequence/mobile/frame-028.webp",
+);
 
 export const ABOUT_REVEAL_END_PROGRESS = 0.3;
 export const ABOUT_PAIR_SPREAD_START = 0.1;
@@ -56,7 +58,7 @@ export const ABOUT_MOBILE_STACK_BOTTOM_GAP = 32;
 export const ABOUT_MOBILE_STACK_CARD_GAP = 40;
 export const ABOUT_MOBILE_STACK_CARD_PEEK = 12;
 export const ABOUT_MOBILE_STACK_EXIT_GAP = 64;
-export const ABOUT_MOBILE_STACK_LERP_FACTOR = 0.16;
+export const ABOUT_MOBILE_STACK_LERP_FACTOR = 0.2;
 
 export const ABOUT_PRELOAD_BUFFER = 6;
 export const ABOUT_PRELOAD_EAGER_RADIUS = 10;
