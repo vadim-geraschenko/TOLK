@@ -16,7 +16,7 @@ export function HomePage() {
     { label: "Главная", href: "#", isActive: true },
     { label: "О нас", href: "/about" },
     { label: "Выпуски", href: "/episodes" },
-    { label: "Очные чтения", href: "#" },
+    { label: "Очные чтения", href: "/readings" },
     { label: "Мерч", href: "/merch" },
     { label: "Telegram", href: "#", isSocial: true },
     { label: "YouTube", href: "#", isSocial: true },

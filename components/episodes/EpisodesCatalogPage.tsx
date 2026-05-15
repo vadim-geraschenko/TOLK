@@ -78,7 +78,7 @@ export function EpisodesCatalogPage({ episodes }: EpisodesCatalogPageProps) {
     { label: "Главная", href: "/" },
     { label: "О нас", href: "/about" },
     { label: "Выпуски", href: "/episodes", isActive: true },
-    { label: "Очные чтения", href: "#" },
+    { label: "Очные чтения", href: "/readings" },
     { label: "Мерч", href: "/merch" },
     { label: "Telegram", href: "#", isSocial: true },
     { label: "YouTube", href: "#", isSocial: true },

@@ -9,6 +9,7 @@ import {
   type HomeSocial,
 } from "../../content/home";
 import { Button } from "../site/Button";
+import { EventStatusBadge } from "../site/EventStatusBadge";
 import { Eyebrow } from "../site/Eyebrow";
 import { PanelShell } from "../site/PanelShell";
 import { SectionHeader } from "../site/SectionHeader";
@@ -158,7 +159,9 @@ export function HomeHeroSection() {
           <article className={cx("reading-card")}>
             <div className={cx("reading-card-body")}>
               <Eyebrow cx={cx}>Очные Чтения</Eyebrow>
-              <div className={cx("reading-status")}>Событие прошло</div>
+              <EventStatusBadge className={cx("reading-status")}>
+                Событие прошло
+              </EventStatusBadge>
               <h3>Читаем Библию. Бог решает убить человечество</h3>
               <p>
                 Запись следующих чтений планируется 13-го апреля, в 18:00 в

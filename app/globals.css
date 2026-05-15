@@ -5,6 +5,8 @@
   --font-body-family:
     var(--font-source-sans-3), "Source Sans 3", "Segoe UI", "Helvetica Neue",
     sans-serif;
+  --font-display: var(--font-display-family);
+  --font-body: var(--font-body-family);
   --scrollbar-track: #050608;
   --scrollbar-thumb: #cfd6df;
 
@@ -13,6 +15,9 @@
   --bg-surface-2: #20242a;
   --bg-surface-3: #252a30;
   --bg-inset: #0b0d10;
+  --surface-panel: rgba(24, 27, 31, 0.88);
+  --surface-panel-soft: rgba(21, 24, 28, 0.72);
+  --surface-overlay: rgba(10, 12, 15, 0.54);
   --text-primary: #f2f4f7;
   --text-secondary: #c6cbd2;
   --text-muted: #8d959f;
@@ -43,6 +48,23 @@
   --page-gutter-desktop: 32px;
   --page-gutter-tablet: 28px;
   --page-gutter-mobile: 24px;
+  --section-padding: 40px;
+  --section-padding-home: 34px;
+  --section-padding-tablet: 32px;
+  --section-divider-height: 28px;
+  --section-divider-height-mobile: 22px;
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 10px;
+  --space-md: 12px;
+  --space-lg: 14px;
+  --space-xl: 16px;
+  --space-2xl: 18px;
+  --space-3xl: 20px;
+  --space-4xl: 22px;
+  --space-5xl: 24px;
+  --space-6xl: 28px;
+  --space-7xl: 32px;
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 14px;

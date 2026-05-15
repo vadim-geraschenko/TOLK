@@ -8,7 +8,7 @@ export const primaryNavigation: NavigationItem[] = [
   { label: "Главная", href: "/" },
   { label: "О нас", href: "/about" },
   { label: "Выпуски", href: "#" },
-  { label: "Очные чтения", href: "#" },
+  { label: "Очные чтения", href: "/readings" },
   { label: "Мерч", href: "/merch" },
   { label: "Telegram", href: "#", social: true },
   { label: "YouTube", href: "#", social: true },
