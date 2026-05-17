@@ -99,6 +99,12 @@ async function waitForRenderReady(page) {
 
   await ensureHomeDataReady(page);
 
+  await page.evaluate(() => {
+    document.querySelectorAll("img[loading='lazy']").forEach((image) => {
+      image.setAttribute("loading", "eager");
+    });
+  });
+
   await page.evaluate(async () => {
     if (document.fonts?.ready) {
       try {
@@ -112,6 +118,8 @@ async function waitForRenderReady(page) {
   try {
     await page.waitForFunction(() =>
       Array.from(document.images).every((image) => image.complete),
+      undefined,
+      { timeout: 10_000 },
     );
   } catch {
     // Keep going if some images fail silently.
@@ -219,10 +227,11 @@ async function captureState(browser, targetUrl, viewport, state) {
     `home-${viewport.name}-${state.name}.png`,
   );
 
-  await page.locator("body").screenshot({
+  await page.screenshot({
     path: targetPath,
     animations: "disabled",
     caret: "hide",
+    fullPage: true,
     scale: "css",
   });
 

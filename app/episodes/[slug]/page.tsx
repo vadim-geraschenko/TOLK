@@ -34,6 +34,12 @@ export async function generateMetadata({
       images: [withBasePath(episode.cover)],
       type: "video.other",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: episode.title,
+      description: episode.description,
+      images: [withBasePath(episode.cover)],
+    },
   };
 }
 

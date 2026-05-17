@@ -8,6 +8,7 @@ import {
   type HomeParticipant,
   type HomeSocial,
 } from "../../content/home";
+import { socialLinks } from "../../content/navigation";
 import { Button } from "../site/Button";
 import { EventStatusBadge } from "../site/EventStatusBadge";
 import { Eyebrow } from "../site/Eyebrow";
@@ -183,7 +184,12 @@ export function HomeHeroSection() {
                     </div>
                   </div>
                 </div>
-                <Button cx={cx} className="mini-button" href="#" label="Приобрести билет" />
+                <Button
+                  cx={cx}
+                  className="mini-button"
+                  href={socialLinks.telegram}
+                  label="Следить за анонсами"
+                />
               </div>
             </div>
           </article>

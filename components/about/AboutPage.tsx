@@ -1,3 +1,4 @@
+import { getSiteNavItems } from "../../content/navigation";
 import { bindStyles } from "../../lib/bind-styles";
 import { AboutMotion } from "./AboutMotion";
 import {
@@ -15,16 +16,7 @@ import styles from "./about.module.css";
 
 const cx = bindStyles(styles);
 
-const aboutNavItems = [
-  { label: "Главная", href: "/" },
-  { label: "О нас", href: "#", isActive: true },
-  { label: "Выпуски", href: "/episodes" },
-  { label: "Очные чтения", href: "/readings" },
-  { label: "Мерч", href: "/merch" },
-  { label: "Telegram", href: "#", isSocial: true },
-  { label: "YouTube", href: "#", isSocial: true },
-  { label: "Boosty", href: "#", isSocial: true },
-];
+const aboutNavItems = getSiteNavItems("/about");
 
 function AboutBackgroundMedia() {
   return (

@@ -43,8 +43,25 @@ const sourceSans = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vadim-geraschenko.github.io"),
-  title: "TOLK",
+  title: {
+    default: "TOLK",
+    template: "%s",
+  },
   description: "Библия для всех: разговоры о вечном и личном",
+  openGraph: {
+    siteName: "TOLK",
+    title: "TOLK",
+    description: "Библия для всех: разговоры о вечном и личном",
+    locale: "ru_RU",
+    type: "website",
+    images: [withBasePath("/assets/merch.webp")],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "TOLK",
+    description: "Библия для всех: разговоры о вечном и личном",
+    images: [withBasePath("/assets/merch.webp")],
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -1,16 +1,12 @@
 import { chromium, devices } from "playwright";
-import http from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
 
 const REPO_ROOT = process.cwd();
-const HOME_SOURCE_PATH = "/docs/design/pages/home/source/home-mvp.html";
 const BASELINES_DIR = path.join(
   REPO_ROOT,
   "docs/design/pages/home/snapshots/baselines",
 );
-const HOST = "127.0.0.1";
-const PORT = 4173;
 
 const VIEWPORTS = [
   {
@@ -37,114 +33,59 @@ const STATES = [
   },
   {
     name: "hero-button-hover",
-    selector: ".hero-actions .button:first-child",
+    selector: "[data-home-hero-actions] .button:first-child",
     pseudo: ["hover"],
   },
   {
     name: "hero-button-active",
-    selector: ".hero-actions .button:first-child",
+    selector: "[data-home-hero-actions] .button:first-child",
     pseudo: ["active"],
   },
   {
     name: "episode-card-hover",
-    selector: "#episodes-slot .episode-card:first-child",
+    selector: "[data-home-episodes-track] [data-home-episode-card]:first-child",
     pseudo: ["hover"],
   },
   {
     name: "participant-hover",
-    selector: "#participants-slot .participant:nth-child(2)",
+    selector: "[data-home-participants-list] [data-home-participant-card]:nth-child(2) .participant",
     pseudo: ["hover"],
   },
   {
     name: "social-button-hover",
-    selector: "#socials-slot .social-button:first-child",
+    selector: "[data-home-social-buttons] [data-home-social-button]:first-child .social-button",
     pseudo: ["hover"],
   },
 ];
 
-function contentTypeFor(filePath) {
-  const ext = path.extname(filePath).toLowerCase();
-  switch (ext) {
-    case ".html":
-      return "text/html; charset=utf-8";
-    case ".css":
-      return "text/css; charset=utf-8";
-    case ".js":
-      return "application/javascript; charset=utf-8";
-    case ".json":
-      return "application/json; charset=utf-8";
-    case ".svg":
-      return "image/svg+xml";
-    case ".png":
-      return "image/png";
-    case ".jpg":
-    case ".jpeg":
-      return "image/jpeg";
-    case ".webp":
-      return "image/webp";
-    case ".gif":
-      return "image/gif";
-    case ".mp4":
-      return "video/mp4";
-    case ".pdf":
-      return "application/pdf";
-    default:
-      return "application/octet-stream";
-  }
-}
+function parseArgs(argv) {
+  const args = {
+    baseUrl: process.env.CAPTURE_BASE_URL || "http://127.0.0.1:3000",
+    routePath: process.env.CAPTURE_HOME_PATH || "/",
+  };
 
-function safeResolveFromRepo(urlPathname) {
-  const decodedPath = decodeURIComponent(urlPathname.split("?")[0]);
-  const normalized = decodedPath === "/" ? HOME_SOURCE_PATH : decodedPath;
-  const absolutePath = path.resolve(REPO_ROOT, `.${normalized}`);
-  if (!absolutePath.startsWith(REPO_ROOT)) {
-    return null;
-  }
-  return absolutePath;
-}
-
-function startStaticServer() {
-  const server = http.createServer(async (req, res) => {
-    const filePath = safeResolveFromRepo(req.url || "/");
-    if (!filePath) {
-      res.writeHead(403);
-      res.end("Forbidden");
-      return;
+  for (let i = 0; i < argv.length; i += 1) {
+    if (argv[i] === "--base-url" && argv[i + 1]) {
+      args.baseUrl = argv[i + 1];
+      i += 1;
+    } else if (argv[i] === "--path" && argv[i + 1]) {
+      args.routePath = argv[i + 1];
+      i += 1;
     }
+  }
 
-    try {
-      const stat = await fs.stat(filePath);
-      if (stat.isDirectory()) {
-        res.writeHead(403);
-        res.end("Forbidden");
-        return;
-      }
-
-      const file = await fs.readFile(filePath);
-      res.writeHead(200, {
-        "Content-Type": contentTypeFor(filePath),
-        "Cache-Control": "no-store",
-      });
-      res.end(file);
-    } catch {
-      res.writeHead(404);
-      res.end("Not found");
-    }
-  });
-
-  return new Promise((resolve, reject) => {
-    server.once("error", reject);
-    server.listen(PORT, HOST, () => resolve(server));
-  });
+  return args;
 }
 
 async function ensureHomeDataReady(page) {
   await page.waitForFunction(() => {
     return (
-      document.querySelectorAll("#episodes-slot .episode-card").length >= 4 &&
-      document.querySelectorAll("#participants-slot .participant").length >= 3 &&
-      document.querySelectorAll("#socials-slot .social-button").length >= 3 &&
-      document.querySelector("#hero-episode-slot .hero-episode")
+      document.querySelectorAll("[data-home-episodes-track] [data-home-episode-card]").length >= 1 &&
+      document.querySelectorAll("[data-home-participants-list] [data-home-participant-card]").length >= 1 &&
+      document.querySelectorAll("[data-home-social-buttons] [data-home-social-button] .social-button")
+        .length >= 1 &&
+      document.querySelector("[data-home-hero-episode]") &&
+      document.querySelector("[data-home-hero-actions] .button")
     );
   });
 }
@@ -160,6 +101,12 @@ async function waitForRenderReady(page) {
 
   await ensureHomeDataReady(page);
 
+  await page.evaluate(() => {
+    document.querySelectorAll("img[loading='lazy']").forEach((image) => {
+      image.setAttribute("loading", "eager");
+    });
+  });
+
   await page.evaluate(async () => {
     if (document.fonts?.ready) {
       try {
@@ -173,6 +120,8 @@ async function waitForRenderReady(page) {
   try {
     await page.waitForFunction(() =>
       Array.from(document.images).every((image) => image.complete),
+      undefined,
+      { timeout: 10_000 },
     );
   } catch {
     // Some images may fail silently; keep going if the page is otherwise stable.
@@ -181,7 +130,7 @@ async function waitForRenderReady(page) {
   await page.waitForTimeout(250);
 }
 
-async function preparePageForBaselineCapture(page) {
+async function preparePageForCapture(page) {
   await page.addStyleTag({
     content: `
       html, body {
@@ -222,7 +171,7 @@ async function loadFullPageImages(page) {
       Array.from(document.images).every((image) => image.complete),
     );
   } catch {
-    // Static reference pages should still be comparable if an asset fails.
+    // Keep the visual check useful even if a remote image fails to settle.
   }
 
   await page.waitForTimeout(120);
@@ -248,7 +197,13 @@ async function forcePseudoState(page, selector, pseudoClasses) {
   });
 }
 
-async function captureState(browser, baseUrl, viewport, state) {
+async function markVisualCapture(page) {
+  await page.addInitScript(() => {
+    window.__TOLK_VISUAL_CAPTURE__ = true;
+  });
+}
+
+async function captureState(browser, targetUrl, viewport, state) {
   const context = await browser.newContext({
     colorScheme: "dark",
     reducedMotion: "no-preference",
@@ -256,11 +211,10 @@ async function captureState(browser, baseUrl, viewport, state) {
   });
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}${HOME_SOURCE_PATH}`, {
-    waitUntil: "domcontentloaded",
-  });
+  await markVisualCapture(page);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
-  await preparePageForBaselineCapture(page);
+  await preparePageForCapture(page);
 
   if (state.selector && state.pseudo?.length) {
     await forcePseudoState(page, state.selector, state.pseudo);
@@ -275,10 +229,11 @@ async function captureState(browser, baseUrl, viewport, state) {
     `home-${viewport.name}-${state.name}.png`,
   );
 
-  await page.locator("body").screenshot({
+  await page.screenshot({
     path: targetPath,
     animations: "disabled",
     caret: "hide",
+    fullPage: true,
     scale: "css",
   });
 
@@ -286,7 +241,7 @@ async function captureState(browser, baseUrl, viewport, state) {
   return targetPath;
 }
 
-async function warmViewport(browser, baseUrl, viewport) {
+async function warmViewport(browser, targetUrl, viewport) {
   const context = await browser.newContext({
     colorScheme: "dark",
     reducedMotion: "no-preference",
@@ -294,46 +249,40 @@ async function warmViewport(browser, baseUrl, viewport) {
   });
   const page = await context.newPage();
 
-  await page.goto(`${baseUrl}${HOME_SOURCE_PATH}`, {
-    waitUntil: "domcontentloaded",
-  });
+  await markVisualCapture(page);
+  await page.goto(targetUrl, { waitUntil: "domcontentloaded" });
   await waitForRenderReady(page);
-  await preparePageForBaselineCapture(page);
+  await preparePageForCapture(page);
   await page.waitForTimeout(250);
   await context.close();
 }
 
 async function main() {
+  const { baseUrl, routePath } = parseArgs(process.argv.slice(2));
+  const targetUrl = new URL(routePath, baseUrl).toString();
+
   await fs.mkdir(BASELINES_DIR, { recursive: true });
 
-  const server = await startStaticServer();
   const browser = await chromium.launch({ headless: true });
-  const baseUrl = `http://${HOST}:${PORT}`;
 
   try {
     const savedPaths = [];
 
     for (const viewport of VIEWPORTS) {
-      await warmViewport(browser, baseUrl, viewport);
+      await warmViewport(browser, targetUrl, viewport);
 
       for (const state of STATES) {
-        const savedPath = await captureState(browser, baseUrl, viewport, state);
+        const savedPath = await captureState(browser, targetUrl, viewport, state);
         savedPaths.push(path.relative(REPO_ROOT, savedPath));
       }
     }
 
-    console.log("Saved home baselines:");
+    console.log(`Captured home baseline snapshots from ${targetUrl}:`);
     for (const savedPath of savedPaths) {
       console.log(`- ${savedPath}`);
     }
   } finally {
     await browser.close();
-    await new Promise((resolve, reject) => {
-      server.close((error) => {
-        if (error) reject(error);
-        else resolve();
-      });
-    });
   }
 }
 

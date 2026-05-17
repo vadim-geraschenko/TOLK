@@ -103,7 +103,7 @@
   text-transform: uppercase;
 }
 
-.product-copy h2 {
+.product-copy h1 {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
@@ -272,7 +272,7 @@
   text-transform: none;
 }
 
-.product-copy h2 {
+.product-copy h1 {
   margin-bottom: 10px;
   font-size: clamp(58px, 5.2vw, 82px);
   text-shadow: 0 16px 52px rgba(255, 255, 255, 0.08);
@@ -542,7 +542,7 @@
     padding: 8px 0 40px;
   }
 
-  .product-copy h2 {
+  .product-copy h1 {
     font-size: clamp(58px, 10vw, 90px);
   }
 }
@@ -693,7 +693,7 @@
     gap: 18px 18px;
   }
 
-  .product-copy h2 {
+  .product-copy h1 {
     grid-column: 1 / -1;
     margin-bottom: 0;
     font-size: clamp(52px, 14vw, 72px);

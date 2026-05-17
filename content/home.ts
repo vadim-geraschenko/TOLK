@@ -1,4 +1,5 @@
 import { episodes } from "./episodes";
+import { socialLinks } from "./navigation";
 import { people } from "./people";
 
 export type HomeParticipant = {
@@ -66,14 +67,14 @@ export const homeParticipants: HomeParticipant[] = [
 export const homeSocials: HomeSocial[] = [
   {
     name: "Telegram",
-    href: "#",
+    href: socialLinks.telegram,
     icon: "/assets/socials-telegram.svg",
     iconClass: "icon-telegram",
     description: "Анонсы, короткие посты и текущая жизнь проекта.",
   },
   {
     name: "YouTube",
-    href: "#",
+    href: socialLinks.youtube,
     icon: "/assets/socials-youtube.svg",
     iconClass: "icon-youtube",
     description:
@@ -81,7 +82,7 @@ export const homeSocials: HomeSocial[] = [
   },
   {
     name: "Boosty",
-    href: "#",
+    href: socialLinks.boosty,
     icon: "/assets/socials-boosty.svg",
     iconClass: "icon-boosty",
     description: "Поддержка проекта и доступ к доп. материалам.",

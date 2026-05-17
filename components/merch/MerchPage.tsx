@@ -1,4 +1,5 @@
 import { merchProducts } from "../../content/merch";
+import { getSiteNavItems } from "../../content/navigation";
 import { bindStyles } from "../../lib/bind-styles";
 import { withBasePath } from "../../lib/base-path";
 import { Button } from "../site/Button";
@@ -9,16 +10,7 @@ import styles from "./merch.module.css";
 
 const cx = bindStyles(styles);
 
-const navItems = [
-  { label: "Главная", href: "/" },
-  { label: "О нас", href: "/about" },
-  { label: "Выпуски", href: "/episodes" },
-  { label: "Очные чтения", href: "/readings" },
-  { label: "Мерч", href: "/merch", isActive: true },
-  { label: "Telegram", href: "#", isSocial: true },
-  { label: "YouTube", href: "#", isSocial: true },
-  { label: "Boosty", href: "#", isSocial: true },
-];
+const navItems = getSiteNavItems("/merch");
 
 const patchPath = `
   M 112 62
@@ -60,7 +52,7 @@ export function MerchPage() {
               </div>
 
               <div className={cx("product-copy")}>
-                <h2 id="featured-merch">{featuredProduct.title}</h2>
+                <h1 id="featured-merch">{featuredProduct.title}</h1>
                 <p className={cx("subtitle")}>{featuredProduct.subtitle}</p>
 
                 {detailImage ? (

@@ -1,3 +1,4 @@
+import { getSiteNavItems, socialLinks } from "../../content/navigation";
 import { bindStyles } from "../../lib/bind-styles";
 import { withBasePath } from "../../lib/base-path";
 import { Button } from "../site/Button";
@@ -8,16 +9,7 @@ import styles from "./readings.module.css";
 
 const cx = bindStyles(styles);
 
-const navItems = [
-  { label: "Главная", href: "/" },
-  { label: "О нас", href: "/about" },
-  { label: "Выпуски", href: "/episodes" },
-  { label: "Очные чтения", href: "/readings", isActive: true },
-  { label: "Мерч", href: "/merch" },
-  { label: "Telegram", href: "#", isSocial: true },
-  { label: "YouTube", href: "#", isSocial: true },
-  { label: "Boosty", href: "#", isSocial: true },
-];
+const navItems = getSiteNavItems("/readings");
 
 const details = [
   ["Дата", "13 апреля 2025 · 18:00"],
@@ -88,10 +80,10 @@ export function ReadingsPage() {
                 />
               </figure>
               <div className={cx("actions")}>
-                <Button cx={cx} href="#" label="Приобрести билет" />
+                <Button cx={cx} href={socialLinks.telegram} label="Следить за анонсами" />
                 <Button
                   cx={cx}
-                  href="https://boosty.to/bibletolk"
+                  href={socialLinks.boosty}
                   label="Материалы на Boosty"
                 />
               </div>

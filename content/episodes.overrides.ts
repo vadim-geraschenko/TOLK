@@ -1,3 +1,4 @@
+import { socialLinks } from "./navigation";
 import { defaultHostsDisplayOrder, guest, host, people } from "./people";
 
 export type EpisodeKind =
@@ -39,7 +40,7 @@ export type EpisodeOverride = {
 };
 
 export const defaultSupportLinks: EpisodeSupportLink[] = [
-  { label: "Поддержать на Boosty", href: "#" },
+  { label: "Поддержать на Boosty", href: socialLinks.boosty },
   { label: "Мерч TOLK", href: "/merch" },
 ];
 

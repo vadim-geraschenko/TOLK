@@ -1,3 +1,4 @@
+import { getSiteNavItems } from "../../content/navigation";
 import { bindStyles } from "../../lib/bind-styles";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
@@ -12,16 +13,7 @@ import {
 
 export function HomePage() {
   const cx = bindStyles(styles);
-  const navItems = [
-    { label: "Главная", href: "#", isActive: true },
-    { label: "О нас", href: "/about" },
-    { label: "Выпуски", href: "/episodes" },
-    { label: "Очные чтения", href: "/readings" },
-    { label: "Мерч", href: "/merch" },
-    { label: "Telegram", href: "#", isSocial: true },
-    { label: "YouTube", href: "#", isSocial: true },
-    { label: "Boosty", href: "#", isSocial: true },
-  ];
+  const navItems = getSiteNavItems("/");
 
   return (
     <div className={cx("root", "page-shell")}>

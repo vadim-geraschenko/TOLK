@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { Episode } from "../../content/episodes";
 import type { EpisodeKind } from "../../content/episodes.overrides";
+import { getSiteNavItems } from "../../content/navigation";
 import { bindStyles } from "../../lib/bind-styles";
 import { SiteFooter } from "../site/SiteFooter";
 import { SiteHeader } from "../site/SiteHeader";
@@ -74,16 +75,7 @@ export function EpisodesCatalogPage({ episodes }: EpisodesCatalogPageProps) {
   const visibleItems = visible.length;
   const totalItems = filtered.length;
   const hasMore = filtered.length > visible.length;
-  const navItems = [
-    { label: "Главная", href: "/" },
-    { label: "О нас", href: "/about" },
-    { label: "Выпуски", href: "/episodes", isActive: true },
-    { label: "Очные чтения", href: "/readings" },
-    { label: "Мерч", href: "/merch" },
-    { label: "Telegram", href: "#", isSocial: true },
-    { label: "YouTube", href: "#", isSocial: true },
-    { label: "Boosty", href: "#", isSocial: true },
-  ];
+  const navItems = getSiteNavItems("/episodes");
 
   return (
     <div className={cx("root", "page-shell")} id="episodes-top">
@@ -92,7 +84,7 @@ export function EpisodesCatalogPage({ episodes }: EpisodesCatalogPageProps) {
       <main className={cx("main")}>
         <section className={cx("container", "top")}>
           <h1>Лента выпусков</h1>
-          <p className={cx("subtitle")}>Прототип страницы выпусков в формате YouTube-ленты</p>
+          <p className={cx("subtitle")}>Все выпуски TOLK: чтения, спецвыпуски, стримы и короткие видео.</p>
           <nav className={cx("tabs")} aria-label="Категории выпусков">
             {TABS.map((item) => (
               <Link
